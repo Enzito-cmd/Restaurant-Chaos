@@ -5,11 +5,11 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager Instance { get; private set; }
 
-    [Header("Cámaras Globales")]
+    [Header("Cameras")]
     [SerializeField] private GameObject mainCam;
     [SerializeField] private GameObject universalMinigameCam;
 
-    [Header("Configuración")]
+    [Header("Config")]
     public float zoomDuration = 1.5f; 
 
     private GameObject activeTransitionCam;
