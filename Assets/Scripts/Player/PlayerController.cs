@@ -10,13 +10,29 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     private Vector3 moveDirection;
 
+    private bool canMove = true;
+
+    private Transform mainCameraTransform;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+
+        if (Camera.main != null)
+        {
+            mainCameraTransform = Camera.main.transform;
+        }
+    }
+
+    public void SetMovement(bool state)
+    {
+        canMove = state;
     }
 
     private void Update()
     {
+        if (!canMove) return;
+
         HandleInput();
         HandleMovement();
         HandleRotation();
@@ -27,12 +43,25 @@ public class PlayerController : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
 
-        moveDirection = new Vector3(moveX, 0f, moveZ).normalized;
+        if (mainCameraTransform != null)
+        {
+            Vector3 camForward = mainCameraTransform.forward;
+            Vector3 camRight = mainCameraTransform.right;
+
+            camForward.y = 0f;
+            camRight.y = 0f;
+
+            camForward.Normalize();
+            camRight.Normalize();
+
+            moveDirection = (camForward * moveZ + camRight * moveX).normalized;
+        }
     }
 
     private void HandleMovement()
     {
         if (moveDirection.sqrMagnitude < 0.01f) return;
+
         characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
 
@@ -40,7 +69,6 @@ public class PlayerController : MonoBehaviour
     {
         if (moveDirection == Vector3.zero) return;
 
-        // Forzamos a que el vector de dirección no tenga inclinación en Y
         Vector3 targetDirection = new Vector3(moveDirection.x, 0f, moveDirection.z);
 
         if (targetDirection != Vector3.zero)

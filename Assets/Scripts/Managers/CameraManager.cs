@@ -1,21 +1,18 @@
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
-using Unity.Cinemachine;
 
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager Instance { get; private set; }
 
-    [Header("Virtual Cameras")]
-    [SerializeField] private CinemachineCamera diningRoomCamera;
-    [SerializeField] private CinemachineCamera kitchenCamera;
-    [SerializeField] private CinemachineCamera minigameCamera;
+    [Header("Cámaras Globales")]
+    [SerializeField] private GameObject mainCam;
+    [SerializeField] private GameObject universalMinigameCam;
 
-    [Header("Priority Settings")]
-    [SerializeField] private int activePriority = 10;
-    [SerializeField] private int inactivePriority = 0;
+    [Header("Configuración")]
+    public float zoomDuration = 1.5f; 
 
-    private List<CinemachineCamera> allCameras;
+    private GameObject activeTransitionCam;
 
     private void Awake()
     {
@@ -25,36 +22,56 @@ public class CameraManager : MonoBehaviour
             return;
         }
         Instance = this;
-
-        allCameras = new List<CinemachineCamera>
-        {
-            diningRoomCamera,
-            kitchenCamera,
-            minigameCamera
-        };
     }
 
     private void Start()
     {
-        ActivateDiningRoomCamera();
+        SwitchToMainCam();
     }
 
-    public void SwitchCamera(CinemachineCamera targetCamera)
+    public void SwitchToMainCam()
     {
-        if (targetCamera == null) return;
+        StopAllCoroutines();
 
-        foreach (var cam in allCameras)
-        {
-            if (cam != null)
-            {
-                cam.Priority.Value = inactivePriority;
-            }
-        }
+        if (mainCam != null) mainCam.SetActive(true);
+        if (universalMinigameCam != null) universalMinigameCam.SetActive(false);
+        if (activeTransitionCam != null) activeTransitionCam.SetActive(false);
 
-        targetCamera.Priority.Value = activePriority;
+        activeTransitionCam = null;
     }
 
-    public void ActivateDiningRoomCamera() => SwitchCamera(diningRoomCamera);
-    public void ActivateKitchenCamera() => SwitchCamera(kitchenCamera);
-    public void ActivateMinigameCamera() => SwitchCamera(minigameCamera);
+    /// <summary>
+    /// MinigameManager call this function when a minigame is triggered.
+    /// </summary>
+    public void StartMinigameTransition(GameObject transitionCam)
+    {
+        activeTransitionCam = transitionCam;
+        StartCoroutine(MinigameTransitionRoutine());
+    }
+
+    private IEnumerator MinigameTransitionRoutine()
+    {
+        if (mainCam != null) mainCam.SetActive(false);
+        if (activeTransitionCam != null) activeTransitionCam.SetActive(true);
+
+        yield return new WaitForSeconds(zoomDuration);
+
+        if (activeTransitionCam != null) activeTransitionCam.SetActive(false);
+        if (universalMinigameCam != null) universalMinigameCam.SetActive(true);
+    }
+    public void StartMinigameExitTransition()
+    {
+        StartCoroutine(MinigameExitRoutine());
+    }
+
+    private IEnumerator MinigameExitRoutine()
+    {
+        if (universalMinigameCam != null) universalMinigameCam.SetActive(false);
+        if (activeTransitionCam != null) activeTransitionCam.SetActive(true);
+
+        yield return null;
+
+        if (activeTransitionCam != null) activeTransitionCam.SetActive(false);
+        if (mainCam != null) mainCam.SetActive(true);
+    }
 }
