@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MochiStation : MonoBehaviour, IInteractable, IMinigame
+public class TempuraStation : MonoBehaviour, IInteractable, IMinigame
 {
     [Header("Camera")]
     [SerializeField] private GameObject transitionCam;
@@ -10,19 +10,20 @@ public class MochiStation : MonoBehaviour, IInteractable, IMinigame
     [SerializeField]
     private List<ItemType> validIngredients = new List<ItemType>
     {
-        ItemType.Chocolate,
-        ItemType.Peach,
-        ItemType.Strawberry
+        ItemType.Seafood 
     };
 
     [Header("References")]
     [SerializeField] private PlayerHoldSystem playerHoldSystem;
+    [SerializeField] private TempuraController tempuraController;
+
     public void Interact()
     {
-        if (MinigameManager.Instance != null && MinigameManager.Instance.isMinigameActive)
+        if (MinigameManager.Instance != null && (MinigameManager.Instance.isMinigameActive || MinigameManager.Instance.isTransitioning))
         {
             return;
         }
+
         if (playerHoldSystem == null || !playerHoldSystem.IsHoldingItem)
         {
             Debug.Log("Empty hands");
@@ -54,11 +55,11 @@ public class MochiStation : MonoBehaviour, IInteractable, IMinigame
 
     public void SetupMinigame()
     {
-        Debug.Log("Entering mochis minigame");
+        if (tempuraController != null) tempuraController.StartMinigame();
     }
 
     public void EndMinigame()
     {
-        Debug.Log("Quitting mochis minigame");
+        if (tempuraController != null) tempuraController.EndMinigame();
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CustomCameraBlends
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBlenderSettings
   CustomBlends:
-  - From: MochisTransitionCam
+  - From: '**ANY CAMERA**'
     To: MinigamesCamera
     Blend:
       Style: 0
