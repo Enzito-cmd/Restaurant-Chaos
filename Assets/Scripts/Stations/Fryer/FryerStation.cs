@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TempuraStation : MonoBehaviour, IInteractable, IMinigame
+public class FryerStation : MonoBehaviour, IInteractable, IMinigame
 {
     [Header("Camera")]
     [SerializeField] private GameObject transitionCam;
@@ -10,12 +10,12 @@ public class TempuraStation : MonoBehaviour, IInteractable, IMinigame
     [SerializeField]
     private List<ItemType> validIngredients = new List<ItemType>
     {
-        ItemType.Seafood 
+        ItemType.BreadedTempura 
     };
 
     [Header("References")]
     [SerializeField] private PlayerHoldSystem playerHoldSystem;
-    [SerializeField] private TempuraController tempuraController;
+    [SerializeField] private FryerController fryerController;
 
     public void Interact()
     {
@@ -54,13 +54,14 @@ public class TempuraStation : MonoBehaviour, IInteractable, IMinigame
         }
     }
 
+
     public void SetupMinigame()
     {
-        if (tempuraController != null) tempuraController.StartMinigame();
+        if (fryerController != null) fryerController.StartMinigame();
     }
 
     public void EndMinigame()
     {
-        if (tempuraController != null) tempuraController.EndMinigame();
+        if (fryerController != null) fryerController.EndMinigame();
     }
 }

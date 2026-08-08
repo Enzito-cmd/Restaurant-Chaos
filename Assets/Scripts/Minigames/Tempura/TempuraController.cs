@@ -5,7 +5,9 @@ public class TempuraController : MonoBehaviour
     [Header("References")]
     [SerializeField] private TempuraGridLogic logic;
     [SerializeField] private TempuraGridVisuals visuals;
+    [SerializeField] private PlayerHoldSystem playerHoldSystem;
     [SerializeField] private GameObject tempuraTray;
+    [SerializeField] private GameObject breadedTempuraPrefab;
 
     [Header("Rules")]
     public int roundsToWin = 3;
@@ -168,6 +170,10 @@ public class TempuraController : MonoBehaviour
         if (currentRound >= roundsToWin)
         {
             isPlaying = false;
+
+            playerHoldSystem.ClearHeldItem();
+            playerHoldSystem.HoldItem(breadedTempuraPrefab);
+
             if (MinigameManager.Instance != null)
             {
                 MinigameManager.Instance.ExitMinigame();

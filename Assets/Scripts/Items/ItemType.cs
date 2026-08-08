@@ -5,7 +5,7 @@ public enum ItemType
     Strawberry,
     Peach,
     Seafood,
-    RawTempura,
+    BreadedTempura,
     FriedTempura,
     WokRice
 }
