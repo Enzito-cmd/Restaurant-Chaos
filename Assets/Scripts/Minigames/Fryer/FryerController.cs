@@ -73,8 +73,16 @@ public class FryerController : MonoBehaviour
         {
             visuals.ShowSkillcheck(false);
             visuals.ShowCountdown(false);
-            visuals.MoveBasketUp();
         }
+
+        StartCoroutine(EndSequence(won));
+    }
+
+    private IEnumerator EndSequence(bool won)
+    {
+        if (visuals != null) visuals.MoveBasketUp();
+
+        yield return new WaitForSeconds(1.5f);
 
         if (MinigameManager.Instance != null)
         {
@@ -114,8 +122,8 @@ public class FryerController : MonoBehaviour
         if (visuals != null)
         {
             visuals.UpdateSkillcheckUI(needleAngle, currentZoneStartAngle, zoneSizeRatio);
-            visuals.ShowSkillcheck(true);  
-            visuals.ShowCountdown(true);  
+            visuals.ShowSkillcheck(true);
+            visuals.ShowCountdown(true);
         }
 
         for (int i = 3; i > 0; i--)
