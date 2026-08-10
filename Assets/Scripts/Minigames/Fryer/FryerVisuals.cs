@@ -48,8 +48,9 @@ public class FryerVisuals : MonoBehaviour
         foreach (Transform spawnPoint in spawnPoints)
         {
             if (spawnPoint == null) continue;
+            Quaternion randomRotation = Random.rotation;
 
-            GameObject temp = Instantiate(tempuraPrefab, spawnPoint.position, spawnPoint.rotation);
+            GameObject temp = Instantiate(tempuraPrefab, spawnPoint.position, randomRotation);
             if (temp.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
                 spawnedTempuras.Add(rb);
@@ -60,13 +61,24 @@ public class FryerVisuals : MonoBehaviour
     public void MoveBasketDown()
     {
         if (basketDownPoint != null) targetBasketPos = basketDownPoint.position;
+        WakeUpTempuras();
     }
 
     public void MoveBasketUp()
     {
         if (basketUpPoint != null) targetBasketPos = basketUpPoint.position;
+        WakeUpTempuras();
     }
-
+    private void WakeUpTempuras()
+    {
+        foreach (Rigidbody rb in spawnedTempuras)
+        {
+            if (rb != null)
+            {
+                rb.WakeUp(); 
+            }
+        }
+    }
     public void BumpTempuras()
     {
         foreach (Rigidbody rb in spawnedTempuras)
