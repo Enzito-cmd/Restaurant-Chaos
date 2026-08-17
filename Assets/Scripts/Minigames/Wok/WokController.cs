@@ -5,8 +5,9 @@ public class WokController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject minigameContainer;
-    [SerializeField] private WokVisuals visuals;
-
+    
+    private WokVisuals visuals;
+    private WokPrepPhase prepPhase; 
     private bool isMinigameActive = false;
 
     private void Start()
@@ -15,6 +16,9 @@ public class WokController : MonoBehaviour
         {
             minigameContainer.SetActive(false);
         }
+
+        prepPhase = GetComponent<WokPrepPhase>();
+        visuals = GetComponent<WokVisuals>();
     }
 
     public void StartMinigame()
@@ -34,6 +38,11 @@ public class WokController : MonoBehaviour
         if (visuals != null)
         {
             yield return StartCoroutine(visuals.AnimatePanIn());
+        }
+
+        if (prepPhase != null)
+        {
+            prepPhase.StartPrepPhase();
         }
     }
 
