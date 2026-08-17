@@ -182,6 +182,9 @@ public class Interaction : MonoBehaviour
 
                         spawner.RemoveFirstClient();
 
+                        if (TutorialManager.instance != null)
+                            TutorialManager.instance.OnActionTriggered(TutorialManager.TutorialStep.GrabClient);
+
                         return;
                     }
                 }
@@ -198,7 +201,7 @@ public class Interaction : MonoBehaviour
                     return;
                 }
 
-        }///esto no
+        }
             if (hit.collider.CompareTag("Grabbable"))
             {
                 heldObject = hit.collider.gameObject;//guarda el objeto agarrado
@@ -247,6 +250,9 @@ public class Interaction : MonoBehaviour
                     followingClient._table = table;
                     followingClient._tableNumber = table._numberOfTable;
 
+                    if (TutorialManager.instance != null)
+                        TutorialManager.instance.OnActionTriggered(TutorialManager.TutorialStep.GuideClient);
+
                     TableIndicators(false);
                     clientHeld = null;
                     followingClient = null;
@@ -268,7 +274,7 @@ public class Interaction : MonoBehaviour
             TableIndicators(false);
             return;
         }
-        ///esto no
+
         if (heldObject.GetComponent<FoodBehaviour>() != null)
         {
             if (MySphereCast(out hit))
@@ -286,8 +292,7 @@ public class Interaction : MonoBehaviour
                 }
             }
         }
-        ////
-        
+
         if (heldObject != null)
         {
             FireExtinguisherBehaviour extinguisher = heldObject.GetComponent<FireExtinguisherBehaviour>();
@@ -334,7 +339,6 @@ public class Interaction : MonoBehaviour
         {
             return;
         }
-        ///esto no
 
         if (heldObject.GetComponent<FoodBehaviour>() != null)
         {
@@ -342,7 +346,7 @@ public class Interaction : MonoBehaviour
             heldObject = null;
         }
     }
-    /// 
+
     private void DetectObjects()
     {
         Debug.DrawRay(transform.position, transform.forward);
@@ -415,7 +419,6 @@ public class Interaction : MonoBehaviour
 
                     return;
                 }
-                //eso no
                 else if (hit.collider.CompareTag("MinigameTable"))
                 {
                     if (GameManager.instance._miniGameManager.GetMinigameInfo((int)char.GetNumericValue(hit.transform.gameObject.name[0])).Request(heldObject) == false)
@@ -428,7 +431,7 @@ public class Interaction : MonoBehaviour
                 interactionAdvise.position = new Vector3(hit.collider.transform.position.x, interactionAdvise.position.y, hit.collider.transform.position.z);
 
                 return;
-            }///
+            }
         }
         else if (heldObject != null)
         {
@@ -462,7 +465,6 @@ public class Interaction : MonoBehaviour
                     }
                 }
             }
-            //no
             if (hit.collider.CompareTag("MinigameTable"))
             {
                 if (GameManager.instance._miniGameManager.GetMinigameInfo((int)char.GetNumericValue(hit.transform.gameObject.name[0])).Request(heldObject) == false)
@@ -474,7 +476,7 @@ public class Interaction : MonoBehaviour
                 interactionAdvise.position = new Vector3(hit.collider.transform.position.x, interactionAdvise.position.y, hit.collider.transform.position.z);
                 return;
             }
-            ///
+
         }
         if (MySphereCast(out hit))
         {
