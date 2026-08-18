@@ -6237,11 +6237,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384717116}
   m_Mesh: {fileID: 6136263599269639341, guid: 27d4c8b2e0cf3014880f860d0b8cfd47, type: 3}
---- !u!4 &392825981 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-  m_PrefabInstance: {fileID: 2826374633312326365}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &400357668
 GameObject:
   m_ObjectHideFlags: 0
@@ -26679,7 +26674,6 @@ Transform:
   - {fileID: 8605378407507111498}
   - {fileID: 287521217818491047}
   - {fileID: 6359599024818862662}
-  - {fileID: 392825981}
   - {fileID: 543450652940815861}
   m_Father: {fileID: 138967393}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -33934,63 +33928,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6d0f9192032dc44b80f71a0eb959d51, type: 3}
---- !u!1001 &2826374633312326365
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1626174188}
-    m_Modifications:
-    - target: {fileID: 578638451629357682, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_Name
-      value: FlourContainer
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -72.8051
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -8.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -26.260988
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5696461582662554086, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
 --- !u!33 &3010172806565512654
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -34907,8 +34844,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.02387877, y: 0.019933986, z: 0.0038858813}
-  m_Center: {x: -0.008393286, y: -0.017915426, z: 0.004008727}
+  m_Size: {x: 0.023878768, y: 0.033746067, z: 0.011181271}
+  m_Center: {x: -0.008393285, y: -0.017286887, z: 0.007656442}
 --- !u!23 &8102382928582374821
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -35371,8 +35308,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.018824909, y: 0.03210913, z: 0.00951851}
-  m_Center: {x: 0.00093638204, y: 0.0066421083, z: 0.006550137}
+  m_Size: {x: 0.018824909, y: 0.019426426, z: 0.009518512}
+  m_Center: {x: 0.00093638204, y: 0.00030075497, z: 0.0065501384}
 --- !u!1 &9014776605616048525
 GameObject:
   m_ObjectHideFlags: 0
