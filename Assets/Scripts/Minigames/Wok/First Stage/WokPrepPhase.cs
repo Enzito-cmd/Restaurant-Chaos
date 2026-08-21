@@ -1,37 +1,42 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 
 public class WokPrepPhase : MonoBehaviour
 {
-    public enum PrepItem { None, Egg, Flour }
+    public enum PrepItem { None, Egg, Rice }
 
     [Header("References")]
-    public WokController wokController;     
-    public Camera wokCamera;               
+    public WokController wokController;
+    public Camera wokCamera;
 
-    [Header("Clickable Areas (Colliders)")]
+    [Header("UI References")]
+    [SerializeField] private GameObject prepUIPanel;
+    [SerializeField] private TMP_Text eggCounterText;
+    [SerializeField] private Image riceFillImage;
+
+    [Header("Clickable Areas")]
     public Collider eggBowlCollider;
-    public Collider flourBowlCollider;
+    public Collider riceBowlCollider;
     public Collider wokCollider;
 
-    [Header("Drag Visuals (Prefabs)")]
-    public GameObject dragEggPrefab;        
-    public GameObject dragFlourBowlPrefab;  
-    public ParticleSystem flourParticles;
+    [Header("Drag Visuals")]
+    public GameObject dragEggPrefab;
+    public GameObject dragRiceBowlPrefab;
 
     public float dragHeightOffset = 1.5f;
 
     [Header("Progression")]
     public int requiredEggs = 2;
-    public float requiredFlour = 2f;
+    public float requiredRice = 2f;
 
-    private int currentEggs = 0;
-    private float currentFlour = 0f;
+    [SerializeField] private int currentEggs = 0;
+    [SerializeField] private float currentRice = 0f;
 
     [Header("Feedback Settings")]
-    public float pourSpeed;            
-    public float tiltAngle = 45f;         
-    
+    public float pourSpeed;
+    public float tiltAngle;
 
     private PrepItem currentItem = PrepItem.None;
     private GameObject heldObjInstance;
@@ -42,12 +47,15 @@ public class WokPrepPhase : MonoBehaviour
     public void StartPrepPhase()
     {
         currentEggs = 0;
-        currentFlour = 0f;
-        currentItem = PrepItem.None;
+        currentRice = 0f;
+        ClearHeldItem();
         isPrepActive = true;
         dragPlane = new Plane(Vector3.up, wokCollider.transform.position);
 
-        Debug.Log("Prep phase");
+        if (prepUIPanel != null) prepUIPanel.SetActive(true);
+        UpdateUI();
+
+        Debug.Log("Prep phase started");
     }
 
     private void Update()
@@ -60,6 +68,12 @@ public class WokPrepPhase : MonoBehaviour
 
     private void HandleMouseInput()
     {
+        if (Input.GetMouseButtonDown(1) && currentItem != PrepItem.None)
+        {
+            ClearHeldItem();
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
@@ -72,9 +86,9 @@ public class WokPrepPhase : MonoBehaviour
                     {
                         GrabItem(PrepItem.Egg, dragEggPrefab);
                     }
-                    else if (hit.collider == flourBowlCollider && currentFlour < requiredFlour)
+                    else if (hit.collider == riceBowlCollider && currentRice < requiredRice)
                     {
-                        GrabItem(PrepItem.Flour, dragFlourBowlPrefab);
+                        GrabItem(PrepItem.Rice, dragRiceBowlPrefab);
                     }
                 }
                 else if (currentItem == PrepItem.Egg)
@@ -83,16 +97,20 @@ public class WokPrepPhase : MonoBehaviour
                     {
                         DropEgg();
                     }
+                    else
+                    {
+                        ClearHeldItem();
+                    }
                 }
             }
         }
 
-        if (Input.GetMouseButton(0) && currentItem == PrepItem.Flour)
+        if (Input.GetMouseButton(0) && currentItem == PrepItem.Rice)
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider == wokCollider)
             {
-                PourFlour();
+                PourRice();
             }
             else
             {
@@ -100,13 +118,9 @@ public class WokPrepPhase : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && currentItem == PrepItem.Flour)
+        if (Input.GetMouseButtonUp(0) && currentItem == PrepItem.Rice)
         {
             StopPouring();
-        }
-
-        if (Input.GetMouseButtonDown(1) && currentItem != PrepItem.None)
-        {
             ClearHeldItem();
         }
     }
@@ -119,7 +133,6 @@ public class WokPrepPhase : MonoBehaviour
             if (dragPlane.Raycast(ray, out float enter))
             {
                 Vector3 hitPoint = ray.GetPoint(enter);
-                // Ahora multiplicamos hacia arriba usando tu variable personalizable
                 heldObjInstance.transform.position = hitPoint + Vector3.up * dragHeightOffset;
             }
         }
@@ -127,13 +140,19 @@ public class WokPrepPhase : MonoBehaviour
 
     private void GrabItem(PrepItem item, GameObject prefab)
     {
+        ClearHeldItem();
         currentItem = item;
         heldObjInstance = Instantiate(prefab);
 
-        if (item == PrepItem.Flour)
+        if (item == PrepItem.Rice)
         {
             heldParticles = heldObjInstance.GetComponentInChildren<ParticleSystem>();
-            if (heldParticles != null) heldParticles.Stop();
+            if (heldParticles != null)
+            {
+                heldParticles.Play();
+                var em = heldParticles.emission;
+                em.enabled = false;
+            }
         }
     }
 
@@ -147,28 +166,35 @@ public class WokPrepPhase : MonoBehaviour
     private void DropEgg()
     {
         currentEggs++;
+        UpdateUI();
         Debug.Log($"Eggs: {currentEggs}/{requiredEggs}");
-
 
         ClearHeldItem();
         CheckCompletion();
     }
 
-    private void PourFlour()
+    private void PourRice()
     {
-        if (currentFlour >= requiredFlour) return;
+        if (currentRice >= requiredRice || heldObjInstance == null) return;
 
-        heldObjInstance.transform.localRotation = Quaternion.Lerp(heldObjInstance.transform.localRotation, Quaternion.Euler(0, 0, tiltAngle), Time.deltaTime * 10f);
+        Vector3 directionToCenter = (wokCollider.transform.position - heldObjInstance.transform.position).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(directionToCenter) * Quaternion.Euler(tiltAngle, 0, 0);
 
-        if (heldParticles != null && !heldParticles.isPlaying) heldParticles.Play();
+        heldObjInstance.transform.rotation = Quaternion.Lerp(heldObjInstance.transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-        currentFlour += Time.deltaTime * pourSpeed;
-        Debug.Log($"{currentFlour.ToString("F2")} / {requiredFlour}");
-
-        if (currentFlour >= requiredFlour)
+        if (heldParticles != null)
         {
-            currentFlour = requiredFlour;
-            Debug.Log("Flour full");
+            var em = heldParticles.emission;
+            em.enabled = true;
+        }
+
+        currentRice += Time.deltaTime * pourSpeed;
+        UpdateUI();
+
+        if (currentRice >= requiredRice)
+        {
+            currentRice = requiredRice;
+            UpdateUI();
             StopPouring();
             ClearHeldItem();
             CheckCompletion();
@@ -179,16 +205,37 @@ public class WokPrepPhase : MonoBehaviour
     {
         if (heldObjInstance != null)
         {
-            heldObjInstance.transform.localRotation = Quaternion.Lerp(heldObjInstance.transform.localRotation, Quaternion.identity, Time.deltaTime * 10f);
+            heldObjInstance.transform.rotation = Quaternion.Lerp(heldObjInstance.transform.rotation, Quaternion.identity, Time.deltaTime * 10f);
         }
-        if (heldParticles != null && heldParticles.isPlaying) heldParticles.Stop();
+        if (heldParticles != null)
+        {
+            var em = heldParticles.emission;
+            em.enabled = false;
+        }
+    }
+
+    private void UpdateUI()
+    {
+        if (eggCounterText != null)
+        {
+            eggCounterText.text = $"{currentEggs}/{requiredEggs}";
+        }
+
+        if (riceFillImage != null && requiredRice > 0)
+        {
+            riceFillImage.fillAmount = currentRice / requiredRice;
+        }
     }
 
     private void CheckCompletion()
     {
-        if (currentEggs >= requiredEggs && currentFlour >= requiredFlour)
+        if (currentEggs >= requiredEggs && currentRice >= requiredRice)
         {
             isPrepActive = false;
+            ClearHeldItem();
+
+            if (prepUIPanel != null) prepUIPanel.SetActive(false);
+
             Debug.Log("Completed");
             // wokController.StartCookingPhase(); 
         }
