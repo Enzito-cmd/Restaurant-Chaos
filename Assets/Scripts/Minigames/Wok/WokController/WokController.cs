@@ -67,6 +67,11 @@ public class WokController : MonoBehaviour
         }
     }
 
+    public void CookPhase()
+    {
+        GetComponent<WokTransition>().StartTransition();
+    }
+
     public void FinishCooking(bool won)
     {
         if (won)
