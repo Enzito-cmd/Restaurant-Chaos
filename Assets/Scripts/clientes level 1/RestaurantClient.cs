@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class RestaurantClient : MonoBehaviour, IInteractable
 {
@@ -32,6 +33,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     [Header("NavMesh")]
     [SerializeField] private NavMeshAgent agent;
+
+    [Header("Order Visual")]
+    [SerializeField] private Transform orderVisualPoint;
+    [SerializeField] private GameObject thinkingPrefab;
+    [SerializeField] private GameObject wokOrderPrefab;
+
+    private GameObject currentOrderVisual;
 
     private void Awake()
     {
@@ -234,10 +242,44 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         }
 
         currentState = ClientState.Sitting;
+        StartCoroutine(OrderSequence());
 
         Debug.Log("Cliente sentado.");
     }
+    private IEnumerator OrderSequence()
+    {
+        // Muestra el pensamiento
+        ShowOrderVisual(thinkingPrefab);
 
+        // Espera 2 segundos
+        yield return new WaitForSeconds(5f);
+
+        // Muestra el Wok gris
+        ShowOrderVisual(wokOrderPrefab);
+    }
+    private void ShowOrderVisual(GameObject prefab)
+    {
+        // Borra el visual anterior
+        if (currentOrderVisual != null)
+        {
+            Destroy(currentOrderVisual);
+        }
+
+        if (prefab == null || orderVisualPoint == null)
+            return;
+
+        // Crea el nuevo visual arriba de la cabeza
+        currentOrderVisual = Instantiate(
+            prefab,
+            orderVisualPoint.position,
+            orderVisualPoint.rotation,
+            orderVisualPoint
+        );
+
+        // Al ser hijo del punto, queda arriba de la cabeza
+        currentOrderVisual.transform.localPosition = Vector3.zero;
+        currentOrderVisual.transform.localRotation = Quaternion.identity;
+    }
     // =====================================================
     // FOOD DELIVERY
     // =====================================================
@@ -285,7 +327,11 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         Debug.Log("Cliente recibió Wok Rice.");
 
         holdSystem.ClearHeldItem();
-
+        if (currentOrderVisual != null)
+        {
+            Destroy(currentOrderVisual);
+            currentOrderVisual = null;
+        }
         if (currentChair != null)
         {
             currentChair.SetOccupied(false);
