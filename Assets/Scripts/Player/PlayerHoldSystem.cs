@@ -24,15 +24,28 @@ public class PlayerHoldSystem : MonoBehaviour
             return false;
         }
 
-        if (itemPrefab != null && holdPoint != null)
+        if (itemPrefab == null || holdPoint == null)
         {
-            currentHeldObject = Instantiate(itemPrefab, holdPoint);
-            currentHeldObject.transform.localPosition = Vector3.zero;
-            currentHeldObject.transform.localRotation = Quaternion.identity;
-            return true;
+            Debug.LogError("Falta Item Prefab o HoldPoint.");
+            return false;
         }
 
-        return false;
+        currentHeldObject = Instantiate(
+            itemPrefab,
+            holdPoint
+        );
+
+        currentHeldObject.SetActive(true);
+
+        foreach (Transform child in currentHeldObject.GetComponentsInChildren<Transform>(true))
+        {
+            child.gameObject.SetActive(true);
+        }
+
+        currentHeldObject.transform.localPosition = Vector3.zero;
+        currentHeldObject.transform.localRotation = Quaternion.identity;
+
+        return true;
     }
 
     /// <summary>

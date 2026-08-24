@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class WokCookPhase : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private WokController wokController;
+
     [Header("Wok Control")]
     public Transform wokTransform;
     public Transform wokCenterHitbox;
@@ -36,29 +39,51 @@ public class WokCookPhase : MonoBehaviour
     private Plane dragPlane;
     private bool isCookingActive = false;
 
-    private Color[] arrowColors = new Color[] {
+    private Color[] arrowColors = new Color[]
+    {
         Color.blue,
         Color.red,
         Color.green,
-        new Color(0.5f, 0f, 0.5f), 
-        new Color(1f, 0.4f, 0.7f)  
+        new Color(0.5f, 0f, 0.5f),
+        new Color(1f, 0.4f, 0.7f)
     };
+
+    private void Awake()
+    {
+        if (wokController == null)
+        {
+            wokController = GetComponent<WokController>();
+        }
+    }
 
     public void StartCooking()
     {
-        if (arrowsCanvas != null) arrowsCanvas.SetActive(true);
+        if (arrowsCanvas != null)
+        {
+            arrowsCanvas.SetActive(true);
+        }
+
         currentErrors = 0;
         currentHits = 0;
         activeArrowsCount = 0;
         spawnTimer = spawnInterval;
+
         startPos = wokTransform.position;
-        dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
+
+        dragPlane = new Plane(
+            Vector3.up,
+            dragPlaneCollider.transform.position
+        );
+
         isCookingActive = true;
+
+        Debug.Log("Cooking started");
     }
 
     private void Update()
     {
-        if (!isCookingActive) return;
+        if (!isCookingActive)
+            return;
 
         HandleWokDragging();
         HandleArrowSpawning();
@@ -69,14 +94,17 @@ public class WokCookPhase : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.collider == handleCollider)
                 {
                     isDragging = true;
+
                     if (dragPlane.Raycast(ray, out float enter))
                     {
-                        dragOffset = wokTransform.position - ray.GetPoint(enter);
+                        dragOffset =
+                            wokTransform.position - ray.GetPoint(enter);
                     }
                 }
             }
@@ -90,24 +118,41 @@ public class WokCookPhase : MonoBehaviour
         if (isDragging && Input.GetMouseButton(0))
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
             if (dragPlane.Raycast(ray, out float enter))
             {
-                Vector3 desiredPos = ray.GetPoint(enter) + dragOffset;
+                Vector3 desiredPos =
+                    ray.GetPoint(enter) + dragOffset;
 
-                Vector3 offsetFromStart = desiredPos - startPos;
+                Vector3 offsetFromStart =
+                    desiredPos - startPos;
+
                 offsetFromStart.y = 0;
 
                 if (offsetFromStart.magnitude > maxDragDistance)
                 {
-                    desiredPos = startPos + offsetFromStart.normalized * maxDragDistance;
+                    desiredPos =
+                        startPos +
+                        offsetFromStart.normalized *
+                        maxDragDistance;
                 }
 
-                wokTransform.position = Vector3.Lerp(wokTransform.position, desiredPos, Time.deltaTime * 15f);
+                wokTransform.position =
+                    Vector3.Lerp(
+                        wokTransform.position,
+                        desiredPos,
+                        Time.deltaTime * 15f
+                    );
             }
         }
         else
         {
-            wokTransform.position = Vector3.Lerp(wokTransform.position, startPos, Time.deltaTime * returnSpeed);
+            wokTransform.position =
+                Vector3.Lerp(
+                    wokTransform.position,
+                    startPos,
+                    Time.deltaTime * returnSpeed
+                );
         }
     }
 
@@ -115,7 +160,8 @@ public class WokCookPhase : MonoBehaviour
     {
         spawnTimer -= Time.deltaTime;
 
-        if (spawnTimer <= 0f && activeArrowsCount < maxArrowsOnScreen)
+        if (spawnTimer <= 0f &&
+            activeArrowsCount < maxArrowsOnScreen)
         {
             SpawnRandomArrow();
             spawnTimer = spawnInterval;
@@ -124,54 +170,169 @@ public class WokCookPhase : MonoBehaviour
 
     private void SpawnRandomArrow()
     {
-        int randomIndex = Random.Range(0, fixedArrowPoints.Length);
-        Transform targetPoint = fixedArrowPoints[randomIndex];
+        if (fixedArrowPoints == null ||
+            fixedArrowPoints.Length == 0)
+        {
+            return;
+        }
 
-        Vector3 directionFromCenter = (targetPoint.position - targetPoint.parent.position).normalized;
-        Vector3 spawnPos = targetPoint.position + directionFromCenter * 5f;
+        int randomIndex =
+            Random.Range(0, fixedArrowPoints.Length);
 
-        GameObject newArrow = Instantiate(movingArrowPrefab, spawnPos, targetPoint.rotation, arrowsCanvas.transform);
+        Transform targetPoint =
+            fixedArrowPoints[randomIndex];
+
+        Vector3 directionFromCenter =
+            (
+                targetPoint.position -
+                targetPoint.parent.position
+            ).normalized;
+
+        Vector3 spawnPos =
+            targetPoint.position +
+            directionFromCenter * 5f;
+
+        GameObject newArrow =
+            Instantiate(
+                movingArrowPrefab,
+                spawnPos,
+                targetPoint.rotation,
+                arrowsCanvas.transform
+            );
 
         newArrow.transform.localScale = Vector3.one;
 
-        UnityEngine.UI.Image arrowImage = newArrow.GetComponent<UnityEngine.UI.Image>();
+        UnityEngine.UI.Image arrowImage =
+            newArrow.GetComponent<UnityEngine.UI.Image>();
+
         if (arrowImage != null)
         {
-            arrowImage.color = arrowColors[Random.Range(0, arrowColors.Length)];
+            arrowImage.color =
+                arrowColors[
+                    Random.Range(
+                        0,
+                        arrowColors.Length
+                    )
+                ];
         }
 
-        CookingArrow arrowScript = newArrow.GetComponent<CookingArrow>();
-        float randomSpeed = Random.Range(2f, 4f);
-        arrowScript.Initialize(targetPoint.position, randomSpeed, wokCenterHitbox);
+        CookingArrow arrowScript =
+            newArrow.GetComponent<CookingArrow>();
 
-        arrowScript.onHit = () => {
-            activeArrowsCount--;
-            currentHits++;
-            if (currentHits >= requiredHits) WinMinigame();
-        };
+        if (arrowScript == null)
+        {
+            Destroy(newArrow);
+            return;
+        }
 
-        arrowScript.onMiss = () => {
-            activeArrowsCount--;
-            currentErrors++;
-            if (currentErrors >= maxErrors) LoseMinigame();
-        };
+        float randomSpeed =
+            Random.Range(2f, 4f);
+
+        arrowScript.Initialize(
+            targetPoint.position,
+            randomSpeed,
+            wokCenterHitbox
+        );
+
+        arrowScript.onHit = OnArrowHit;
+        arrowScript.onMiss = OnArrowMiss;
 
         activeArrowsCount++;
     }
 
+    private void OnArrowHit()
+    {
+        activeArrowsCount--;
+
+        if (!isCookingActive)
+            return;
+
+        currentHits++;
+
+        Debug.Log(
+            "Hit: " +
+            currentHits +
+            "/" +
+            requiredHits
+        );
+
+        if (currentHits >= requiredHits)
+        {
+            WinMinigame();
+        }
+    }
+
+    private void OnArrowMiss()
+    {
+        activeArrowsCount--;
+
+        if (!isCookingActive)
+            return;
+
+        currentErrors++;
+
+        Debug.Log(
+            "Errors: " +
+            currentErrors +
+            "/" +
+            maxErrors
+        );
+
+        if (currentErrors >= maxErrors)
+        {
+            LoseMinigame();
+        }
+    }
+
     private void WinMinigame()
     {
+        if (!isCookingActive)
+            return;
+
         isCookingActive = false;
-        if (arrowsCanvas != null) arrowsCanvas.SetActive(false);
-        Debug.Log("Won");
-        // wokController.FinishCooking(true);
+
+        if (arrowsCanvas != null)
+        {
+            arrowsCanvas.SetActive(false);
+        }
+
+        Debug.Log("Wok minigame WON");
+
+        if (wokController != null)
+        {
+            wokController.FinishCooking(true);
+        }
+        else
+        {
+            Debug.LogError(
+                "WokController no encontrado en WokCookPhase."
+            );
+        }
     }
 
     private void LoseMinigame()
     {
+        if (!isCookingActive)
+            return;
+
         isCookingActive = false;
-        if (arrowsCanvas != null) arrowsCanvas.SetActive(false);
-        Debug.Log("Lose");
-        // wokController.FinishCooking(false);
+
+        if (arrowsCanvas != null)
+        {
+            arrowsCanvas.SetActive(false);
+        }
+
+        Debug.Log("Wok minigame LOST");
+
+        if (wokController != null)
+        {
+            wokController.FinishCooking(false);
+        }
+        else
+        {
+            Debug.LogError(
+                "WokController no encontrado en WokCookPhase."
+            );
+        }
     }
 }
