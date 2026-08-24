@@ -6856,6 +6856,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WokController
   minigameContainer: {fileID: 1626174187}
+  wokRicePrefab: {fileID: 3539599562070976871, guid: 8f11bc69fc4ac15469322a1596cce527, type: 3}
+  playerHoldSystem: {fileID: 1728617282}
 --- !u!114 &407859963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6930,12 +6932,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 825c423061c55ed4393149bdc8784302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WokCookPhase
+  wokController: {fileID: 407859962}
   wokTransform: {fileID: 8605378407507111498}
   wokCenterHitbox: {fileID: 1060082743}
   wokCamera: {fileID: 330585545}
   dragPlaneCollider: {fileID: 2025439638}
   handleCollider: {fileID: 1773386734}
-  maxDragDistance: 5
+  maxDragDistance: 2
   returnSpeed: 8
   arrowsCanvas: {fileID: 2004951814}
   movingArrowPrefab: {fileID: 3107087615272145620, guid: 02c6907e755b5bf4abde40e7c7280dc6, type: 3}

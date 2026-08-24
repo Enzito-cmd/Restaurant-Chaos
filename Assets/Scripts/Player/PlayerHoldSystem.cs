@@ -26,7 +26,6 @@ public class PlayerHoldSystem : MonoBehaviour
 
         if (itemPrefab == null || holdPoint == null)
         {
-            Debug.LogError("Falta Item Prefab o HoldPoint.");
             return false;
         }
 
