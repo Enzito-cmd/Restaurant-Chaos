@@ -233,11 +233,15 @@ public class WokPrepPhase : MonoBehaviour
         {
             isPrepActive = false;
             ClearHeldItem();
-
-            if (prepUIPanel != null) prepUIPanel.SetActive(false);
-
-            Debug.Log("Completed");
-            // wokController.StartCookingPhase(); 
+            StartCoroutine(TransitionToCooking());
         }
+    }
+
+    private IEnumerator TransitionToCooking()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (prepUIPanel != null) prepUIPanel.SetActive(false);
+        if (wokController != null) wokController.CookPhase();
     }
 }
