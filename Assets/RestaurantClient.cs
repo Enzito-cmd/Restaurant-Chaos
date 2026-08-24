@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RestaurantClient : MonoBehaviour, IInteractable
 {
@@ -29,8 +30,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     public ClientState CurrentState => currentState;
 
+    [Header("NavMesh")]
+    [SerializeField] private NavMeshAgent agent;
+
     private void Awake()
     {
+        agent = GetComponent<NavMeshAgent>();
+
         FindPlayer();
         FindExitPoint();
     }
@@ -51,7 +57,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             FindExitPoint();
         }
     }
-
+ 
     private void Update()
     {
         switch (currentState)
@@ -151,7 +157,19 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         if (targetQueuePosition == null)
             return;
 
-        MoveTowards(targetQueuePosition.position);
+        float distance = Vector3.Distance(
+            transform.position,
+            targetQueuePosition.position
+        );
+
+        if (distance > stopDistance)
+        {
+            MoveTowards(targetQueuePosition.position);
+        }
+        else if (agent != null && agent.hasPath)
+        {
+            agent.ResetPath();
+        }
     }
 
     // =====================================================
@@ -168,16 +186,18 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 return;
         }
 
-        Vector3 targetPosition = player.position;
-
         float distance = Vector3.Distance(
             transform.position,
-            targetPosition
+            player.position
         );
 
         if (distance > stopDistance)
         {
-            MoveTowards(targetPosition);
+            MoveTowards(player.position);
+        }
+        else if (agent != null)
+        {
+            agent.ResetPath();
         }
     }
 
@@ -190,26 +210,27 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         if (currentState != ClientState.FollowingPlayer)
             return;
 
-        if (chair == null)
-            return;
-
-        if (chair.IsOccupied)
+        if (chair == null || chair.IsOccupied)
             return;
 
         currentChair = chair;
         currentChair.SetOccupied(true);
 
+        // Desactivamos el agente porque el SitPoint
+        // está fuera del NavMesh
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
+
+        // Lo colocamos exactamente en el SitPoint
         Transform sitPoint = chair.SitPoint;
 
         if (sitPoint != null)
         {
             transform.position = sitPoint.position;
             transform.rotation = sitPoint.rotation;
-        }
-        else
-        {
-            transform.position = chair.transform.position;
-            transform.rotation = chair.transform.rotation;
         }
 
         currentState = ClientState.Sitting;
@@ -271,6 +292,27 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             currentChair = null;
         }
 
+        if (agent != null)
+        {
+            NavMeshHit hit;
+
+            if (NavMesh.SamplePosition(
+                transform.position,
+                out hit,
+                3f,
+                NavMesh.AllAreas))
+            {
+                transform.position = hit.position;
+
+                agent.enabled = true;
+                agent.isStopped = false;
+            }
+            else
+            {
+                Debug.LogWarning("No se encontró NavMesh cerca de la silla.");
+            }
+        }
+
         currentState = ClientState.Leaving;
 
         Debug.Log("Cliente se va.");
@@ -309,25 +351,15 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     private void MoveTowards(Vector3 target)
     {
-        Vector3 direction = target - transform.position;
-        direction.y = 0f;
-
-        if (direction.magnitude <= 0.01f)
+        if (agent == null)
             return;
 
-        transform.position +=
-            direction.normalized *
-            moveSpeed *
-            Time.deltaTime;
+        if (!agent.isOnNavMesh)
+            return;
 
-        Quaternion targetRotation =
-            Quaternion.LookRotation(direction);
+        agent.speed = moveSpeed;
+        agent.stoppingDistance = stopDistance;
 
-        transform.rotation =
-            Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed * Time.deltaTime
-            );
+        agent.SetDestination(target);
     }
 }
