@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3938643403368851303}
   - component: {fileID: 6292817812543829887}
   - component: {fileID: -5646332962686698992}
+  - component: {fileID: 7245918196004066026}
   m_Layer: 6
   m_Name: Client
   m_TagString: Untagged
@@ -125,8 +126,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eaef0d1a056c946a258fd582bbb9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  player: {fileID: 0}
   moveSpeed: 3
   rotationSpeed: 8
   stopDistance: 3
-  exitPoint: {fileID: 0}
+  foodDeliveryDistance: 2
+  agent: {fileID: 7245918196004066026}
+--- !u!195 &7245918196004066026
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341922451776090912}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 480
+  m_StoppingDistance: 3
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
