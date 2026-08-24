@@ -67,14 +67,8 @@ public class WokCookPhase : MonoBehaviour
         currentHits = 0;
         activeArrowsCount = 0;
         spawnTimer = spawnInterval;
-
         startPos = wokTransform.position;
-
-        dragPlane = new Plane(
-            Vector3.up,
-            dragPlaneCollider.transform.position
-        );
-
+        dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
         isCookingActive = true;
 
         Debug.Log("Cooking started");
@@ -82,8 +76,7 @@ public class WokCookPhase : MonoBehaviour
 
     private void Update()
     {
-        if (!isCookingActive)
-            return;
+        if (!isCookingActive) return;
 
         HandleWokDragging();
         HandleArrowSpawning();
@@ -103,8 +96,7 @@ public class WokCookPhase : MonoBehaviour
 
                     if (dragPlane.Raycast(ray, out float enter))
                     {
-                        dragOffset =
-                            wokTransform.position - ray.GetPoint(enter);
+                        dragOffset = wokTransform.position - ray.GetPoint(enter);
                     }
                 }
             }
@@ -121,38 +113,21 @@ public class WokCookPhase : MonoBehaviour
 
             if (dragPlane.Raycast(ray, out float enter))
             {
-                Vector3 desiredPos =
-                    ray.GetPoint(enter) + dragOffset;
-
-                Vector3 offsetFromStart =
-                    desiredPos - startPos;
-
+                Vector3 desiredPos = ray.GetPoint(enter) + dragOffset;
+                Vector3 offsetFromStart = desiredPos - startPos;
                 offsetFromStart.y = 0;
 
                 if (offsetFromStart.magnitude > maxDragDistance)
                 {
-                    desiredPos =
-                        startPos +
-                        offsetFromStart.normalized *
-                        maxDragDistance;
+                    desiredPos = startPos + offsetFromStart.normalized * maxDragDistance;
                 }
 
-                wokTransform.position =
-                    Vector3.Lerp(
-                        wokTransform.position,
-                        desiredPos,
-                        Time.deltaTime * 15f
-                    );
+                wokTransform.position = Vector3.Lerp(wokTransform.position, desiredPos, Time.deltaTime * 15f);
             }
         }
         else
         {
-            wokTransform.position =
-                Vector3.Lerp(
-                    wokTransform.position,
-                    startPos,
-                    Time.deltaTime * returnSpeed
-                );
+            wokTransform.position = Vector3.Lerp(wokTransform.position, startPos, Time.deltaTime * returnSpeed);
         }
     }
 
@@ -160,8 +135,7 @@ public class WokCookPhase : MonoBehaviour
     {
         spawnTimer -= Time.deltaTime;
 
-        if (spawnTimer <= 0f &&
-            activeArrowsCount < maxArrowsOnScreen)
+        if (spawnTimer <= 0f && activeArrowsCount < maxArrowsOnScreen)
         {
             SpawnRandomArrow();
             spawnTimer = spawnInterval;
@@ -170,54 +144,25 @@ public class WokCookPhase : MonoBehaviour
 
     private void SpawnRandomArrow()
     {
-        if (fixedArrowPoints == null ||
-            fixedArrowPoints.Length == 0)
-        {
-            return;
-        }
+        if (fixedArrowPoints == null || fixedArrowPoints.Length == 0) return;
 
-        int randomIndex =
-            Random.Range(0, fixedArrowPoints.Length);
+        int randomIndex = Random.Range(0, fixedArrowPoints.Length);
+        Transform targetPoint = fixedArrowPoints[randomIndex];
 
-        Transform targetPoint =
-            fixedArrowPoints[randomIndex];
+        Vector3 directionFromCenter = (targetPoint.position - targetPoint.parent.position).normalized;
+        Vector3 spawnPos = targetPoint.position + directionFromCenter * 5f;
 
-        Vector3 directionFromCenter =
-            (
-                targetPoint.position -
-                targetPoint.parent.position
-            ).normalized;
-
-        Vector3 spawnPos =
-            targetPoint.position +
-            directionFromCenter * 5f;
-
-        GameObject newArrow =
-            Instantiate(
-                movingArrowPrefab,
-                spawnPos,
-                targetPoint.rotation,
-                arrowsCanvas.transform
-            );
-
+        GameObject newArrow = Instantiate(movingArrowPrefab, spawnPos, targetPoint.rotation, arrowsCanvas.transform);
         newArrow.transform.localScale = Vector3.one;
 
-        UnityEngine.UI.Image arrowImage =
-            newArrow.GetComponent<UnityEngine.UI.Image>();
+        UnityEngine.UI.Image arrowImage = newArrow.GetComponent<UnityEngine.UI.Image>();
 
         if (arrowImage != null)
         {
-            arrowImage.color =
-                arrowColors[
-                    Random.Range(
-                        0,
-                        arrowColors.Length
-                    )
-                ];
+            arrowImage.color = arrowColors[Random.Range(0, arrowColors.Length)];
         }
 
-        CookingArrow arrowScript =
-            newArrow.GetComponent<CookingArrow>();
+        CookingArrow arrowScript = newArrow.GetComponent<CookingArrow>();
 
         if (arrowScript == null)
         {
@@ -225,14 +170,8 @@ public class WokCookPhase : MonoBehaviour
             return;
         }
 
-        float randomSpeed =
-            Random.Range(2f, 4f);
-
-        arrowScript.Initialize(
-            targetPoint.position,
-            randomSpeed,
-            wokCenterHitbox
-        );
+        float randomSpeed = Random.Range(2f, 4f);
+        arrowScript.Initialize(targetPoint.position, randomSpeed, wokCenterHitbox);
 
         arrowScript.onHit = OnArrowHit;
         arrowScript.onMiss = OnArrowMiss;
@@ -244,17 +183,10 @@ public class WokCookPhase : MonoBehaviour
     {
         activeArrowsCount--;
 
-        if (!isCookingActive)
-            return;
+        if (!isCookingActive) return;
 
         currentHits++;
-
-        Debug.Log(
-            "Hit: " +
-            currentHits +
-            "/" +
-            requiredHits
-        );
+        Debug.Log("Hit: " + currentHits + "/" + requiredHits);
 
         if (currentHits >= requiredHits)
         {
@@ -266,17 +198,10 @@ public class WokCookPhase : MonoBehaviour
     {
         activeArrowsCount--;
 
-        if (!isCookingActive)
-            return;
+        if (!isCookingActive) return;
 
         currentErrors++;
-
-        Debug.Log(
-            "Errors: " +
-            currentErrors +
-            "/" +
-            maxErrors
-        );
+        Debug.Log("Errors: " + currentErrors + "/" + maxErrors);
 
         if (currentErrors >= maxErrors)
         {
@@ -286,8 +211,7 @@ public class WokCookPhase : MonoBehaviour
 
     private void WinMinigame()
     {
-        if (!isCookingActive)
-            return;
+        if (!isCookingActive) return;
 
         isCookingActive = false;
 
@@ -296,24 +220,17 @@ public class WokCookPhase : MonoBehaviour
             arrowsCanvas.SetActive(false);
         }
 
-        Debug.Log("Wok minigame WON");
+        Debug.Log("Wok won");
 
         if (wokController != null)
         {
             wokController.FinishCooking(true);
         }
-        else
-        {
-            Debug.LogError(
-                "WokController no encontrado en WokCookPhase."
-            );
-        }
     }
 
     private void LoseMinigame()
     {
-        if (!isCookingActive)
-            return;
+        if (!isCookingActive) return;
 
         isCookingActive = false;
 
@@ -322,17 +239,11 @@ public class WokCookPhase : MonoBehaviour
             arrowsCanvas.SetActive(false);
         }
 
-        Debug.Log("Wok minigame LOST");
+        Debug.Log("Wok lost");
 
         if (wokController != null)
         {
             wokController.FinishCooking(false);
-        }
-        else
-        {
-            Debug.LogError(
-                "WokController no encontrado en WokCookPhase."
-            );
         }
     }
 }

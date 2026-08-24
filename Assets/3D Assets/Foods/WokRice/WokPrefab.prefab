@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7982986589112608096}
   - component: {fileID: 5292777312983879440}
   m_Layer: 6
-  m_Name: WokPref
+  m_Name: WokPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
