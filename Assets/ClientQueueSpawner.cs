@@ -7,6 +7,9 @@ public class ClientQueueSpawner : MonoBehaviour
     [Header("Client")]
     [SerializeField] private GameObject clientPrefab;
 
+    [Header("Spawn Point")]
+    [SerializeField] private Transform spawnPoint;
+
     [Header("Queue Positions")]
     [SerializeField] private Transform[] queuePositions;
 
@@ -29,7 +32,6 @@ public class ClientQueueSpawner : MonoBehaviour
         {
             SpawnClient(i);
 
-            // No esperamos después del último cliente
             if (i < amountToSpawn - 1)
             {
                 yield return new WaitForSeconds(spawnInterval);
@@ -39,10 +41,11 @@ public class ClientQueueSpawner : MonoBehaviour
 
     private void SpawnClient(int queueIndex)
     {
+        // Aparece atrás de la fila
         GameObject clientObject = Instantiate(
             clientPrefab,
-            queuePositions[queueIndex].position,
-            queuePositions[queueIndex].rotation
+            spawnPoint.position,
+            spawnPoint.rotation
         );
 
         RestaurantClient client = clientObject.GetComponent<RestaurantClient>();
@@ -50,10 +53,13 @@ public class ClientQueueSpawner : MonoBehaviour
         if (client != null)
         {
             clients.Add(client);
-            client.Setup(this, queueIndex);
-        }
 
-        UpdateQueue();
+            // El cliente sabe a qué posición debe caminar
+            client.Setup(this, queueIndex);
+
+            // Camina desde SpawnPoint hasta su lugar en la fila
+            client.MoveToQueuePosition(queuePositions[queueIndex]);
+        }
     }
 
     public bool CanPickClient(RestaurantClient client)
