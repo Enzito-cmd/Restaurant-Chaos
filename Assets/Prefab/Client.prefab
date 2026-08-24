@@ -166,7 +166,7 @@ MonoBehaviour:
   agent: {fileID: 7245918196004066026}
   orderVisualPoint: {fileID: 6969851351991624562}
   thinkingPrefab: {fileID: 919132149155446097, guid: f83793c00fb3ab044a23b89251873298, type: 3}
-  wokOrderPrefab: {fileID: 919132149155446097, guid: 73396ff9b6604cd438223f44e952cbbe, type: 3}
+  wokOrderPrefab: {fileID: 919132149155446097, guid: 70de4f1131721134d9649f3b4ff5454b, type: 3}
 --- !u!195 &7245918196004066026
 NavMeshAgent:
   m_ObjectHideFlags: 0
