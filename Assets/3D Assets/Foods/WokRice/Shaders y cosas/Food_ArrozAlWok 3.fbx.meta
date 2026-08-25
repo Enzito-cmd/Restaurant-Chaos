@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 73396ff9b6604cd438223f44e952cbbe
+guid: 70de4f1131721134d9649f3b4ff5454b
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,13 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: 
+    second: {fileID: 2100000, guid: 62bdecabc68f66d41825cc6f7a70a1bd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: mt_Comida
-    second: {fileID: -8857592698819870776, guid: e286488e8aafe00438e28a4510f9637f, type: 3}
+    second: {fileID: 2100000, guid: a8eba9bb72e357f4b82028c02ecb8472, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: "mt_Taz\xF3n"
-    second: {fileID: 2100000, guid: 62bdecabc68f66d41825cc6f7a70a1bd, type: 2}
+    second: {fileID: 2100000, guid: daa60cf9b1478c04c9d956464734dd49, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

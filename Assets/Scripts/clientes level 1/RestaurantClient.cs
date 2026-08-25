@@ -297,14 +297,20 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         if (prefab == null || orderVisualPoint == null)
             return;
+
         currentOrderVisual = Instantiate(
             prefab,
             orderVisualPoint.position,
             orderVisualPoint.rotation,
             orderVisualPoint
         );
-        currentOrderVisual.transform.localPosition = Vector3.zero;
-        currentOrderVisual.transform.localRotation = Quaternion.identity;
+
+        // Siempre delante del cliente
+        currentOrderVisual.transform.localPosition =
+            new Vector3(0f, 0f, 1.5f);
+
+        currentOrderVisual.transform.localRotation =
+            Quaternion.identity;
     }
     private void CheckFoodDelivery()
     {
