@@ -12,7 +12,9 @@ public class Chair : MonoBehaviour, IInteractable
 
     public bool IsOccupied => isOccupied;
     public Transform SitPoint => sitPoint;
+    [SerializeField] private Transform moneySpawnPoint;
 
+    public Transform MoneySpawnPoint => moneySpawnPoint;
     private void Start()
     {
         UpdateFreeIndicator(false);
