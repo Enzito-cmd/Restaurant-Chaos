@@ -12,11 +12,25 @@ public class WokTransition : MonoBehaviour
 
     private WokCookPhase cookPhase;
 
+    private Vector3 eggStartPosition;
+    private Vector3 riceStartPosition;
+
     private void Awake()
     {
         cookPhase = GetComponent<WokCookPhase>();
-    }
 
+        // Guardar las posiciones originales de los bowls
+        eggStartPosition = eggBowl.position;
+        riceStartPosition = riceBowl.position;
+    }
+    public void ResetBowls()
+    {
+        eggBowl.gameObject.SetActive(true);
+        riceBowl.gameObject.SetActive(true);
+
+        eggBowl.position = eggStartPosition;
+        riceBowl.position = riceStartPosition;
+    }
     public void StartTransition()
     {
         StartCoroutine(Animations());
