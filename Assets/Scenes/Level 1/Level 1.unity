@@ -5441,7 +5441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WokController
   minigameContainer: {fileID: 1626174187}
-  wokRicePrefab: {fileID: 919132149155446097, guid: 265c2b85236658b44a922d387fa53305, type: 3}
+  wokRicePrefab: {fileID: 8444946466125234379, guid: 3af5f2e5cc74121418e806e6756d2dc9, type: 3}
   playerHoldSystem: {fileID: 1728617282}
 --- !u!114 &407859963
 MonoBehaviour:
@@ -26204,7 +26204,7 @@ Transform:
   m_GameObject: {fileID: 2077929302}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.47, y: 0, z: -12.89}
+  m_LocalPosition: {x: 3.34, y: 0, z: -13.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
