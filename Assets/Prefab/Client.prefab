@@ -565,7 +565,7 @@ MonoBehaviour:
   moveSpeed: 3
   rotationSpeed: 8
   stopDistance: 3
-  foodDeliveryDistance: 2
+  foodDeliveryDistance: 4
   agent: {fileID: 7245918196004066026}
   animator: {fileID: 272076165562732323}
   orderVisualPoint: {fileID: 6969851351991624562}

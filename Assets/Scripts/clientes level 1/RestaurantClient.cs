@@ -18,7 +18,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     [SerializeField] private float stopDistance = 0.5f;
 
     [Header("Food")]
-    [SerializeField] private float foodDeliveryDistance = 2f;
+    [SerializeField] private float foodDeliveryDistance = 4f;
 
     private Transform player;
     private Transform exitPoint;
@@ -79,7 +79,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 break;
 
             case ClientState.Sitting:
-                CheckFoodDelivery();
                 break;
 
             case ClientState.Leaving:
@@ -107,7 +106,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         bool isWalking = false;
 
-        // Si está siguiendo al jugador, está caminando
         if (currentState == ClientState.FollowingPlayer)
         {
             if (player != null)
@@ -120,8 +118,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 isWalking = distance > stopDistance;
             }
         }
-
-        // Si está yendo a su lugar en la fila
         if (currentState == ClientState.WaitingInQueue)
         {
             if (targetQueuePosition != null)
@@ -134,8 +130,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 isWalking = distance > stopDistance;
             }
         }
-
-        // Si está saliendo del restaurante
         if (currentState == ClientState.Leaving)
         {
             if (exitPoint != null)
@@ -160,10 +154,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         {
             player = playerController.transform;
         }
-        else
-        {
-            Debug.LogWarning("No se encontró un objeto con PlayerController.");
-        }
     }
 
     private void FindExitPoint()
@@ -174,35 +164,29 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         {
             exitPoint = exit.transform;
         }
-        else
-        {
-            Debug.LogWarning("No se encontró ningún objeto con el tag Exit.");
-        }
     }
     public void Interact()
     {
-        if (currentState != ClientState.WaitingInQueue)
-            return;
-
-        if (queueSpawner == null)
-            return;
-
-        if (!queueSpawner.CanPickClient(this))
+        // Agarrar cliente de la fila
+        if (currentState == ClientState.WaitingInQueue)
         {
-            Debug.Log("Solo podés agarrar al primer cliente de la fila.");
+            if (queueSpawner == null)
+                return;
+            StartFollowingPlayer();
             return;
         }
 
-        StartFollowingPlayer();
+        // Entregar comida al cliente sentado
+        if (currentState == ClientState.Sitting)
+        {
+            TryDeliverFood();
+        }
     }
-
     private void StartFollowingPlayer()
     {
         currentState = ClientState.FollowingPlayer;
         queueSpawner.RemoveClientFromQueue(this);
         Chair.ShowFreeChairs();
-
-        Debug.Log("Cliente agarrado. Ahora te sigue.");
     }
     public void MoveToQueuePosition(Transform newPosition)
     {
@@ -262,7 +246,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         currentChair = chair;
         currentChair.SetOccupied(true);
-        // Apagamos todos los indicadores porque ya sentamos al cliente
         Chair.HideAllIndicators();
         if (agent != null)
         {
@@ -279,8 +262,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         currentState = ClientState.Sitting;
         StartCoroutine(OrderSequence());
-
-        Debug.Log("Cliente sentado.");
     }
     private IEnumerator OrderSequence()
     {
@@ -304,15 +285,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             orderVisualPoint.rotation,
             orderVisualPoint
         );
-
-        // Siempre delante del cliente
         currentOrderVisual.transform.localPosition =
             new Vector3(0f, 0f, 1.5f);
 
         currentOrderVisual.transform.localRotation =
             Quaternion.identity;
     }
-    private void CheckFoodDelivery()
+    private void TryDeliverFood()
     {
         if (player == null)
             return;
@@ -323,23 +302,30 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         );
 
         if (distance > foodDeliveryDistance)
+        {
+            Debug.Log("Muy lejos para entregar comida.");
             return;
+        }
 
         PlayerHoldSystem holdSystem =
-            player.GetComponent<PlayerHoldSystem>();
+            player.GetComponentInChildren<PlayerHoldSystem>();
 
         if (holdSystem == null)
             return;
 
         if (!holdSystem.IsHoldingItem)
+        {
+            Debug.Log("No tenés comida en la mano.");
             return;
+        }
 
         GameObject heldItem = holdSystem.GetHeldItem();
 
         if (heldItem == null)
             return;
 
-        HoldableItem item = heldItem.GetComponent<HoldableItem>();
+        HoldableItem item =
+            heldItem.GetComponentInChildren<HoldableItem>();
 
         if (item == null)
             return;
@@ -348,12 +334,14 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         {
             DeliverFood(holdSystem);
         }
+        else
+        {
+            Debug.Log("Esta no es la comida que pidió el cliente.");
+        }
     }
 
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
-        Debug.Log("Cliente recibió Wok Rice.");
-
         holdSystem.ClearHeldItem();
         if (currentOrderVisual != null)
         {
@@ -365,31 +353,21 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             currentChair.SetOccupied(false);
             currentChair = null;
         }
+        NavMeshHit hit;
 
-        if (agent != null)
+        if (NavMesh.SamplePosition(
+            transform.position,
+            out hit,
+            5f,
+            NavMesh.AllAreas))
         {
-            NavMeshHit hit;
+            transform.position = hit.position;
+            agent.enabled = true;
+            agent.isStopped = false;
+            agent.ResetPath();
 
-            if (NavMesh.SamplePosition(
-                transform.position,
-                out hit,
-                3f,
-                NavMesh.AllAreas))
-            {
-                transform.position = hit.position;
-
-                agent.enabled = true;
-                agent.isStopped = false;
-            }
-            else
-            {
-                Debug.LogWarning("No se encontró NavMesh cerca de la silla.");
-            }
+            currentState = ClientState.Leaving;
         }
-
-        currentState = ClientState.Leaving;
-
-        Debug.Log("Cliente se va.");
     }
     private void LeaveRestaurant()
     {
@@ -401,6 +379,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 return;
         }
 
+        // Caminar hacia la salida
         MoveTowards(exitPoint.position);
 
         float distance = Vector3.Distance(
@@ -408,8 +387,14 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             exitPoint.position
         );
 
-        if (distance <= 0.5f)
+        // Cuando llega, destruir el cliente
+        if (distance <= stopDistance)
         {
+            if (agent != null && agent.enabled)
+            {
+                agent.ResetPath();
+            }
+
             Destroy(gameObject);
         }
     }
