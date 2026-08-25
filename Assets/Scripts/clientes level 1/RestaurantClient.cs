@@ -31,6 +31,9 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     [Header("NavMesh")]
     [SerializeField] private NavMeshAgent agent;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
     [Header("Order Visual")]
     [SerializeField] private Transform orderVisualPoint;
     [SerializeField] private GameObject thinkingPrefab;
@@ -41,6 +44,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponentInChildren<Animator>();
 
         FindPlayer();
         FindExitPoint();
@@ -61,7 +65,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             FindExitPoint();
         }
     }
- 
+
     private void Update()
     {
         switch (currentState)
@@ -82,6 +86,70 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 LeaveRestaurant();
                 break;
         }
+    }
+    private void LateUpdate()
+    {
+        UpdateAnimation();
+    }
+    private void UpdateAnimation()
+    {
+        if (animator == null)
+            return;
+
+        if (currentState == ClientState.Sitting)
+        {
+            animator.SetBool("Sitting", true);
+            animator.SetFloat("Speed", 0f);
+            return;
+        }
+
+        animator.SetBool("Sitting", false);
+
+        bool isWalking = false;
+
+        // Si está siguiendo al jugador, está caminando
+        if (currentState == ClientState.FollowingPlayer)
+        {
+            if (player != null)
+            {
+                float distance = Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
+
+                isWalking = distance > stopDistance;
+            }
+        }
+
+        // Si está yendo a su lugar en la fila
+        if (currentState == ClientState.WaitingInQueue)
+        {
+            if (targetQueuePosition != null)
+            {
+                float distance = Vector3.Distance(
+                    transform.position,
+                    targetQueuePosition.position
+                );
+
+                isWalking = distance > stopDistance;
+            }
+        }
+
+        // Si está saliendo del restaurante
+        if (currentState == ClientState.Leaving)
+        {
+            if (exitPoint != null)
+            {
+                float distance = Vector3.Distance(
+                    transform.position,
+                    exitPoint.position
+                );
+
+                isWalking = distance > 0.5f;
+            }
+        }
+
+        animator.SetFloat("Speed", isWalking ? 1f : 0f);
     }
     private void FindPlayer()
     {
