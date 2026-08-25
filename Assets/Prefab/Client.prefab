@@ -443,6 +443,7 @@ GameObject:
   - component: {fileID: 3938643403368851303}
   - component: {fileID: 6292817812543829887}
   - component: {fileID: -5646332962686698992}
+  - component: {fileID: 272076165562732323}
   - component: {fileID: 7245918196004066026}
   m_Layer: 6
   m_Name: Client
@@ -566,9 +567,39 @@ MonoBehaviour:
   stopDistance: 3
   foodDeliveryDistance: 2
   agent: {fileID: 7245918196004066026}
+  animator: {fileID: 272076165562732323}
   orderVisualPoint: {fileID: 6969851351991624562}
   thinkingPrefab: {fileID: 919132149155446097, guid: f83793c00fb3ab044a23b89251873298, type: 3}
   wokOrderPrefab: {fileID: 7059658529292256279, guid: f72070ef768cf0c488576ef8427ce806, type: 3}
+--- !u!95 &272076165562732323
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341922451776090912}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 2fc2c6d76201aae4e95aad9ed713f3f7, type: 3}
+  m_Controller: {fileID: 9100000, guid: 51410f551ab89f24c80591493dce0423, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+    'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
+    'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
+    'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
+    'mixamorig:RightArm'\n\tand more ...\n\tFrom animation clip 'mixamo.com'\n\tFrom
+    animation clip 'WalkingNormal'\n\tFrom animation clip 'SitNormal'"
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!195 &7245918196004066026
 NavMeshAgent:
   m_ObjectHideFlags: 0
