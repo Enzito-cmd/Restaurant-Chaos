@@ -64,9 +64,17 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 40e32e59c9271964ba29bd460c9e7813, type: 2}
+    - target: {fileID: -122828261115192467, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
       propertyPath: m_Name
       value: stacks of money
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
       propertyPath: m_IsActive
@@ -82,6 +90,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3027685370793199770}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2723224209960006999}
   m_SourcePrefab: {fileID: 100100000, guid: 9664d6a5237eda7428bfbcd3808163fa, type: 3}
 --- !u!1 &6585275513500336520 stripped
 GameObject:
@@ -158,3 +169,16 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2723224209960006999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6585275513500336520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af96690dbe7dff34381eb66d9c7d876c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  moneyAmount: 30
