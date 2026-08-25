@@ -572,6 +572,8 @@ MonoBehaviour:
   orderVisualPoint: {fileID: 6969851351991624562}
   thinkingPrefab: {fileID: 919132149155446097, guid: f83793c00fb3ab044a23b89251873298, type: 3}
   wokOrderPrefab: {fileID: 7059658529292256279, guid: f72070ef768cf0c488576ef8427ce806, type: 3}
+  moneyPrefab: {fileID: 6585275513500336520, guid: c71b153a9c544a84ba23af28c2356f71, type: 3}
+  wokRiceReward: 30
 --- !u!95 &272076165562732323
 Animator:
   serializedVersion: 7

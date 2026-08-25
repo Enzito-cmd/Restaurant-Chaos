@@ -42,6 +42,11 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private GameObject currentOrderVisual;
     private bool playerInFoodRange = false;
 
+    [Header("Money")]
+    [SerializeField] private GameObject moneyPrefab;
+    [SerializeField] private int wokRiceReward = 30;
+
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -374,6 +379,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             Destroy(currentOrderVisual);
             currentOrderVisual = null;
         }
+        SpawnMoneyOnTable();
         if (currentChair != null)
         {
             currentChair.SetOccupied(false);
@@ -394,6 +400,30 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
             currentState = ClientState.Leaving;
         }
+    }
+    private void SpawnMoneyOnTable()
+    {
+        if (moneyPrefab == null)
+            return;
+
+        if (currentChair == null)
+            return;
+
+        Transform spawnPoint = currentChair.MoneySpawnPoint;
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("La silla no tiene MoneySpawnPoint.");
+            return;
+        }
+
+        Instantiate(
+            moneyPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        Debug.Log("Dinero creado en la mesa: " + wokRiceReward);
     }
     private void LeaveRestaurant()
     {
