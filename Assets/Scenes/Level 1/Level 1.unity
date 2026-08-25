@@ -14977,6 +14977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chair
   sitPoint: {fileID: 1488711712}
+  freeIndicator: {fileID: 212664538}
 --- !u!1 &1142905410
 GameObject:
   m_ObjectHideFlags: 0
@@ -21306,6 +21307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   sitPoint: {fileID: 1392466402}
+  freeIndicator: {fileID: 1307739715}
 --- !u!1 &1626174187
 GameObject:
   m_ObjectHideFlags: 0
@@ -24650,6 +24652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chair
   sitPoint: {fileID: 1062883516}
+  freeIndicator: {fileID: 1430960025}
 --- !u!1 &1967717191
 GameObject:
   m_ObjectHideFlags: 0
@@ -25995,6 +25998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chair
   sitPoint: {fileID: 1291185041}
+  freeIndicator: {fileID: 1608045657}
 --- !u!1 &2067065915
 GameObject:
   m_ObjectHideFlags: 0
