@@ -40,6 +40,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     [SerializeField] private GameObject wokOrderPrefab;
 
     private GameObject currentOrderVisual;
+    private bool playerInFoodRange = false;
 
     private void Awake()
     {
@@ -49,7 +50,23 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         FindPlayer();
         FindExitPoint();
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponentInParent<PlayerController>() != null)
+        {
+            playerInFoodRange = true;
+            Debug.Log("Jugador dentro del rango del cliente");
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponentInParent<PlayerController>() != null)
+        {
+            playerInFoodRange = false;
+            Debug.Log("Jugador salió del rango del cliente");
+        }
+    }
     public void Setup(ClientQueueSpawner spawner, int queueIndex)
     {
         queueSpawner = spawner;
@@ -79,6 +96,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 break;
 
             case ClientState.Sitting:
+
+                if (playerInFoodRange &&
+                    Input.GetKeyDown(KeyCode.E))
+                {
+                    TryDeliverFood();
+                }
+
                 break;
 
             case ClientState.Leaving:
@@ -293,17 +317,9 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     }
     private void TryDeliverFood()
     {
-        if (player == null)
-            return;
-
-        float distance = Vector3.Distance(
-            transform.position,
-            player.position
-        );
-
-        if (distance > foodDeliveryDistance)
+        if (!playerInFoodRange)
         {
-            Debug.Log("Muy lejos para entregar comida.");
+            Debug.Log("El jugador no está dentro del rango del cliente");
             return;
         }
 
@@ -311,32 +327,42 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             player.GetComponentInChildren<PlayerHoldSystem>();
 
         if (holdSystem == null)
+        {
+            Debug.Log("No se encontró PlayerHoldSystem");
             return;
+        }
 
         if (!holdSystem.IsHoldingItem)
         {
-            Debug.Log("No tenés comida en la mano.");
+            Debug.Log("No tenés comida en la mano");
             return;
         }
 
         GameObject heldItem = holdSystem.GetHeldItem();
 
         if (heldItem == null)
+        {
+            Debug.Log("No hay objeto sostenido");
             return;
+        }
 
         HoldableItem item =
             heldItem.GetComponentInChildren<HoldableItem>();
 
         if (item == null)
+        {
+            Debug.Log("El objeto no tiene HoldableItem");
             return;
+        }
 
         if (item.itemType == ItemType.WokRice)
         {
+            Debug.Log("Entregando comida");
             DeliverFood(holdSystem);
         }
         else
         {
-            Debug.Log("Esta no es la comida que pidió el cliente.");
+            Debug.Log("La comida no es WokRice");
         }
     }
 
