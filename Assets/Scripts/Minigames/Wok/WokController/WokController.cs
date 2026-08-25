@@ -13,6 +13,7 @@ public class WokController : MonoBehaviour
     private WokVisuals visuals;
     private WokPrepPhase prepPhase;
     private bool isMinigameActive = false;
+    private WokTransition transition;
 
     private void Start()
     {
@@ -23,11 +24,18 @@ public class WokController : MonoBehaviour
 
         prepPhase = GetComponent<WokPrepPhase>();
         visuals = GetComponent<WokVisuals>();
+        transition = GetComponent<WokTransition>();
     }
 
     public void StartMinigame()
     {
         isMinigameActive = true;
+
+        // REACTIVAR HUEVOS Y ARROZ
+        if (transition != null)
+        {
+            transition.ResetBowls();
+        }
 
         if (minigameContainer != null)
         {
