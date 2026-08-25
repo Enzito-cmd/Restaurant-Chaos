@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9152270970154544218}
   - component: {fileID: 2042942649712429982}
   - component: {fileID: 8129595723236630208}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Palillo_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 3451920624169588255}
   - component: {fileID: 2875752593325625139}
   - component: {fileID: 6457056144930717336}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Tomate_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 1395373583645768596}
   - component: {fileID: 8321032270825067565}
   - component: {fileID: 168029541408098815}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: "m_Taz\xF3nArroz"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,9 +279,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 873247171871298327}
-  - component: {fileID: 5814138618978612839}
-  - component: {fileID: 888782135049319506}
-  m_Layer: 0
+  - component: {fileID: 922224057039272572}
+  - component: {fileID: -2565804398129488826}
+  m_Layer: 6
   m_Name: WokRicePref
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ Transform:
   m_GameObject: {fileID: 3539599562070976871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.483235, y: -0.0000014583787, z: 22.041773}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -311,7 +311,20 @@ Transform:
   - {fileID: 7901138387859879250}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5814138618978612839
+--- !u!114 &922224057039272572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3539599562070976871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6228a5ee1de02b84f9be9306281176f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoldableItem
+  itemType: 7
+--- !u!65 &-2565804398129488826
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -332,19 +345,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &888782135049319506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3539599562070976871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6228a5ee1de02b84f9be9306281176f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HoldableItem
-  itemType: 7
 --- !u!1 &4007729561215286682
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: 7901138387859879250}
   - component: {fileID: 3803883166023716347}
   - component: {fileID: 3695926689369362211}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Tomate_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -446,7 +446,7 @@ GameObject:
   - component: {fileID: 1304779706611049197}
   - component: {fileID: 348030022211688573}
   - component: {fileID: 6583421211875042554}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Palillo_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 2541480092123113459}
   - component: {fileID: 1802368745824896036}
   - component: {fileID: 4310785844567298644}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Arbejas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -626,7 +626,7 @@ GameObject:
   - component: {fileID: 51442250884945348}
   - component: {fileID: 3942578835328529104}
   - component: {fileID: 6100452876127586677}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Arroz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 244152153059061684}
   - component: {fileID: 6091749472332984076}
   - component: {fileID: 564973257463740846}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: m_Tomate_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
