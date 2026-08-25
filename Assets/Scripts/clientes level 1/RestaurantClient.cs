@@ -23,12 +23,9 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private Transform player;
     private Transform exitPoint;
     private Chair currentChair;
-
     private ClientQueueSpawner queueSpawner;
     private Transform targetQueuePosition;
-
     private ClientState currentState;
-
     public ClientState CurrentState => currentState;
 
     [Header("NavMesh")]
@@ -54,7 +51,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         queueSpawner = spawner;
         currentState = ClientState.WaitingInQueue;
 
-        // Por seguridad, vuelve a buscarlos si todavía son null.
         if (player == null)
         {
             FindPlayer();
@@ -87,11 +83,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 break;
         }
     }
-
-    // =====================================================
-    // AUTOMATIC REFERENCES
-    // =====================================================
-
     private void FindPlayer()
     {
         PlayerController playerController =
@@ -120,11 +111,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             Debug.LogWarning("No se encontró ningún objeto con el tag Exit.");
         }
     }
-
-    // =====================================================
-    // INTERACTION
-    // =====================================================
-
     public void Interact()
     {
         if (currentState != ClientState.WaitingInQueue)
@@ -145,16 +131,11 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private void StartFollowingPlayer()
     {
         currentState = ClientState.FollowingPlayer;
-
         queueSpawner.RemoveClientFromQueue(this);
+        Chair.ShowFreeChairs();
 
         Debug.Log("Cliente agarrado. Ahora te sigue.");
     }
-
-    // =====================================================
-    // QUEUE
-    // =====================================================
-
     public void MoveToQueuePosition(Transform newPosition)
     {
         targetQueuePosition = newPosition;
@@ -179,11 +160,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             agent.ResetPath();
         }
     }
-
-    // =====================================================
-    // FOLLOW PLAYER
-    // =====================================================
-
     private void FollowPlayer()
     {
         if (player == null)
@@ -208,11 +184,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             agent.ResetPath();
         }
     }
-
-    // =====================================================
-    // CHAIR
-    // =====================================================
-
     public void SitOnChair(Chair chair)
     {
         if (currentState != ClientState.FollowingPlayer)
@@ -223,16 +194,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         currentChair = chair;
         currentChair.SetOccupied(true);
-
-        // Desactivamos el agente porque el SitPoint
-        // está fuera del NavMesh
+        // Apagamos todos los indicadores porque ya sentamos al cliente
+        Chair.HideAllIndicators();
         if (agent != null)
         {
             agent.isStopped = true;
             agent.enabled = false;
         }
-
-        // Lo colocamos exactamente en el SitPoint
         Transform sitPoint = chair.SitPoint;
 
         if (sitPoint != null)
@@ -248,18 +216,12 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     }
     private IEnumerator OrderSequence()
     {
-        // Muestra el pensamiento
         ShowOrderVisual(thinkingPrefab);
-
-        // Espera 2 segundos
         yield return new WaitForSeconds(5f);
-
-        // Muestra el Wok gris
         ShowOrderVisual(wokOrderPrefab);
     }
     private void ShowOrderVisual(GameObject prefab)
     {
-        // Borra el visual anterior
         if (currentOrderVisual != null)
         {
             Destroy(currentOrderVisual);
@@ -267,23 +229,15 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         if (prefab == null || orderVisualPoint == null)
             return;
-
-        // Crea el nuevo visual arriba de la cabeza
         currentOrderVisual = Instantiate(
             prefab,
             orderVisualPoint.position,
             orderVisualPoint.rotation,
             orderVisualPoint
         );
-
-        // Al ser hijo del punto, queda arriba de la cabeza
         currentOrderVisual.transform.localPosition = Vector3.zero;
         currentOrderVisual.transform.localRotation = Quaternion.identity;
     }
-    // =====================================================
-    // FOOD DELIVERY
-    // =====================================================
-
     private void CheckFoodDelivery()
     {
         if (player == null)
@@ -363,11 +317,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         Debug.Log("Cliente se va.");
     }
-
-    // =====================================================
-    // LEAVING
-    // =====================================================
-
     private void LeaveRestaurant()
     {
         if (exitPoint == null)
@@ -390,11 +339,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             Destroy(gameObject);
         }
     }
-
-    // =====================================================
-    // MOVEMENT
-    // =====================================================
-
     private void MoveTowards(Vector3 target)
     {
         if (agent == null)

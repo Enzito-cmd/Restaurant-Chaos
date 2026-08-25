@@ -5,10 +5,18 @@ public class Chair : MonoBehaviour, IInteractable
     [Header("Chair")]
     [SerializeField] private Transform sitPoint;
 
+    [Header("Free Indicator")]
+    [SerializeField] private GameObject freeIndicator;
+
     private bool isOccupied = false;
 
     public bool IsOccupied => isOccupied;
     public Transform SitPoint => sitPoint;
+
+    private void Start()
+    {
+        UpdateFreeIndicator(false);
+    }
 
     public void Interact()
     {
@@ -51,5 +59,46 @@ public class Chair : MonoBehaviour, IInteractable
     public void SetOccupied(bool state)
     {
         isOccupied = state;
+
+        // Si está ocupada, nunca mostramos el indicador
+        if (isOccupied)
+        {
+            UpdateFreeIndicator(false);
+        }
+    }
+
+    public void UpdateFreeIndicator(bool show)
+    {
+        if (freeIndicator == null)
+            return;
+
+        // Solo se muestra si la silla está libre
+        freeIndicator.SetActive(show && !isOccupied);
+    }
+
+    public static void ShowFreeChairs()
+    {
+        Chair[] chairs =
+            FindObjectsByType<Chair>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (Chair chair in chairs)
+        {
+            chair.UpdateFreeIndicator(true);
+        }
+    }
+
+    public static void HideAllIndicators()
+    {
+        Chair[] chairs =
+            FindObjectsByType<Chair>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (Chair chair in chairs)
+        {
+            chair.UpdateFreeIndicator(false);
+        }
     }
 }
