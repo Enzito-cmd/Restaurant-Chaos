@@ -379,24 +379,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
                 return;
         }
 
-        // Caminar hacia la salida
         MoveTowards(exitPoint.position);
-
-        float distance = Vector3.Distance(
-            transform.position,
-            exitPoint.position
-        );
-
-        // Cuando llega, destruir el cliente
-        if (distance <= stopDistance)
-        {
-            if (agent != null && agent.enabled)
-            {
-                agent.ResetPath();
-            }
-
-            Destroy(gameObject);
-        }
     }
     private void MoveTowards(Vector3 target)
     {
