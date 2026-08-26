@@ -46,7 +46,8 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     [SerializeField] private GameObject moneyPrefab;
     [SerializeField] private int wokRiceReward = 30;
     private ClientHappiness clientHappiness;
-
+    private bool wasServed = false;
+    private bool hasBeenRemoved = false;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -54,6 +55,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         clientHappiness = GetComponent<ClientHappiness>();
         FindPlayer();
         FindExitPoint();
+    }
+    private void Start()
+    {
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.RegisterClient();
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -184,7 +192,24 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             player = playerController.transform;
         }
     }
+    public void Die()
+    {
+        if (hasBeenRemoved)
+            return;
 
+        hasBeenRemoved = true;
+
+        Destroy(gameObject);
+    }
+    private void RemoveClientFromLevel()
+    {
+        if (hasBeenRemoved)
+            return;
+
+        hasBeenRemoved = true;
+
+        Destroy(gameObject);
+    }
     private void FindExitPoint()
     {
         GameObject exit = GameObject.FindGameObjectWithTag("Exit");
@@ -377,11 +402,20 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
+        wasServed = true;
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.AddServedClient();
+        }
+
         if (clientHappiness != null)
         {
             clientHappiness.StopTimer();
         }
+
         holdSystem.ClearHeldItem();
+
         if (currentOrderVisual != null)
         {
             Destroy(currentOrderVisual);
@@ -445,6 +479,16 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         }
 
         MoveTowards(exitPoint.position);
+
+        float distance = Vector3.Distance(
+            transform.position,
+            exitPoint.position
+        );
+
+        if (distance <= 1f)
+        {
+            RemoveClientFromLevel();
+        }
     }
     private void MoveTowards(Vector3 target)
     {
