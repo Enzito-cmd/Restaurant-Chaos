@@ -12709,6 +12709,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2117947619}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1000572924
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.23
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.09
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 18.88
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.17344788
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9848431
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 160.023
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_Name
+      value: flower pot (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
 --- !u!1 &1003457388
 GameObject:
   m_ObjectHideFlags: 0
@@ -16999,6 +17068,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276559010}
   m_Mesh: {fileID: -702306082516146135, guid: 27d4c8b2e0cf3014880f860d0b8cfd47, type: 3}
+--- !u!1001 &1277730971
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.73
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.17830911
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -14.52
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.17344788
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9848431
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 160.023
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
+      propertyPath: m_Name
+      value: flower pot
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4315117ac15bff44aa0afe49562c930e, type: 3}
 --- !u!1 &1278909840
 GameObject:
   m_ObjectHideFlags: 0
@@ -29183,3 +29309,5 @@ SceneRoots:
   - {fileID: 1855687471}
   - {fileID: 668713912}
   - {fileID: 1985326004}
+  - {fileID: 1277730971}
+  - {fileID: 1000572924}
