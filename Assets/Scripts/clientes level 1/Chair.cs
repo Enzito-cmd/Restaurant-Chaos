@@ -14,12 +14,31 @@ public class Chair : MonoBehaviour, IInteractable
     public Transform SitPoint => sitPoint;
     [SerializeField] private Transform moneySpawnPoint;
 
+    [Header("Order Indicator")]
+    [SerializeField] private GameObject orderIndicator;
+    public GameObject OrderIndicator => orderIndicator;
+
     public Transform MoneySpawnPoint => moneySpawnPoint;
     private void Start()
     {
         UpdateFreeIndicator(false);
+        HideOrderIndicator();
+    }
+    public void ShowOrderIndicator()
+    {
+        if (orderIndicator != null)
+        {
+            orderIndicator.SetActive(true);
+        }
     }
 
+    public void HideOrderIndicator()
+    {
+        if (orderIndicator != null)
+        {
+            orderIndicator.SetActive(false);
+        }
+    }
     public void Interact()
     {
         if (isOccupied)
