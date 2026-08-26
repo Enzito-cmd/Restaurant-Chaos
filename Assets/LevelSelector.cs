@@ -7,4 +7,8 @@ public class LevelSelector : MonoBehaviour
     {
         SceneManager.LoadScene("Level 1");
     }
+    public void GoToLevelSelector()
+    {
+        SceneManager.LoadScene("LevelSelector");
+    }
 }
