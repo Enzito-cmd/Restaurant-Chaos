@@ -11,4 +11,8 @@ public class LevelSelector : MonoBehaviour
     {
         SceneManager.LoadScene("LevelSelector");
     }
+    public void LoadLevel2()
+    {
+        SceneManager.LoadScene("Level 2");
+    }
 }
