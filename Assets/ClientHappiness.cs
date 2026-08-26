@@ -36,7 +36,14 @@ public class ClientHappiness : MonoBehaviour
             UpdateBar();
 
             Debug.Log("El cliente se quedó sin tiempo.");
-            Destroy(gameObject);
+
+            RestaurantClient client =
+    GetComponent<RestaurantClient>();
+
+            if (client != null)
+            {
+                client.Die();
+            }
 
             return;
         }
