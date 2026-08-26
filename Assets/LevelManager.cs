@@ -107,6 +107,13 @@ public class LevelManager : MonoBehaviour
             endPanel.SetActive(true);
         }
 
+        // Mostrar cursor para poder usar los botones
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.ShowCursor();
+        }
+
+        // Mostrar las estrellas correspondientes
         for (int i = 0; i < stars.Length; i++)
         {
             if (stars[i] != null)
