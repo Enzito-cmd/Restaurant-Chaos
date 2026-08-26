@@ -297,6 +297,10 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         ShowOrderVisual(thinkingPrefab);
         yield return new WaitForSeconds(5f);
         ShowOrderVisual(wokOrderPrefab);
+        if (currentChair != null)
+        {
+            currentChair.ShowOrderIndicator();
+        }
     }
     private void ShowOrderVisual(GameObject prefab)
     {
@@ -383,6 +387,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         if (currentChair != null)
         {
             currentChair.SetOccupied(false);
+            currentChair.HideOrderIndicator();
             currentChair = null;
         }
         NavMeshHit hit;
