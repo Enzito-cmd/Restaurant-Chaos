@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class WokCookPhase : MonoBehaviour
 {
@@ -31,6 +32,10 @@ public class WokCookPhase : MonoBehaviour
     public int maxErrors = 3;
     public int requiredHits = 10;
 
+    [Header("UI Text")]
+    public TextMeshProUGUI hitsText;
+    public TextMeshProUGUI errorsText;
+
     private int currentErrors = 0;
     private int currentHits = 0;
     private int activeArrowsCount = 0;
@@ -54,6 +59,10 @@ public class WokCookPhase : MonoBehaviour
         {
             wokController = GetComponent<WokController>();
         }
+
+        // APAGAMOS LOS TEXTOS AL ARRANCAR
+        if (hitsText != null) hitsText.gameObject.SetActive(false);
+        if (errorsText != null) errorsText.gameObject.SetActive(false);
     }
 
     public void StartCooking()
@@ -63,6 +72,10 @@ public class WokCookPhase : MonoBehaviour
             arrowsCanvas.SetActive(true);
         }
 
+        // PRENDEMOS LOS TEXTOS
+        if (hitsText != null) hitsText.gameObject.SetActive(true);
+        if (errorsText != null) errorsText.gameObject.SetActive(true);
+
         currentErrors = 0;
         currentHits = 0;
         activeArrowsCount = 0;
@@ -70,6 +83,8 @@ public class WokCookPhase : MonoBehaviour
         startPos = wokTransform.position;
         dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
         isCookingActive = true;
+
+        UpdateUI();
 
         Debug.Log("Cooking started");
     }
@@ -186,7 +201,8 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         currentHits++;
-        Debug.Log("Hit: " + currentHits + "/" + requiredHits);
+        UpdateUI();
+        Debug.Log(currentHits + "/" + requiredHits);
 
         if (currentHits >= requiredHits)
         {
@@ -201,11 +217,25 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         currentErrors++;
-        Debug.Log("Errors: " + currentErrors + "/" + maxErrors);
+        UpdateUI();
+        Debug.Log(currentErrors + "/" + maxErrors);
 
         if (currentErrors >= maxErrors)
         {
             LoseMinigame();
+        }
+    }
+
+    private void UpdateUI()
+    {
+        if (hitsText != null)
+        {
+            hitsText.text = $"{currentHits}/{requiredHits}";
+        }
+
+        if (errorsText != null)
+        {
+            errorsText.text = $"{currentErrors}/{maxErrors}";
         }
     }
 
@@ -219,6 +249,9 @@ public class WokCookPhase : MonoBehaviour
         {
             arrowsCanvas.SetActive(false);
         }
+
+        if (hitsText != null) hitsText.gameObject.SetActive(false);
+        if (errorsText != null) errorsText.gameObject.SetActive(false);
 
         Debug.Log("Wok won");
 
@@ -238,6 +271,9 @@ public class WokCookPhase : MonoBehaviour
         {
             arrowsCanvas.SetActive(false);
         }
+
+        if (hitsText != null) hitsText.gameObject.SetActive(false);
+        if (errorsText != null) errorsText.gameObject.SetActive(false);
 
         Debug.Log("Wok lost");
 
