@@ -45,13 +45,13 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     [Header("Money")]
     [SerializeField] private GameObject moneyPrefab;
     [SerializeField] private int wokRiceReward = 30;
-
+    private ClientHappiness clientHappiness;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
-
+        clientHappiness = GetComponent<ClientHappiness>();
         FindPlayer();
         FindExitPoint();
     }
@@ -377,6 +377,10 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
+        if (clientHappiness != null)
+        {
+            clientHappiness.StopTimer();
+        }
         holdSystem.ClearHeldItem();
         if (currentOrderVisual != null)
         {
