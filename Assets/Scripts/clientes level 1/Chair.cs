@@ -16,6 +16,7 @@ public class Chair : MonoBehaviour, IInteractable
 
     [Header("Order Indicator")]
     [SerializeField] private GameObject orderIndicator;
+    [SerializeField] private GameObject cookIndicator;
     public GameObject OrderIndicator => orderIndicator;
 
     public Transform MoneySpawnPoint => moneySpawnPoint;
@@ -29,6 +30,7 @@ public class Chair : MonoBehaviour, IInteractable
         if (orderIndicator != null)
         {
             orderIndicator.SetActive(true);
+            cookIndicator.SetActive(true);
         }
     }
 
@@ -37,6 +39,7 @@ public class Chair : MonoBehaviour, IInteractable
         if (orderIndicator != null)
         {
             orderIndicator.SetActive(false);
+            cookIndicator.SetActive(false);
         }
     }
     public void Interact()
