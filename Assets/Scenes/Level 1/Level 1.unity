@@ -15828,6 +15828,7 @@ MonoBehaviour:
   freeIndicator: {fileID: 212664538}
   moneySpawnPoint: {fileID: 759792318}
   orderIndicator: {fileID: 415929406}
+  cookIndicator: {fileID: 2000928488}
 --- !u!1 &1142905410
 GameObject:
   m_ObjectHideFlags: 0
@@ -21935,6 +21936,7 @@ MonoBehaviour:
   freeIndicator: {fileID: 1307739715}
   moneySpawnPoint: {fileID: 2136910024}
   orderIndicator: {fileID: 136194471}
+  cookIndicator: {fileID: 2000928488}
 --- !u!1 &1626174187
 GameObject:
   m_ObjectHideFlags: 0
@@ -26299,6 +26301,7 @@ MonoBehaviour:
   freeIndicator: {fileID: 1430960025}
   moneySpawnPoint: {fileID: 162384706}
   orderIndicator: {fileID: 1153090050}
+  cookIndicator: {fileID: 2000928488}
 --- !u!1 &1967717191
 GameObject:
   m_ObjectHideFlags: 0
@@ -26805,7 +26808,7 @@ GameObject:
   - component: {fileID: 2000928491}
   - component: {fileID: 2000928490}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: cookIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27764,6 +27767,7 @@ MonoBehaviour:
   freeIndicator: {fileID: 1608045657}
   moneySpawnPoint: {fileID: 2030029734}
   orderIndicator: {fileID: 1423656499}
+  cookIndicator: {fileID: 2000928488}
 --- !u!1 &2067065915
 GameObject:
   m_ObjectHideFlags: 0
