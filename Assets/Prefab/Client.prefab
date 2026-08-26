@@ -989,7 +989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   happinessFill: {fileID: 6249721240637243270}
-  maxTime: 90
+  maxTime: 120
 --- !u!1001 &6250146473642846220
 PrefabInstance:
   m_ObjectHideFlags: 0
