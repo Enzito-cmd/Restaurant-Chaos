@@ -166,6 +166,7 @@ public class WokPrepPhase : MonoBehaviour
     private void DropEgg()
     {
         currentEggs++;
+        SoundManager.Instance?.PlaySound(SoundType.EggAdded);
         UpdateUI();
         Debug.Log($"Eggs: {currentEggs}/{requiredEggs}");
 

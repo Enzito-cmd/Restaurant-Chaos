@@ -29,6 +29,7 @@ public class WokController : MonoBehaviour
 
     public void StartMinigame()
     {
+        SoundManager.Instance?.PlaySound(SoundType.WokStart);
         isMinigameActive = true;
 
         // REACTIVAR HUEVOS Y ARROZ
