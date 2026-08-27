@@ -241,6 +241,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         currentState = ClientState.FollowingPlayer;
         queueSpawner.RemoveClientFromQueue(this);
         Chair.ShowFreeChairs();
+        SoundManager.Instance?.PlaySound(SoundType.ClientPicked);
     }
     public void MoveToQueuePosition(Transform newPosition)
     {
@@ -315,6 +316,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         }
 
         currentState = ClientState.Sitting;
+        SoundManager.Instance?.PlaySound(SoundType.ClientSit);
         StartCoroutine(OrderSequence());
     }
     private IEnumerator OrderSequence()
@@ -403,6 +405,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
         wasServed = true;
+        SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
 
         if (LevelManager.Instance != null)
         {
@@ -465,8 +468,15 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             spawnPoint.position,
             spawnPoint.rotation
         );
+        SoundManager.Instance?.PlaySound(SoundType.MoneySpawn);
 
         Debug.Log("Dinero creado en la mesa: " + wokRiceReward);
+    }
+    public void CollectMoney()
+    {
+        SoundManager.Instance?.PlaySound(SoundType.MoneyPickup);
+
+        Destroy(gameObject);
     }
     private void LeaveRestaurant()
     {
