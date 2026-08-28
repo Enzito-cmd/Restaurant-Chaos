@@ -7187,6 +7187,8 @@ MonoBehaviour:
   handleCollider: {fileID: 1773386734}
   maxDragDistance: 2
   returnSpeed: 8
+  maxTiltAngle: 25
+  tiltSpeed: 12
   arrowsCanvas: {fileID: 2004951814}
   movingArrowPrefab: {fileID: 3107087615272145620, guid: 02c6907e755b5bf4abde40e7c7280dc6, type: 3}
   fixedArrowPoints:
@@ -25497,7 +25499,7 @@ Transform:
   m_GameObject: {fileID: 1405054511}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.47, y: 0.55393076, z: -0.27345085}
+  m_LocalPosition: {x: 0.47, y: 0.897, z: -0.27345085}
   m_LocalScale: {x: 2.342625, y: 2.3426247, z: 2.342625}
   m_ConstrainProportionsScale: 0
   m_Children: []

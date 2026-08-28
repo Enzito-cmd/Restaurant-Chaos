@@ -17,9 +17,14 @@ public class WokCookPhase : MonoBehaviour
     public float maxDragDistance = 2.5f;
     public float returnSpeed = 8f;
 
+    [Header("Wok Tilt Settings")]
+    public float maxTiltAngle = 25f; 
+    public float tiltSpeed = 12f;   
+
     private bool isDragging = false;
     private Vector3 dragOffset;
     private Vector3 startPos;
+    private Quaternion startRot; 
 
     [Header("Arrow System")]
     public GameObject arrowsCanvas;
@@ -60,7 +65,6 @@ public class WokCookPhase : MonoBehaviour
             wokController = GetComponent<WokController>();
         }
 
-        // APAGAMOS LOS TEXTOS AL ARRANCAR
         if (hitsText != null) hitsText.gameObject.SetActive(false);
         if (errorsText != null) errorsText.gameObject.SetActive(false);
     }
@@ -72,7 +76,6 @@ public class WokCookPhase : MonoBehaviour
             arrowsCanvas.SetActive(true);
         }
 
-        // PRENDEMOS LOS TEXTOS
         if (hitsText != null) hitsText.gameObject.SetActive(true);
         if (errorsText != null) errorsText.gameObject.SetActive(true);
 
@@ -80,7 +83,10 @@ public class WokCookPhase : MonoBehaviour
         currentHits = 0;
         activeArrowsCount = 0;
         spawnTimer = spawnInterval;
+
         startPos = wokTransform.position;
+        startRot = wokTransform.rotation;
+
         dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
         isCookingActive = true;
 
@@ -94,6 +100,7 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         HandleWokDragging();
+        HandleWokTilt(); 
         HandleArrowSpawning();
     }
 
@@ -143,6 +150,30 @@ public class WokCookPhase : MonoBehaviour
         else
         {
             wokTransform.position = Vector3.Lerp(wokTransform.position, startPos, Time.deltaTime * returnSpeed);
+        }
+    }
+
+    private void HandleWokTilt()
+    {
+        Vector3 offset = wokTransform.position - startPos;
+        offset.y = 0;
+
+        if (offset.magnitude > 0.01f)
+        {
+            float tiltRatio = Mathf.Clamp01(offset.magnitude / maxDragDistance);
+
+            Vector3 dirToCenter = -offset.normalized;
+
+            Vector3 tiltAxis = Vector3.Cross(Vector3.up, dirToCenter);
+
+            Quaternion tiltRotation = Quaternion.AngleAxis(maxTiltAngle * tiltRatio, tiltAxis);
+            Quaternion targetRotation = tiltRotation * startRot;
+
+            wokTransform.rotation = Quaternion.Lerp(wokTransform.rotation, targetRotation, Time.deltaTime * tiltSpeed);
+        }
+        else
+        {
+            wokTransform.rotation = Quaternion.Lerp(wokTransform.rotation, startRot, Time.deltaTime * tiltSpeed);
         }
     }
 
