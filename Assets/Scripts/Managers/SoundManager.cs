@@ -59,7 +59,33 @@ public class SoundManager : MonoBehaviour
     {
         Instance = this;
     }
+    public void StartLoopingSound(SoundType sound)
+    {
+        if (soundSource == null)
+            return;
 
+        AudioClip clip = GetClip(sound);
+
+        if (clip == null)
+            return;
+
+        if (soundSource.isPlaying && soundSource.clip == clip)
+            return;
+
+        soundSource.clip = clip;
+        soundSource.loop = true;
+        soundSource.Play();
+    }
+
+    public void StopLoopingSound()
+    {
+        if (soundSource == null)
+            return;
+
+        soundSource.Stop();
+        soundSource.clip = null;
+        soundSource.loop = false;
+    }
     public void PlaySound(SoundType sound)
     {
         if (soundSource == null)
