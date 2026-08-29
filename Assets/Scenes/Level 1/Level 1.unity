@@ -4673,20 +4673,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdbf32144c3d25419891e77bc3cb2d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  soundSource: {fileID: 0}
-  buttonClick: {fileID: 0}
-  clientPicked: {fileID: 0}
-  clientSit: {fileID: 0}
-  foodDelivered: {fileID: 0}
-  clientLeave: {fileID: 0}
+  soundSource: {fileID: 319966161}
+  buttonClick: {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
+  clientPicked: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
+  clientSit: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
+  foodDelivered: {fileID: 8300000, guid: 5d6203af0daa8f34a843a32ee4b20d60, type: 3}
+  clientLeave: {fileID: 8300000, guid: 6881feb029054d044804ac7cb403371e, type: 3}
   clientAngry: {fileID: 0}
-  moneySpawn: {fileID: 0}
-  moneyPickup: {fileID: 0}
-  wokStart: {fileID: 0}
-  eggAdded: {fileID: 0}
-  ricePour: {fileID: 0}
-  cookingSuccess: {fileID: 0}
-  cookingFail: {fileID: 0}
+  moneySpawn: {fileID: 8300000, guid: 14b71074cc9b7534fa415beddf41a040, type: 3}
+  moneyPickup: {fileID: 8300000, guid: 14b71074cc9b7534fa415beddf41a040, type: 3}
+  wokStart: {fileID: 8300000, guid: 1507acc1266bbda4b970472a3f33a76a, type: 3}
+  eggAdded: {fileID: 8300000, guid: c6472de4955dc234eafa059a63c8b0d4, type: 3}
+  ricePour: {fileID: 8300000, guid: 95dbfe883f09f984cbf902a1b2bba1ba, type: 3}
+  cookingSuccess: {fileID: 8300000, guid: 33328a0a20ffb184b86ae87c4749c969, type: 3}
+  cookingFail: {fileID: 8300000, guid: 7779e7de2374f2b4a8861e0732318d5e, type: 3}
+  musicSource: {fileID: 0}
+  backgroundMusic: {fileID: 0}
 --- !u!4 &319966163
 Transform:
   m_ObjectHideFlags: 0
@@ -6201,6 +6203,8 @@ MonoBehaviour:
   handleCollider: {fileID: 1773386734}
   maxDragDistance: 5
   returnSpeed: 8
+  maxTiltAngle: 25
+  tiltSpeed: 12
   arrowsCanvas: {fileID: 2004951814}
   movingArrowPrefab: {fileID: 3107087615272145620, guid: 02c6907e755b5bf4abde40e7c7280dc6, type: 3}
   fixedArrowPoints:
@@ -15281,6 +15285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30abef9a2002dcf48b29da6dd972505a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelector
+  sceneLoadDelay: 0.2
 --- !u!1 &1076781017
 GameObject:
   m_ObjectHideFlags: 0
