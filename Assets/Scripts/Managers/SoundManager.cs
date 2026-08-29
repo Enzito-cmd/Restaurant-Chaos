@@ -39,17 +39,21 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip cookingSuccess;
     [SerializeField] private AudioClip cookingFail;
 
+    [Header("Music")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip backgroundMusic;
+    private void Start()
+    {
+        if (musicSource != null && backgroundMusic != null)
+        {
+            musicSource.clip = backgroundMusic;
+            musicSource.loop = true;
+            musicSource.Play();
+        }
+    }
     private void Awake()
     {
-        //if (Instance != null && Instance != this)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-
         Instance = this;
-
-        //DontDestroyOnLoad(gameObject);
     }
 
     public void PlaySound(SoundType sound)
