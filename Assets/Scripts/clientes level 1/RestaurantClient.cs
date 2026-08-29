@@ -324,6 +324,10 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         ShowOrderVisual(thinkingPrefab);
         yield return new WaitForSeconds(5f);
         ShowOrderVisual(wokOrderPrefab);
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.pedido);
+        }
         if (currentChair != null)
         {
             currentChair.ShowOrderIndicator();
@@ -405,7 +409,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
         wasServed = true;
-        SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
+        //SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
 
         if (LevelManager.Instance != null)
         {
@@ -423,6 +427,11 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         {
             Destroy(currentOrderVisual);
             currentOrderVisual = null;
+        }
+        //  SONIDO DE COMIDA ENTREGADA
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.FoodDelivered);
         }
         SpawnMoneyOnTable();
         if (currentChair != null)
@@ -472,12 +481,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         Debug.Log("Dinero creado en la mesa: " + wokRiceReward);
     }
-    public void CollectMoney()
-    {
-        SoundManager.Instance?.PlaySound(SoundType.MoneyPickup);
-
-        Destroy(gameObject);
-    }
     private void LeaveRestaurant()
     {
         if (exitPoint == null)
@@ -497,6 +500,11 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         if (distance <= 1f)
         {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound(SoundType.ClientLeave);
+            }
+
             RemoveClientFromLevel();
         }
     }

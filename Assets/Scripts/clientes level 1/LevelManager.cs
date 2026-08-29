@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class LevelManager : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class LevelManager : MonoBehaviour
 
     [Header("Stars")]
     [SerializeField] private GameObject[] stars;
+
+    [Header("Star Animation")]
+    [SerializeField] private float delayBetweenStars = 0.5f;
+    [SerializeField] private float animationDuration = 0.4f;
 
     private int clientsServed = 0;
     private bool levelEnded = false;
@@ -32,6 +37,7 @@ public class LevelManager : MonoBehaviour
             endPanel.SetActive(false);
         }
 
+        // Apagar todas las estrellas al comenzar
         foreach (GameObject star in stars)
         {
             if (star != null)
@@ -40,13 +46,17 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        // Esperamos un momento para que aparezcan los clientes
+        // Esperamos a que aparezcan los clientes
         Invoke(nameof(StartCheckingClients), 1f);
     }
 
     private void StartCheckingClients()
     {
         hasStartedChecking = true;
+    }
+    public void RegisterClient()
+    {
+        // No necesitamos contar clientes vivos.
     }
 
     private void Update()
@@ -64,12 +74,6 @@ public class LevelManager : MonoBehaviour
             EndLevel();
         }
     }
-
-    public void RegisterClient()
-    {
-        // Ya no necesitamos contar clientes vivos.
-    }
-
     public void AddServedClient()
     {
         clientsServed++;
@@ -78,11 +82,6 @@ public class LevelManager : MonoBehaviour
             "CLIENTE ATENDIDO. Total atendidos: " +
             clientsServed
         );
-    }
-
-    public void RemoveClient(bool wasServed)
-    {
-        // Ya no contamos estrellas acá.
     }
 
     private void EndLevel()
@@ -107,19 +106,75 @@ public class LevelManager : MonoBehaviour
             endPanel.SetActive(true);
         }
 
-        // Mostrar cursor para poder usar los botones
+        // Mostrar cursor
         if (CursorManager.Instance != null)
         {
             CursorManager.Instance.ShowCursor();
         }
 
-        // Mostrar las estrellas correspondientes
+        // Empezar animación de estrellas
+        StartCoroutine(ShowStars());
+    }
+
+    private IEnumerator ShowStars()
+    {
         for (int i = 0; i < stars.Length; i++)
         {
-            if (stars[i] != null)
-            {
-                stars[i].SetActive(i < clientsServed);
-            }
+            // Si no atendiste suficientes clientes,
+            // dejamos de mostrar estrellas.
+            if (i >= clientsServed)
+                break;
+
+            if (stars[i] == null)
+                continue;
+
+            yield return new WaitForSeconds(delayBetweenStars);
+
+            yield return StartCoroutine(
+                AnimateStar(stars[i])
+            );
+        }
+    }
+
+    private IEnumerator AnimateStar(GameObject star)
+    {
+        star.SetActive(true);
+
+        Transform starTransform = star.transform;
+
+        // Empieza invisible/pequeña
+        starTransform.localScale = Vector3.zero;
+
+        float elapsed = 0f;
+
+        // Crece
+        while (elapsed < animationDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = elapsed / animationDuration;
+
+            // Suavizado
+            t = 1f - Mathf.Pow(1f - t, 3f);
+
+            starTransform.localScale =
+                Vector3.Lerp(
+                    Vector3.zero,
+                    Vector3.one,
+                    t
+                );
+
+            yield return null;
+        }
+
+        starTransform.localScale = Vector3.one * 0.8f;
+
+        // Sonido
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(
+                SoundType.Stars
+            );
         }
     }
 }

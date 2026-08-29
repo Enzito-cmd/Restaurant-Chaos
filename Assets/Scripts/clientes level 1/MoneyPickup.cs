@@ -8,10 +8,19 @@ public class MoneyPickup : MonoBehaviour, IInteractable
     {
         Debug.Log("Agarraste $" + moneyAmount);
 
-        // Acá sumamos el dinero
-        MoneyManager.Instance.AddMoney(moneyAmount);
+        // Sumar dinero
+        if (MoneyManager.Instance != null)
+        {
+            MoneyManager.Instance.AddMoney(moneyAmount);
+        }
 
-        // Destruir el objeto de dinero
+        // Sonido al recoger dinero
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.MoneyPickup);
+        }
+
+        // Destruir el dinero
         Destroy(gameObject);
     }
 }

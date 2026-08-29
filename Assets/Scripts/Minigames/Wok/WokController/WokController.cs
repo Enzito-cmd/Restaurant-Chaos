@@ -95,6 +95,10 @@ public class WokController : MonoBehaviour
     {
         if (won)
         {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound(SoundType.CookingSuccess);
+            }
             if (playerHoldSystem != null && wokRicePrefab != null)
             {
                 GameObject spawnedFood = Instantiate(wokRicePrefab);
@@ -110,6 +114,13 @@ public class WokController : MonoBehaviour
                 {
                     Destroy(spawnedFood);
                 }
+            }
+        }
+        else
+        {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound(SoundType.CookingFail);
             }
         }
 
