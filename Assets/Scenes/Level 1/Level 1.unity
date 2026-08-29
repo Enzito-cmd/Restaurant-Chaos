@@ -4679,7 +4679,7 @@ MonoBehaviour:
   clientPicked: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
   clientSit: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
   foodDelivered: {fileID: 8300000, guid: 5d6203af0daa8f34a843a32ee4b20d60, type: 3}
-  clientLeave: {fileID: 8300000, guid: 6881feb029054d044804ac7cb403371e, type: 3}
+  clientLeave: {fileID: 8300000, guid: 913ec9871f4ba8e49a1f50c00af7cdb3, type: 3}
   clientAngry: {fileID: 0}
   moneySpawn: {fileID: 8300000, guid: 14b71074cc9b7534fa415beddf41a040, type: 3}
   moneyPickup: {fileID: 8300000, guid: 14b71074cc9b7534fa415beddf41a040, type: 3}
@@ -4690,6 +4690,7 @@ MonoBehaviour:
   cookingFail: {fileID: 8300000, guid: 7779e7de2374f2b4a8861e0732318d5e, type: 3}
   pedido: {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
   Stars: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
+  WokHit: {fileID: 8300000, guid: 1507acc1266bbda4b970472a3f33a76a, type: 3}
   musicSource: {fileID: 0}
   backgroundMusic: {fileID: 0}
 --- !u!4 &319966163

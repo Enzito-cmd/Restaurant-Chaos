@@ -230,7 +230,10 @@ public class WokCookPhase : MonoBehaviour
         activeArrowsCount--;
 
         if (!isCookingActive) return;
-
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.WokHit);
+        }
         currentHits++;
         UpdateUI();
         Debug.Log(currentHits + "/" + requiredHits);
