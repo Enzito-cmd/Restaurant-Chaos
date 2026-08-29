@@ -43,7 +43,7 @@ public class WokPrepPhase : MonoBehaviour
     private ParticleSystem heldParticles;
     private Plane dragPlane;
     private bool isPrepActive = false;
-
+    private bool isPlayingRiceSound = false;
     public void StartPrepPhase()
     {
         currentEggs = 0;
@@ -178,6 +178,16 @@ public class WokPrepPhase : MonoBehaviour
     {
         if (currentRice >= requiredRice || heldObjInstance == null) return;
 
+        if (!isPlayingRiceSound)
+        {
+            isPlayingRiceSound = true;
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySound(SoundType.RicePour);
+            }
+        }
+
         Vector3 directionToCenter = (wokCollider.transform.position - heldObjInstance.transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(directionToCenter) * Quaternion.Euler(tiltAngle, 0, 0);
 
@@ -198,12 +208,14 @@ public class WokPrepPhase : MonoBehaviour
             UpdateUI();
             StopPouring();
             ClearHeldItem();
+            isPlayingRiceSound = false;
             CheckCompletion();
         }
     }
 
     private void StopPouring()
     {
+        isPlayingRiceSound = false;
         if (heldObjInstance != null)
         {
             heldObjInstance.transform.rotation = Quaternion.Lerp(heldObjInstance.transform.rotation, Quaternion.identity, Time.deltaTime * 10f);

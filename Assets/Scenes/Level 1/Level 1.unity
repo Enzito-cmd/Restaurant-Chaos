@@ -4557,6 +4557,7 @@ GameObject:
   - component: {fileID: 319966163}
   - component: {fileID: 319966162}
   - component: {fileID: 319966161}
+  - component: {fileID: 319966164}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -4687,6 +4688,8 @@ MonoBehaviour:
   ricePour: {fileID: 8300000, guid: 95dbfe883f09f984cbf902a1b2bba1ba, type: 3}
   cookingSuccess: {fileID: 8300000, guid: 33328a0a20ffb184b86ae87c4749c969, type: 3}
   cookingFail: {fileID: 8300000, guid: 7779e7de2374f2b4a8861e0732318d5e, type: 3}
+  pedido: {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
+  Stars: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
   musicSource: {fileID: 0}
   backgroundMusic: {fileID: 0}
 --- !u!4 &319966163
@@ -4704,6 +4707,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &319966164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319966160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15dae33408c794e438119cb68c2f911b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSound
 --- !u!1 &323592313
 GameObject:
   m_ObjectHideFlags: 0
@@ -14801,6 +14816,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 319966164}
+        m_TargetAssemblyTypeName: ButtonSound, Assembly-CSharp
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1044810354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24525,6 +24552,8 @@ MonoBehaviour:
   - {fileID: 504295140}
   - {fileID: 781196032}
   - {fileID: 457379523}
+  delayBetweenStars: 0.5
+  animationDuration: 0.4
 --- !u!4 &1737428192
 Transform:
   m_ObjectHideFlags: 0

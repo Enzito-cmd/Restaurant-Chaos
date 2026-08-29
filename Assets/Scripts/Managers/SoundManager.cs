@@ -14,7 +14,9 @@ public enum SoundType
     EggAdded,
     RicePour,
     CookingSuccess,
-    CookingFail
+    CookingFail,
+    pedido,
+    Stars
 }
 
 public class SoundManager : MonoBehaviour
@@ -38,6 +40,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip ricePour;
     [SerializeField] private AudioClip cookingSuccess;
     [SerializeField] private AudioClip cookingFail;
+    [SerializeField] private AudioClip pedido;
+    [SerializeField] private AudioClip Stars;
 
     [Header("Music")]
     [SerializeField] private AudioSource musicSource;
@@ -111,6 +115,10 @@ public class SoundManager : MonoBehaviour
 
             case SoundType.CookingFail:
                 return cookingFail;
+            case SoundType.pedido:
+                return pedido;
+            case SoundType.Stars:
+                return Stars;
         }
 
         return null;
