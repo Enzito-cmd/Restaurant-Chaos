@@ -44,6 +44,7 @@ public class WokPrepPhase : MonoBehaviour
     private Plane dragPlane;
     private bool isPrepActive = false;
     private bool isPlayingRiceSound = false;
+    private bool isRiceSoundPlaying = false;
     public void StartPrepPhase()
     {
         currentEggs = 0;
@@ -66,6 +67,31 @@ public class WokPrepPhase : MonoBehaviour
         UpdateHeldObjectPosition();
     }
 
+    private void StartRiceSound()
+    {
+        if (isRiceSoundPlaying)
+            return;
+
+        if (SoundManager.Instance == null)
+            return;
+
+        SoundManager.Instance.StartLoopingSound(SoundType.RicePour);
+
+        isRiceSoundPlaying = true;
+    }
+
+    private void StopRiceSound()
+    {
+        if (!isRiceSoundPlaying)
+            return;
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.StopLoopingSound();
+        }
+
+        isRiceSoundPlaying = false;
+    }
     private void HandleMouseInput()
     {
         if (Input.GetMouseButtonDown(1) && currentItem != PrepItem.None)
@@ -176,6 +202,13 @@ public class WokPrepPhase : MonoBehaviour
 
     private void PourRice()
     {
+        if (currentRice >= requiredRice || heldObjInstance == null)
+        {
+            StopRiceSound();
+            return;
+        }
+
+        StartRiceSound();
         if (currentRice >= requiredRice || heldObjInstance == null) return;
 
         if (!isPlayingRiceSound)
@@ -207,15 +240,15 @@ public class WokPrepPhase : MonoBehaviour
             currentRice = requiredRice;
             UpdateUI();
             StopPouring();
+            StopRiceSound();
             ClearHeldItem();
-            isPlayingRiceSound = false;
             CheckCompletion();
         }
     }
 
     private void StopPouring()
     {
-        isPlayingRiceSound = false;
+        StopRiceSound();
         if (heldObjInstance != null)
         {
             heldObjInstance.transform.rotation = Quaternion.Lerp(heldObjInstance.transform.rotation, Quaternion.identity, Time.deltaTime * 10f);
