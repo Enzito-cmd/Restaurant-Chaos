@@ -62,8 +62,6 @@ public class SoundManager : MonoBehaviour
     public float MasterVolume => masterVolume;
     private void Awake()
     {
-        
-
         Instance = this;
 
         // Mantener entre escenas
