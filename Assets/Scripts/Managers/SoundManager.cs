@@ -45,22 +45,56 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip Stars;
     [SerializeField] private AudioClip WokHit;
 
-    [Header("Music")]
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioClip backgroundMusic;
-    private void Start()
-    {
-        if (musicSource != null && backgroundMusic != null)
-        {
-            musicSource.clip = backgroundMusic;
-            musicSource.loop = true;
-            musicSource.Play();
-        }
-    }
+    // =========================================================
+    // VOLUMEN
+    // =========================================================
+
+    private const string SoundVolumeKey = "SoundVolume";
+    private const string MasterVolumeKey = "MasterVolume";
+
+    private float soundVolume = 1f;
+    private float masterVolume = 1f;
+
+    public float SoundVolume => soundVolume;
+    public float MasterVolume => masterVolume;
+
+    // =========================================================
+    // AWAKE
+    // =========================================================
+
     private void Awake()
     {
+        
+
         Instance = this;
+
+        // Mantener entre escenas
+        DontDestroyOnLoad(gameObject);
+
+        LoadSettings();
     }
+
+    // =========================================================
+    // SONIDOS
+    // =========================================================
+
+    public void PlaySound(SoundType sound)
+    {
+        if (soundSource == null)
+            return;
+
+        AudioClip clip = GetClip(sound);
+
+        if (clip != null)
+        {
+            soundSource.PlayOneShot(clip);
+        }
+    }
+
+    // =========================================================
+    // LOOP
+    // =========================================================
+
     public void StartLoopingSound(SoundType sound)
     {
         if (soundSource == null)
@@ -76,6 +110,9 @@ public class SoundManager : MonoBehaviour
 
         soundSource.clip = clip;
         soundSource.loop = true;
+
+        UpdateSoundVolume();
+
         soundSource.Play();
     }
 
@@ -88,18 +125,85 @@ public class SoundManager : MonoBehaviour
         soundSource.clip = null;
         soundSource.loop = false;
     }
-    public void PlaySound(SoundType sound)
+
+    // =========================================================
+    // SLIDER SONIDOS
+    // =========================================================
+
+    public void SetSoundVolume(float volume)
     {
-        if (soundSource == null)
-            return;
+        soundVolume = Mathf.Clamp01(volume);
 
-        AudioClip clip = GetClip(sound);
+        UpdateSoundVolume();
 
-        if (clip != null)
+        PlayerPrefs.SetFloat(
+            SoundVolumeKey,
+            soundVolume
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    // =========================================================
+    // SLIDER GENERAL
+    // =========================================================
+
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+
+        // Afectar sonidos
+        UpdateSoundVolume();
+
+        // Afectar música
+        if (MusicManager.Instance != null)
         {
-            soundSource.PlayOneShot(clip);
+            MusicManager.Instance.ApplyMasterVolume(masterVolume);
+        }
+
+        PlayerPrefs.SetFloat(
+            MasterVolumeKey,
+            masterVolume
+        );
+
+        PlayerPrefs.Save();
+    }
+
+    // =========================================================
+    // ACTUALIZAR VOLUMEN DE SONIDOS
+    // =========================================================
+
+    private void UpdateSoundVolume()
+    {
+        if (soundSource != null)
+        {
+            soundSource.volume =
+                soundVolume * masterVolume;
         }
     }
+
+    // =========================================================
+    // CARGAR CONFIGURACIÓN
+    // =========================================================
+
+    private void LoadSettings()
+    {
+        soundVolume = PlayerPrefs.GetFloat(
+            SoundVolumeKey,
+            1f
+        );
+
+        masterVolume = PlayerPrefs.GetFloat(
+            MasterVolumeKey,
+            1f
+        );
+
+        UpdateSoundVolume();
+    }
+
+    // =========================================================
+    // CLIPS
+    // =========================================================
 
     private AudioClip GetClip(SoundType sound)
     {
@@ -143,10 +247,13 @@ public class SoundManager : MonoBehaviour
 
             case SoundType.CookingFail:
                 return cookingFail;
+
             case SoundType.pedido:
                 return pedido;
+
             case SoundType.Stars:
                 return Stars;
+
             case SoundType.WokHit:
                 return WokHit;
         }
