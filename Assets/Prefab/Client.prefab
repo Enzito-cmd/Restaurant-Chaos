@@ -776,6 +776,7 @@ GameObject:
   - component: {fileID: 7245918196004066026}
   - component: {fileID: -7086784785514782075}
   - component: {fileID: 2971369929733084850}
+  - component: {fileID: -6719989600301442847}
   m_Layer: 6
   m_Name: Client
   m_TagString: Untagged
@@ -990,6 +991,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   happinessFill: {fileID: 6249721240637243270}
   maxTime: 120
+--- !u!114 &-6719989600301442847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341922451776090912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e761eea574abf0c49b77721105554336, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &6250146473642846220
 PrefabInstance:
   m_ObjectHideFlags: 0
