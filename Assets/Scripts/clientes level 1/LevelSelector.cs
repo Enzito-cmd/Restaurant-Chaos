@@ -29,6 +29,25 @@ public class LevelSelector : MonoBehaviour
         StartCoroutine(LoadSceneWithSound("Menu"));
     }
 
+    public void ExitGame()
+    {
+        StartCoroutine(ExitGameCoroutine());
+    }
+
+    private IEnumerator ExitGameCoroutine()
+    {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.ButtonClick);
+        }
+
+        // Esperamos para que se escuche el sonido
+        yield return new WaitForSeconds(0.3f);
+
+        Debug.Log("Saliendo del juego...");
+
+        Application.Quit();
+    }
     private IEnumerator LoadSceneWithSound(string sceneName)
     {
         if (SoundManager.Instance != null)

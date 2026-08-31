@@ -1213,6 +1213,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1732557649}
+        m_TargetAssemblyTypeName: LevelSelector, Assembly-CSharp
+        m_MethodName: ExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1637869238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1437,6 +1449,9 @@ MonoBehaviour:
   pedido: {fileID: 0}
   Stars: {fileID: 0}
   WokHit: {fileID: 0}
+  clientSpawn: {fileID: 0}
+  clientDeath: {fileID: 0}
+  cookingMiss: {fileID: 0}
 --- !u!1 &2024753527
 GameObject:
   m_ObjectHideFlags: 0
