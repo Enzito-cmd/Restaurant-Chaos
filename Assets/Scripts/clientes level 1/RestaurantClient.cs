@@ -48,12 +48,14 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private ClientHappiness clientHappiness;
     private bool wasServed = false;
     private bool hasBeenRemoved = false;
-    
+    private ClientHighlight clientHighlight;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         clientHappiness = GetComponent<ClientHappiness>();
+        clientHighlight = GetComponent<ClientHighlight>();
         FindPlayer();
         FindExitPoint();
     }
@@ -96,9 +98,48 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             FindExitPoint();
         }
     }
+    private void UpdateHighlight()
+    {
+        if (clientHighlight == null)
+            return;
+
+        // Solo pueden brillar clientes esperando en la fila
+        if (currentState != ClientState.WaitingInQueue)
+        {
+            clientHighlight.SetHighlight(false);
+            return;
+        }
+
+        if (queueSpawner == null || player == null)
+        {
+            clientHighlight.SetHighlight(false);
+            return;
+        }
+
+        // ¿Es el primero de la fila?
+        bool isFirst = queueSpawner.CanPickClient(this);
+
+        if (!isFirst)
+        {
+            clientHighlight.SetHighlight(false);
+            return;
+        }
+
+        // Distancia al jugador
+        float distance = Vector3.Distance(
+            transform.position,
+            player.position
+        );
+
+        // Usamos el mismo rango que para interactuar
+        bool playerInRange = distance <= 4f;
+
+        clientHighlight.SetHighlight(playerInRange);
+    }
 
     private void Update()
     {
+        UpdateHighlight();
         switch (currentState)
         {
             case ClientState.WaitingInQueue:
