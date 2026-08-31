@@ -83,6 +83,20 @@ public class SoundManager : MonoBehaviour
             soundSource.PlayOneShot(clip);
         }
     }
+    public float PlaySoundAndGetLength(SoundType sound)
+    {
+        if (soundSource == null)
+            return 0f;
+
+        AudioClip clip = GetClip(sound);
+
+        if (clip == null)
+            return 0f;
+
+        soundSource.PlayOneShot(clip);
+
+        return clip.length;
+    }
     public void StartLoopingSound(SoundType sound)
     {
         if (soundSource == null)

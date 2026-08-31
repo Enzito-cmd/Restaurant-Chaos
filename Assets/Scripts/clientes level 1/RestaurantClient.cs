@@ -48,6 +48,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private ClientHappiness clientHappiness;
     private bool wasServed = false;
     private bool hasBeenRemoved = false;
+    
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -208,10 +209,10 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             return;
 
         hasBeenRemoved = true;
-        SoundManager.Instance?.PlaySound(SoundType.ClientLeave);
 
         Destroy(gameObject);
     }
+   
     private void FindExitPoint()
     {
         GameObject exit = GameObject.FindGameObjectWithTag("Exit");
@@ -411,7 +412,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     private void DeliverFood(PlayerHoldSystem holdSystem)
     {
         wasServed = true;
-        //SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
 
         if (LevelManager.Instance != null)
         {
@@ -454,7 +454,6 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             agent.enabled = true;
             agent.isStopped = false;
             agent.ResetPath();
-
             currentState = ClientState.Leaving;
         }
     }
@@ -502,14 +501,10 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
         if (distance <= 1f)
         {
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.PlaySound(SoundType.ClientLeave);
-            }
-
             RemoveClientFromLevel();
         }
     }
+    
     private void MoveTowards(Vector3 target)
     {
         if (agent == null)
