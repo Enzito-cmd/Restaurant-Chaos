@@ -68,5 +68,27 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 5130861749747748658, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7737268207743804775}
   m_SourcePrefab: {fileID: 100100000, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+--- !u!1 &3637943480385893344 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+  m_PrefabInstance: {fileID: 4521046145192185521}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7737268207743804775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3637943480385893344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b992a108e80a644b4099ef25bb8789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  moveSpeed: 8
+  rotationSpeed: 5
