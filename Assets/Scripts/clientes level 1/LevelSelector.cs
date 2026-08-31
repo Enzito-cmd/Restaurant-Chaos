@@ -20,6 +20,10 @@ public class LevelSelector : MonoBehaviour
     {
         StartCoroutine(LoadSceneWithSound("LevelSelector"));
     }
+    public void Configuration()
+    {
+        StartCoroutine(LoadSceneWithSound("Configuration"));
+    }
 
     private IEnumerator LoadSceneWithSound(string sceneName)
     {
