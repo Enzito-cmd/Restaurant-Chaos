@@ -17,7 +17,10 @@ public enum SoundType
     CookingFail,
     pedido,
     Stars,
-    WokHit
+    WokHit,
+    ClientSpawn,
+    ClientDeath,
+    CookingMiss
 }
 
 public class SoundManager : MonoBehaviour
@@ -45,9 +48,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip Stars;
     [SerializeField] private AudioClip WokHit;
 
-    // =========================================================
-    // VOLUMEN
-    // =========================================================
+    [SerializeField] private AudioClip clientSpawn;
+    [SerializeField] private AudioClip clientDeath;
+    [SerializeField] private AudioClip cookingMiss;
 
     private const string SoundVolumeKey = "SoundVolume";
     private const string MasterVolumeKey = "MasterVolume";
@@ -57,11 +60,6 @@ public class SoundManager : MonoBehaviour
 
     public float SoundVolume => soundVolume;
     public float MasterVolume => masterVolume;
-
-    // =========================================================
-    // AWAKE
-    // =========================================================
-
     private void Awake()
     {
         
@@ -73,11 +71,6 @@ public class SoundManager : MonoBehaviour
 
         LoadSettings();
     }
-
-    // =========================================================
-    // SONIDOS
-    // =========================================================
-
     public void PlaySound(SoundType sound)
     {
         if (soundSource == null)
@@ -90,11 +83,6 @@ public class SoundManager : MonoBehaviour
             soundSource.PlayOneShot(clip);
         }
     }
-
-    // =========================================================
-    // LOOP
-    // =========================================================
-
     public void StartLoopingSound(SoundType sound)
     {
         if (soundSource == null)
@@ -126,10 +114,6 @@ public class SoundManager : MonoBehaviour
         soundSource.loop = false;
     }
 
-    // =========================================================
-    // SLIDER SONIDOS
-    // =========================================================
-
     public void SetSoundVolume(float volume)
     {
         soundVolume = Mathf.Clamp01(volume);
@@ -143,11 +127,6 @@ public class SoundManager : MonoBehaviour
 
         PlayerPrefs.Save();
     }
-
-    // =========================================================
-    // SLIDER GENERAL
-    // =========================================================
-
     public void SetMasterVolume(float volume)
     {
         masterVolume = Mathf.Clamp01(volume);
@@ -168,11 +147,6 @@ public class SoundManager : MonoBehaviour
 
         PlayerPrefs.Save();
     }
-
-    // =========================================================
-    // ACTUALIZAR VOLUMEN DE SONIDOS
-    // =========================================================
-
     private void UpdateSoundVolume()
     {
         if (soundSource != null)
@@ -181,11 +155,6 @@ public class SoundManager : MonoBehaviour
                 soundVolume * masterVolume;
         }
     }
-
-    // =========================================================
-    // CARGAR CONFIGURACIÓN
-    // =========================================================
-
     private void LoadSettings()
     {
         soundVolume = PlayerPrefs.GetFloat(
@@ -200,11 +169,6 @@ public class SoundManager : MonoBehaviour
 
         UpdateSoundVolume();
     }
-
-    // =========================================================
-    // CLIPS
-    // =========================================================
-
     private AudioClip GetClip(SoundType sound)
     {
         switch (sound)
@@ -256,6 +220,13 @@ public class SoundManager : MonoBehaviour
 
             case SoundType.WokHit:
                 return WokHit;
+            case SoundType.ClientSpawn:
+                return clientSpawn;
+
+            case SoundType.ClientDeath:
+                return clientDeath;
+            case SoundType.CookingMiss:
+                return cookingMiss;
         }
 
         return null;

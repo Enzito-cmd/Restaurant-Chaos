@@ -249,6 +249,7 @@ public class WokCookPhase : MonoBehaviour
         activeArrowsCount--;
 
         if (!isCookingActive) return;
+        SoundManager.Instance?.PlaySound(SoundType.CookingMiss);
 
         currentErrors++;
         UpdateUI();

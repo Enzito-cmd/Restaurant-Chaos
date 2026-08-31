@@ -198,6 +198,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             return;
 
         hasBeenRemoved = true;
+        SoundManager.Instance?.PlaySound(SoundType.ClientDeath);
 
         Destroy(gameObject);
     }
@@ -207,6 +208,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             return;
 
         hasBeenRemoved = true;
+        SoundManager.Instance?.PlaySound(SoundType.ClientLeave);
 
         Destroy(gameObject);
     }

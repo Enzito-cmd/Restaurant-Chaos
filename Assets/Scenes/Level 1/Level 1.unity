@@ -4691,6 +4691,9 @@ MonoBehaviour:
   pedido: {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
   Stars: {fileID: 8300000, guid: 65dc31ad8b8e0a04797ab516f1db57e0, type: 3}
   WokHit: {fileID: 8300000, guid: 1507acc1266bbda4b970472a3f33a76a, type: 3}
+  clientSpawn: {fileID: 8300000, guid: 913ec9871f4ba8e49a1f50c00af7cdb3, type: 3}
+  clientDeath: {fileID: 8300000, guid: 913ec9871f4ba8e49a1f50c00af7cdb3, type: 3}
+  cookingMiss: {fileID: 8300000, guid: b57d3922ae3a0a144b2fe424df250513, type: 3}
 --- !u!4 &319966163
 Transform:
   m_ObjectHideFlags: 0
@@ -17849,7 +17852,7 @@ MonoBehaviour:
   - {fileID: 1967717192}
   - {fileID: 1661699633}
   maxClients: 3
-  spawnInterval: 5
+  spawnInterval: 30
 --- !u!4 &1203193153
 Transform:
   m_ObjectHideFlags: 0

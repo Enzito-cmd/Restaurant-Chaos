@@ -46,8 +46,9 @@ public class ClientQueueSpawner : MonoBehaviour
             clientPrefab,
             spawnPoint.position,
             spawnPoint.rotation
-        );
 
+        );
+        SoundManager.Instance?.PlaySound(SoundType.ClientSpawn);
         RestaurantClient client = clientObject.GetComponent<RestaurantClient>();
 
         if (client != null)
