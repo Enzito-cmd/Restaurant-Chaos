@@ -6,6 +6,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
 
     private bool isPaused = false;
+    private bool cursorWasVisible;
 
     private void Start()
     {
@@ -35,6 +36,9 @@ public class PauseMenu : MonoBehaviour
 
         isPaused = true;
 
+        // Recordamos cómo estaba el cursor ANTES de pausar
+        cursorWasVisible = Cursor.visible;
+
         if (pausePanel != null)
         {
             pausePanel.SetActive(true);
@@ -62,9 +66,17 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 1f;
 
+        // Restauramos el estado anterior
         if (CursorManager.Instance != null)
         {
-            CursorManager.Instance.HideCursor();
+            if (cursorWasVisible)
+            {
+                CursorManager.Instance.ShowCursor();
+            }
+            else
+            {
+                CursorManager.Instance.HideCursor();
+            }
         }
     }
 }
