@@ -18,13 +18,13 @@ public class WokCookPhase : MonoBehaviour
     public float returnSpeed = 8f;
 
     [Header("Wok Tilt Settings")]
-    public float maxTiltAngle = 25f; 
-    public float tiltSpeed = 12f;   
+    public float maxTiltAngle = 25f;
+    public float tiltSpeed = 12f;
 
     private bool isDragging = false;
     private Vector3 dragOffset;
     private Vector3 startPos;
-    private Quaternion startRot; 
+    private Quaternion startRot;
 
     [Header("Arrow System")]
     public GameObject arrowsCanvas;
@@ -65,12 +65,33 @@ public class WokCookPhase : MonoBehaviour
             wokController = GetComponent<WokController>();
         }
 
+
         if (hitsText != null) hitsText.gameObject.SetActive(false);
         if (errorsText != null) errorsText.gameObject.SetActive(false);
+    }
+    private void OnDisable()
+    {
+        ResetWokTransform();
+    }
+
+    public void ResetWokTransform()
+    {
+        isDragging = false;
+        if (wokTransform != null)
+        {
+            wokTransform.position = startPos;
+            wokTransform.rotation = startRot;
+        }
     }
 
     public void StartCooking()
     {
+        if (wokTransform != null)
+        {
+            startPos = wokTransform.position;
+            startRot = wokTransform.rotation;
+        }
+
         if (arrowsCanvas != null)
         {
             arrowsCanvas.SetActive(true);
@@ -84,12 +105,12 @@ public class WokCookPhase : MonoBehaviour
         activeArrowsCount = 0;
         spawnTimer = spawnInterval;
 
-        startPos = wokTransform.position;
-        startRot = wokTransform.rotation;
+        if (dragPlaneCollider != null)
+        {
+            dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
+        }
 
-        dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
         isCookingActive = true;
-
         UpdateUI();
 
         Debug.Log("Cooking started");
@@ -100,7 +121,7 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         HandleWokDragging();
-        HandleWokTilt(); 
+        HandleWokTilt();
         HandleArrowSpawning();
     }
 
@@ -161,9 +182,7 @@ public class WokCookPhase : MonoBehaviour
         if (offset.magnitude > 0.01f)
         {
             float tiltRatio = Mathf.Clamp01(offset.magnitude / maxDragDistance);
-
             Vector3 dirToCenter = -offset.normalized;
-
             Vector3 tiltAxis = Vector3.Cross(Vector3.up, dirToCenter);
 
             Quaternion tiltRotation = Quaternion.AngleAxis(maxTiltAngle * tiltRatio, tiltAxis);
@@ -279,6 +298,7 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         isCookingActive = false;
+        ResetWokTransform();
 
         if (arrowsCanvas != null)
         {
@@ -301,6 +321,7 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         isCookingActive = false;
+        ResetWokTransform();
 
         if (arrowsCanvas != null)
         {

@@ -21,6 +21,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
         public int rewardAmount;
     }
 
+
     [Header("Customer Settings")]
     public bool isAngryCustomer = false;
 
@@ -511,6 +512,7 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             FindExitPoint();
             if (exitPoint == null) return;
         }
+
 
         if (agent != null && agent.isOnNavMesh)
         {
