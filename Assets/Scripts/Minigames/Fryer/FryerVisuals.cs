@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 
 public class FryerVisuals : MonoBehaviour
 {
@@ -21,16 +22,23 @@ public class FryerVisuals : MonoBehaviour
     private List<Rigidbody> spawnedTempuras = new List<Rigidbody>();
 
     [Header("Skillcheck UI")]
-    public GameObject skillcheckCanvas; 
+    public GameObject skillcheckCanvas;
     public RectTransform needle;
     public Image successZone;
     public TextMeshProUGUI countdownText;
+
+    [Header("Counters UI")]
+    public TextMeshProUGUI hitsText;
+    public TextMeshProUGUI missesText;
 
     private void Start()
     {
         if (basketUpPoint != null) targetBasketPos = basketUpPoint.position;
         if (skillcheckCanvas != null) skillcheckCanvas.SetActive(false);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
+
+        UpdateHits(0, 0);
+        UpdateMisses(0, 0);
     }
 
     private void Update()
@@ -69,16 +77,18 @@ public class FryerVisuals : MonoBehaviour
         if (basketUpPoint != null) targetBasketPos = basketUpPoint.position;
         WakeUpTempuras();
     }
+
     private void WakeUpTempuras()
     {
         foreach (Rigidbody rb in spawnedTempuras)
         {
             if (rb != null)
             {
-                rb.WakeUp(); 
+                rb.WakeUp();
             }
         }
     }
+
     public void BumpTempuras()
     {
         foreach (Rigidbody rb in spawnedTempuras)
@@ -109,6 +119,7 @@ public class FryerVisuals : MonoBehaviour
     {
         if (skillcheckCanvas != null) skillcheckCanvas.SetActive(show);
     }
+
     public void UpdateCountdownText(string text)
     {
         if (countdownText != null) countdownText.text = text;
@@ -119,7 +130,24 @@ public class FryerVisuals : MonoBehaviour
         if (countdownText != null) countdownText.gameObject.SetActive(show);
     }
 
-    private void ClearTempuras()
+
+    public void UpdateHits(int currentHits, int requiredHits)
+    {
+        if (hitsText != null)
+        {
+            hitsText.text = $"{currentHits}/{requiredHits}";
+        }
+    }
+
+    public void UpdateMisses(int currentMisses, int maxMisses)
+    {
+        if (missesText != null)
+        {
+            missesText.text = $"{currentMisses}/{maxMisses}";
+        }
+    }
+
+    public void ClearTempuras()
     {
         foreach (Rigidbody rb in spawnedTempuras)
         {

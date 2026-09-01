@@ -1,11 +1,12 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class FryerController : MonoBehaviour
 {
     [Header("References")]
     public FryerVisuals visuals;
     public GameObject minigameContainer;
+    public PlayerHoldSystem holdSystem;
 
     [Header("Rules")]
     public int successes = 5;
@@ -17,6 +18,9 @@ public class FryerController : MonoBehaviour
     [Range(0.05f, 0.5f)]
     public float zoneSizeRatio = 0.15f;
     public float minDistanceBetweenZones = 100f;
+
+    [Header("Finished Dish Reward")]
+    [SerializeField] private GameObject friedTempuraPrefab;
 
     private int currentSuccesses = 0;
     private int currentFails = 0;
@@ -54,6 +58,8 @@ public class FryerController : MonoBehaviour
         {
             visuals.ShowSkillcheck(false);
             visuals.ShowCountdown(false);
+            visuals.UpdateHits(0, successes);
+            visuals.UpdateMisses(0, fails);
         }
 
         StartCoroutine(FryingSequence());
@@ -97,7 +103,10 @@ public class FryerController : MonoBehaviour
         if (won)
         {
             Debug.Log("Won");
-            // playerHoldSystem.HoldItem(friedTempuraPrefab); 
+            if (holdSystem != null && friedTempuraPrefab != null)
+            {
+                holdSystem.HoldItem(friedTempuraPrefab);
+            }
         }
         else
         {
@@ -108,7 +117,7 @@ public class FryerController : MonoBehaviour
     private IEnumerator FryingSequence()
     {
         yield return new WaitForSeconds(1f);
-        visuals.SpawnTempuras();
+        if (visuals != null) visuals.SpawnTempuras();
         yield return new WaitForSeconds(2f);
 
         if (visuals != null) visuals.MoveBasketDown();
@@ -176,7 +185,11 @@ public class FryerController : MonoBehaviour
     {
         currentSuccesses++;
 
-        if (visuals != null) visuals.BumpTempuras();
+        if (visuals != null)
+        {
+            visuals.UpdateHits(currentSuccesses, successes);
+            visuals.BumpTempuras();
+        }
 
         needleDirection *= -1;
         needleSpeed += 20f;
@@ -188,7 +201,11 @@ public class FryerController : MonoBehaviour
     private void Fail()
     {
         currentFails++;
-        Debug.Log($"Fails: {currentFails} / {fails}");
+
+        if (visuals != null)
+        {
+            visuals.UpdateMisses(currentFails, fails);
+        }
 
         if (currentFails >= fails) EndMinigame(false);
     }

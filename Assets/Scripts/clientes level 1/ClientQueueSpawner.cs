@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class ClientQueueSpawner : MonoBehaviour
 {
-    [Header("Client")]
-    [SerializeField] private GameObject clientPrefab;
+    [Header("Client Prefabs")]
+    [SerializeField] private GameObject[] clientPrefabs;
 
     [Header("Spawn Point")]
     [SerializeField] private Transform spawnPoint;
@@ -18,6 +18,8 @@ public class ClientQueueSpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 5f;
 
     private List<RestaurantClient> clients = new List<RestaurantClient>();
+
+    public bool HasFinishedSpawning { get; private set; } = false;
 
     private void Start()
     {
@@ -37,37 +39,42 @@ public class ClientQueueSpawner : MonoBehaviour
                 yield return new WaitForSeconds(spawnInterval);
             }
         }
+
+        HasFinishedSpawning = true;
     }
 
     private void SpawnClient(int queueIndex)
     {
-        // Aparece atrás de la fila
+        if (clientPrefabs == null || clientPrefabs.Length == 0) return;
+
+        int randomIndex = Random.Range(0, clientPrefabs.Length);
+        GameObject selectedPrefab = clientPrefabs[randomIndex];
+
         GameObject clientObject = Instantiate(
-            clientPrefab,
+            selectedPrefab,
             spawnPoint.position,
             spawnPoint.rotation
-
         );
-        SoundManager.Instance?.PlaySound(SoundType.ClientSpawn);
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(SoundType.ClientSpawn);
+        }
+
         RestaurantClient client = clientObject.GetComponent<RestaurantClient>();
 
         if (client != null)
         {
             clients.Add(client);
-
-            // El cliente sabe a qué posición debe caminar
             client.Setup(this, queueIndex);
 
-            // Camina desde SpawnPoint hasta su lugar en la fila
             client.MoveToQueuePosition(queuePositions[queueIndex]);
         }
     }
 
     public bool CanPickClient(RestaurantClient client)
     {
-        if (clients.Count == 0)
-            return false;
-
+        if (clients.Count == 0) return false;
         return clients[0] == client;
     }
 
