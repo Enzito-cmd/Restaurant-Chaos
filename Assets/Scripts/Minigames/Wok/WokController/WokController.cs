@@ -32,7 +32,6 @@ public class WokController : MonoBehaviour
         SoundManager.Instance?.PlaySound(SoundType.WokStart);
         isMinigameActive = true;
 
-        // REACTIVAR HUEVOS Y ARROZ
         if (transition != null)
         {
             transition.ResetBowls();
