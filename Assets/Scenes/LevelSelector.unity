@@ -660,7 +660,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 694775419}
         m_TargetAssemblyTypeName: LevelSelector, Assembly-CSharp
-        m_MethodName: LoadLevel1
+        m_MethodName: LoadLevel2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -971,6 +971,9 @@ MonoBehaviour:
   pedido: {fileID: 0}
   Stars: {fileID: 0}
   WokHit: {fileID: 0}
+  clientSpawn: {fileID: 0}
+  clientDeath: {fileID: 0}
+  cookingMiss: {fileID: 0}
 --- !u!1 &1154122481
 GameObject:
   m_ObjectHideFlags: 0

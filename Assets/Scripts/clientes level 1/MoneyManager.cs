@@ -31,15 +31,13 @@ public class MoneyManager : MonoBehaviour
     {
         currentMoney += amount;
         UpdateMoneyUI();
-
-        Debug.Log("Dinero actual: $" + currentMoney);
     }
 
     private void UpdateMoneyUI()
     {
         if (moneyText != null)
         {
-            moneyText.text = "$" + currentMoney;
+            moneyText.text = currentMoney.ToString();
         }
     }
 }

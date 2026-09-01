@@ -46,19 +46,47 @@ public class Chair : MonoBehaviour, IInteractable
     {
         if (isOccupied)
         {
-            Debug.Log("Esta silla está ocupada.");
+            RestaurantClient sittingClient = GetComponentInChildren<RestaurantClient>();
+
+            if (sittingClient == null)
+            {
+                sittingClient = FindClientNearChair();
+            }
+
+            if (sittingClient != null && sittingClient.CurrentState == RestaurantClient.ClientState.Sitting)
+            {
+                sittingClient.Interact();
+            }
+
             return;
         }
 
         RestaurantClient client = FindFollowingClient();
-
-        if (client == null)
-        {
-            Debug.Log("No estás llevando a ningún cliente.");
-            return;
-        }
+        if (client == null) return;
 
         client.SitOnChair(this);
+    }
+
+    private RestaurantClient FindClientNearChair()
+    {
+        RestaurantClient[] allClients = FindObjectsByType<RestaurantClient>(FindObjectsSortMode.None);
+        RestaurantClient nearest = null;
+        float minDistance = 2.0f; 
+
+        foreach (var c in allClients)
+        {
+            if (c.CurrentState == RestaurantClient.ClientState.Sitting)
+            {
+                float dist = Vector3.Distance(transform.position, c.transform.position);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    nearest = c;
+                }
+            }
+        }
+
+        return nearest;
     }
 
     private RestaurantClient FindFollowingClient()
@@ -84,7 +112,6 @@ public class Chair : MonoBehaviour, IInteractable
     {
         isOccupied = state;
 
-        // Si está ocupada, nunca mostramos el indicador
         if (isOccupied)
         {
             UpdateFreeIndicator(false);
@@ -96,7 +123,6 @@ public class Chair : MonoBehaviour, IInteractable
         if (freeIndicator == null)
             return;
 
-        // Solo se muestra si la silla está libre
         freeIndicator.SetActive(show && !isOccupied);
     }
 

@@ -774,7 +774,6 @@ GameObject:
   - component: {fileID: -5646332962686698992}
   - component: {fileID: 272076165562732323}
   - component: {fileID: 7245918196004066026}
-  - component: {fileID: -7086784785514782075}
   - component: {fileID: 2971369929733084850}
   - component: {fileID: -6719989600301442847}
   m_Layer: 6
@@ -881,8 +880,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.6479244, y: 1.1064053, z: 2.3662891}
-  m_Center: {x: -0.000626564, y: 0.058166075, z: -0.02631855}
+  m_Size: {x: 2.272932, y: 1.1064053, z: 2.3662891}
+  m_Center: {x: -0.048340797, y: 0.058166075, z: -0.02631855}
 --- !u!114 &-5646332962686698992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,6 +894,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eaef0d1a056c946a258fd582bbb9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  isAngryCustomer: 0
+  yellDuration: 1.5
+  yellDistance: 1.5
+  yellCooldown: 2.5
+  possibleMeals:
+  - foodType: 7
+    visualPrefab: {fileID: 919132149155446097, guid: 70de4f1131721134d9649f3b4ff5454b, type: 3}
+    rewardAmount: 30
+  - foodType: 6
+    visualPrefab: {fileID: 919132149155446097, guid: cf6e677b33306274a91c50ef888d413d, type: 3}
+    rewardAmount: 50
   moveSpeed: 3
   rotationSpeed: 8
   stopDistance: 3
@@ -902,10 +912,8 @@ MonoBehaviour:
   agent: {fileID: 7245918196004066026}
   animator: {fileID: 272076165562732323}
   orderVisualPoint: {fileID: 6969851351991624562}
-  thinkingPrefab: {fileID: 919132149155446097, guid: f83793c00fb3ab044a23b89251873298, type: 3}
-  wokOrderPrefab: {fileID: 7059658529292256279, guid: f72070ef768cf0c488576ef8427ce806, type: 3}
+  thinkingPrefab: {fileID: 8668267033447084222, guid: f8bd054f47073834e89ad7f85cacc294, type: 3}
   moneyPrefab: {fileID: 6585275513500336520, guid: c71b153a9c544a84ba23af28c2356f71, type: 3}
-  wokRiceReward: 30
 --- !u!95 &272076165562732323
 Animator:
   serializedVersion: 7
@@ -937,7 +945,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 8341922451776090912}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.86
+  m_Radius: 0.4
   m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
@@ -950,33 +958,6 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!54 &-7086784785514782075
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8341922451776090912}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &2971369929733084850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1003,6 +984,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e761eea574abf0c49b77721105554336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  emissionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  emissionIntensity: 2
 --- !u!1001 &6250146473642846220
 PrefabInstance:
   m_ObjectHideFlags: 0

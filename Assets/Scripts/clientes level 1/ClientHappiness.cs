@@ -17,7 +17,6 @@ public class ClientHappiness : MonoBehaviour
         currentTime = maxTime;
         UpdateBar();
 
-        // Empieza automáticamente desde que se crea el cliente
         isRunning = true;
     }
 
@@ -35,14 +34,20 @@ public class ClientHappiness : MonoBehaviour
 
             UpdateBar();
 
-            Debug.Log("El cliente se quedó sin tiempo.");
+            Debug.Log("Out of time");
 
-            RestaurantClient client =
-    GetComponent<RestaurantClient>();
+            RestaurantClient client = GetComponent<RestaurantClient>();
 
             if (client != null)
             {
-                client.Die();
+                if (client.isAngryCustomer)
+                {
+                    client.TriggerAngryChase();
+                }
+                else
+                {
+                    client.Die();
+                }
             }
 
             return;
