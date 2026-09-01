@@ -19,6 +19,8 @@ public class RestaurantClient : MonoBehaviour, IInteractable
 
     [Header("Food")]
     [SerializeField] private float foodDeliveryDistance = 4f;
+    [SerializeField] private GameObject tempuraOrderPrefab;
+    private ItemType requestedFood;
 
     private Transform player;
     private Transform exitPoint;
@@ -365,16 +367,54 @@ public class RestaurantClient : MonoBehaviour, IInteractable
     }
     private IEnumerator OrderSequence()
     {
+        // Primero piensa
         ShowOrderVisual(thinkingPrefab);
+
         yield return new WaitForSeconds(5f);
-        ShowOrderVisual(wokOrderPrefab);
+
+        // Elegir comida
+        ChooseFood();
+
+        // Mostrar pedido
+        if (requestedFood == ItemType.WokRice)
+        {
+            ShowOrderVisual(wokOrderPrefab);
+            Debug.Log("El cliente pidió WOK");
+        }
+        else if (requestedFood == ItemType.FriedTempura)
+        {
+            ShowOrderVisual(tempuraOrderPrefab);
+            Debug.Log("El cliente pidió TEMPURA");
+        }
+
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlaySound(SoundType.pedido);
         }
+
         if (currentChair != null)
         {
             currentChair.ShowOrderIndicator();
+        }
+    }
+    private void ChooseFood()
+    {
+        // Level 2 permite Wok o Tempura
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Level 2")
+        {
+            if (Random.value < 0.5f)
+            {
+                requestedFood = ItemType.WokRice;
+            }
+            else
+            {
+                requestedFood = ItemType.FriedTempura;
+            }
+        }
+        else
+        {
+            // En los demás niveles solamente Wok
+            requestedFood = ItemType.WokRice;
         }
     }
     private void ShowOrderVisual(GameObject prefab)
@@ -439,14 +479,17 @@ public class RestaurantClient : MonoBehaviour, IInteractable
             return;
         }
 
-        if (item.itemType == ItemType.WokRice)
+        if (item.itemType == requestedFood)
         {
-            Debug.Log("Entregando comida");
+            Debug.Log("Comida correcta. Entregando...");
             DeliverFood(holdSystem);
         }
         else
         {
-            Debug.Log("La comida no es WokRice");
+            Debug.Log(
+                "Comida incorrecta. El cliente pidió: " + requestedFood +
+                " pero intentaste entregar: " + item.itemType
+            );
         }
     }
 
