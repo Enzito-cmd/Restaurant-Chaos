@@ -14982,6 +14982,8 @@ MonoBehaviour:
   needle: {fileID: 1905458090}
   successZone: {fileID: 1998713804}
   countdownText: {fileID: 672275043}
+  hitsText: {fileID: 0}
+  missesText: {fileID: 0}
 --- !u!114 &816269212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14996,12 +14998,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FryerController
   visuals: {fileID: 816269211}
   minigameContainer: {fileID: 40244631}
+  holdSystem: {fileID: 0}
   successes: 5
   fails: 3
   timeBeforeSkillcheck: 3
   needleSpeed: 180
   zoneSizeRatio: 0.1
   minDistanceBetweenZones: 100
+  friedTempuraPrefab: {fileID: 919132149155446097, guid: cf6e677b33306274a91c50ef888d413d, type: 3}
 --- !u!1 &822467251
 GameObject:
   m_ObjectHideFlags: 0
