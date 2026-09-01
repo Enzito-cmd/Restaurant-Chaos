@@ -14978,8 +14978,8 @@ MonoBehaviour:
   - {fileID: 19142844}
   bumpForce: 2
   torqueForce: 1
-  skillcheckCanvas: {fileID: 400357668}
-  needle: {fileID: 634025706}
+  skillcheckCanvas: {fileID: 1869018005}
+  needle: {fileID: 1905458090}
   successZone: {fileID: 1998713804}
   countdownText: {fileID: 672275043}
 --- !u!114 &816269212
@@ -33709,7 +33709,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1869018006
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36609,8 +36609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f82e26ac11d98b4bba55e2c14a8c181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtinguisherProp
-  extinguisherHoldPrefab: {fileID: 3763585651795306530, guid: 9d795d123507f9c49a185856f3ad7142, type: 3}
-  extinguisherPropPrefab: {fileID: 798278192}
 --- !u!65 &2032139525
 BoxCollider:
   m_ObjectHideFlags: 0
