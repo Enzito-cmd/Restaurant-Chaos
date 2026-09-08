@@ -1,21 +1,26 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    [Header("Pause Panel")]
+    [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject configurationsPanel;
 
     private bool isPaused = false;
     private bool cursorWasVisible;
 
+    private void Awake()
+    {
+        // SIEMPRE empiezan ocultos
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (configurationsPanel != null)
+            configurationsPanel.SetActive(false);
+    }
+
     private void Start()
     {
-        if (pausePanel != null)
-        {
-            pausePanel.SetActive(false);
-        }
-
         Time.timeScale = 1f;
     }
 
@@ -23,17 +28,30 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
-                ResumeGame();
-            else
+            if (!isPaused)
+            {
                 PauseGame();
+            }
+            else
+            {
+                // Si estamos en configuraciones,
+                // ESC vuelve al menú de pausa
+                if (configurationsPanel != null &&
+                    configurationsPanel.activeSelf)
+                {
+                    CloseConfigurations();
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            }
         }
     }
 
-    public void MainMenu()
-    {
-        SceneManager.LoadScene(0);
-    }
+    // =====================================================
+    // PAUSE
+    // =====================================================
 
     public void PauseGame()
     {
@@ -42,47 +60,84 @@ public class PauseMenu : MonoBehaviour
 
         isPaused = true;
 
-        // Recordamos cómo estaba el cursor ANTES de pausar
         cursorWasVisible = Cursor.visible;
 
+        if (configurationsPanel != null)
+            configurationsPanel.SetActive(false);
+
         if (pausePanel != null)
-        {
             pausePanel.SetActive(true);
-        }
 
         Time.timeScale = 0f;
 
         if (CursorManager.Instance != null)
-        {
             CursorManager.Instance.ShowCursor();
+    }
+
+    // =====================================================
+    // RESUME
+    // =====================================================
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (configurationsPanel != null)
+            configurationsPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+
+        if (CursorManager.Instance != null)
+        {
+            if (cursorWasVisible)
+                CursorManager.Instance.ShowCursor();
+            else
+                CursorManager.Instance.HideCursor();
         }
     }
 
-    public void ResumeGame()
+    // =====================================================
+    // CONFIGURATIONS
+    // =====================================================
+
+    public void OpenConfigurations()
     {
         if (!isPaused)
             return;
 
-        isPaused = false;
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (configurationsPanel != null)
+            configurationsPanel.SetActive(true);
+    }
+
+    // =====================================================
+    // BACK
+    // =====================================================
+
+    public void CloseConfigurations()
+    {
+        if (!isPaused)
+            return;
+
+        if (configurationsPanel != null)
+            configurationsPanel.SetActive(false);
 
         if (pausePanel != null)
-        {
-            pausePanel.SetActive(false);
-        }
+            pausePanel.SetActive(true);
+    }
 
+    // =====================================================
+    // EXIT
+    // =====================================================
+
+    public void ExitGame()
+    {
         Time.timeScale = 1f;
-
-        // Restauramos el estado anterior
-        if (CursorManager.Instance != null)
-        {
-            if (cursorWasVisible)
-            {
-                CursorManager.Instance.ShowCursor();
-            }
-            else
-            {
-                CursorManager.Instance.HideCursor();
-            }
-        }
+        Application.Quit();
     }
 }
