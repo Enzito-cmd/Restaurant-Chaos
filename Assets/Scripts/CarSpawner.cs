@@ -16,8 +16,23 @@ public class CarSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 3f;
 
-    // Evita que haya autos que puedan cruzarse
-    private bool carIsDriving = false;
+    // Cantidad de autos que están circulando
+    private int carsDriving = 0;
+
+    // Parejas:
+    // 1 - 2
+    // 3 - 4
+    // 5 - 6
+    // 7 - 8
+    private int currentPair = 0;
+
+    private readonly int[][] spawnPairs =
+    {
+        new int[] { 0, 1 }, // Spawn 1 y 2
+        new int[] { 2, 3 }, // Spawn 3 y 4
+        new int[] { 4, 5 }, // Spawn 5 y 6
+        new int[] { 6, 7 }  // Spawn 7 y 8
+    };
 
     private void Start()
     {
@@ -28,30 +43,46 @@ public class CarSpawner : MonoBehaviour
     {
         while (true)
         {
-            // Solo intentamos crear un auto si no hay otro circulando
-            if (!carIsDriving)
+            // Esperamos a que terminen los dos autos
+            if (carsDriving == 0)
             {
-                SpawnCar();
+                SpawnCarPair();
             }
 
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
-    private void SpawnCar()
+    private void SpawnCarPair()
     {
         if (carPrefabs == null || carPrefabs.Length == 0)
             return;
 
-        if (spawnPoints == null || spawnPoints.Length == 0)
+        if (spawnPoints == null || spawnPoints.Length != 8)
             return;
 
-        if (endPoints == null || endPoints.Length != spawnPoints.Length)
+        if (endPoints == null || endPoints.Length != 8)
             return;
 
-        // Elegimos un punto al azar
-        int spawnIndex = UnityEngine.Random.Range(0, spawnPoints.Length);
+        // Obtenemos la pareja actual
+        int spawnIndex1 = spawnPairs[currentPair][0];
+        int spawnIndex2 = spawnPairs[currentPair][1];
 
+        // Spawneamos los dos
+        SpawnCar(spawnIndex1);
+        SpawnCar(spawnIndex2);
+
+        // Pasamos a la siguiente pareja
+        currentPair++;
+
+        if (currentPair >= spawnPairs.Length)
+        {
+            currentPair = 0;
+        }
+    }
+
+    private void SpawnCar(int spawnIndex)
+    {
         Transform spawnPoint = spawnPoints[spawnIndex];
         Transform endPoint = endPoints[spawnIndex];
 
@@ -60,13 +91,10 @@ public class CarSpawner : MonoBehaviour
 
         // Elegimos un auto al azar
         GameObject carPrefab =
-    carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)];
+            carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)];
 
         if (carPrefab == null)
             return;
-
-        // Bloqueamos el tráfico
-        carIsDriving = true;
 
         GameObject carObject = Instantiate(
             carPrefab,
@@ -79,6 +107,8 @@ public class CarSpawner : MonoBehaviour
 
         if (carMovement != null)
         {
+            carsDriving++;
+
             carMovement.SetTarget(
                 endPoint,
                 FreeTraffic
@@ -86,13 +116,17 @@ public class CarSpawner : MonoBehaviour
         }
         else
         {
-            carIsDriving = false;
             Destroy(carObject);
         }
     }
 
     private void FreeTraffic()
     {
-        carIsDriving = false;
+        carsDriving--;
+
+        if (carsDriving < 0)
+        {
+            carsDriving = 0;
+        }
     }
 }
