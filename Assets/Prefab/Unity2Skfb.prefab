@@ -90,5 +90,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b992a108e80a644b4099ef25bb8789, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  moveSpeed: 8
+  moveSpeed: 30
   rotationSpeed: 5
+  arrivalDistance: 1
+  detectionDistance: 6
+  safeDistance: 3
+  brakeSpeed: 15
