@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -135,9 +136,9 @@ public class PauseMenu : MonoBehaviour
     // EXIT
     // =====================================================
 
-    public void ExitGame()
+    public void GoBackToMenu()
     {
         Time.timeScale = 1f;
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 }
