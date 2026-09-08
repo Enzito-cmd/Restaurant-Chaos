@@ -103,20 +103,21 @@ public class CarSpawner : MonoBehaviour
         );
 
         CarMovement carMovement =
-            carObject.GetComponent<CarMovement>();
+    carObject.GetComponent<CarMovement>();
 
         if (carMovement != null)
         {
+            // Velocidad aleatoria entre 20 y 30
+            float randomSpeed = UnityEngine.Random.Range(10f, 30f);
+
+            carMovement.SetSpeed(randomSpeed);
+
             carsDriving++;
 
             carMovement.SetTarget(
                 endPoint,
                 FreeTraffic
             );
-        }
-        else
-        {
-            Destroy(carObject);
         }
     }
 
