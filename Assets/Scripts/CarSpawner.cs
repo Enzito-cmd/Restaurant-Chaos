@@ -1,6 +1,6 @@
 using UnityEngine;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 
 public class CarSpawner : MonoBehaviour
 {
@@ -16,19 +16,8 @@ public class CarSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 3f;
 
-    private readonly int[] pairedSpawns =
-    {
-        5, // Spawn 1  Spawn 6
-        4, // Spawn 2  Spawn 5
-        7, // Spawn 3  Spawn 8
-        6, // Spawn 4  Spawn 7
-        1, // Spawn 5  Spawn 2
-        0, // Spawn 6  Spawn 1
-        3, // Spawn 7  Spawn 4
-        2  // Spawn 8  Spawn 3
-    };
-
-    private HashSet<int> occupiedPairs = new HashSet<int>();
+    // Evita que haya autos que puedan cruzarse
+    private bool carIsDriving = false;
 
     private void Start()
     {
@@ -39,7 +28,11 @@ public class CarSpawner : MonoBehaviour
     {
         while (true)
         {
-            SpawnCar();
+            // Solo intentamos crear un auto si no hay otro circulando
+            if (!carIsDriving)
+            {
+                SpawnCar();
+            }
 
             yield return new WaitForSeconds(spawnInterval);
         }
@@ -48,75 +41,37 @@ public class CarSpawner : MonoBehaviour
     private void SpawnCar()
     {
         if (carPrefabs == null || carPrefabs.Length == 0)
-        {
-            return;
-        }
-
-        if (spawnPoints == null || spawnPoints.Length != 8)
-        {
-
-            return;
-        }
-
-        if (endPoints == null || endPoints.Length != 8)
-        {
-
-            return;
-        }
-
-        List<int> availableSpawns = new List<int>();
-
-        for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            int pair = GetPair(i);
-
-   
-            if (!occupiedPairs.Contains(pair))
-            {
-                availableSpawns.Add(i);
-            }
-        }
-
-
-        if (availableSpawns.Count == 0)
             return;
 
+        if (spawnPoints == null || spawnPoints.Length == 0)
+            return;
 
-        int randomListIndex =
-            Random.Range(0, availableSpawns.Count);
+        if (endPoints == null || endPoints.Length != spawnPoints.Length)
+            return;
 
-        int spawnIndex =
-            availableSpawns[randomListIndex];
-
-        int pairIndex = GetPair(spawnIndex);
-
-        occupiedPairs.Add(pairIndex);
+        // Elegimos un punto al azar
+        int spawnIndex = UnityEngine.Random.Range(0, spawnPoints.Length);
 
         Transform spawnPoint = spawnPoints[spawnIndex];
         Transform endPoint = endPoints[spawnIndex];
 
         if (spawnPoint == null || endPoint == null)
-        {
-            occupiedPairs.Remove(pairIndex);
             return;
-        }
 
-
-        int randomCar =
-            Random.Range(0, carPrefabs.Length);
-
+        // Elegimos un auto al azar
         GameObject carPrefab =
-            carPrefabs[randomCar];
+    carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)];
 
         if (carPrefab == null)
-        {
-            occupiedPairs.Remove(pairIndex);
             return;
-        }
+
+        // Bloqueamos el tráfico
+        carIsDriving = true;
+
         GameObject carObject = Instantiate(
             carPrefab,
             spawnPoint.position,
-            Quaternion.identity
+            spawnPoint.rotation
         );
 
         CarMovement carMovement =
@@ -126,24 +81,18 @@ public class CarSpawner : MonoBehaviour
         {
             carMovement.SetTarget(
                 endPoint,
-                () => FreePair(pairIndex)
+                FreeTraffic
             );
         }
         else
         {
-
-            occupiedPairs.Remove(pairIndex);
+            carIsDriving = false;
             Destroy(carObject);
         }
     }
 
-    private int GetPair(int spawnIndex)
+    private void FreeTraffic()
     {
-        return pairedSpawns[spawnIndex];
-    }
-
-    private void FreePair(int pairIndex)
-    {
-        occupiedPairs.Remove(pairIndex);
+        carIsDriving = false;
     }
 }
