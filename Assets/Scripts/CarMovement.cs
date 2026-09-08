@@ -136,7 +136,11 @@ public class CarMovement : MonoBehaviour
 
         return false;
     }
-
+    public void SetSpeed(float speed)
+    {
+        moveSpeed = speed;
+        currentSpeed = speed;
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
