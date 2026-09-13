@@ -33,7 +33,7 @@ public class FryerVisuals : MonoBehaviour
 
     private void Start()
     {
-        if (basketUpPoint != null) targetBasketPos = basketUpPoint.position;
+        if (basket != null) targetBasketPos = basket.position;
         if (skillcheckCanvas != null) skillcheckCanvas.SetActive(false);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
 

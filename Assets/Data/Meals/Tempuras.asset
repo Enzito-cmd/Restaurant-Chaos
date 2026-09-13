@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8dfbf655166ae4b8bff22e981e3662, type: 3}
+  m_Name: Tempuras
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.MealDefinition
+  displayName: Tempuras
+  itemType: 6
+  orderVisualPrefab: {fileID: 919132149155446097, guid: cf6e677b33306274a91c50ef888d413d, type: 3}
+  uiIcon: {fileID: 21300000, guid: 2054361240b646744b29db6a3962f3cd, type: 3}
+  basePrice: 50

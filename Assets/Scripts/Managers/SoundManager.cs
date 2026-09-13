@@ -62,6 +62,12 @@ public class SoundManager : MonoBehaviour
     public float MasterVolume => masterVolume;
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
 
         // Mantener entre escenas
@@ -146,7 +152,7 @@ public class SoundManager : MonoBehaviour
         // Afectar sonidos
         UpdateSoundVolume();
 
-        // Afectar música
+        // Afectar mï¿½sica
         if (MusicManager.Instance != null)
         {
             MusicManager.Instance.ApplyMasterVolume(masterVolume);
