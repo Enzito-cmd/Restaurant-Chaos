@@ -41,8 +41,7 @@ public class PlayerHoldSystem : MonoBehaviour
             child.gameObject.SetActive(true);
         }
 
-        currentHeldObject.transform.localPosition = Vector3.zero;
-        currentHeldObject.transform.localRotation = Quaternion.identity;
+        ApplyHoldOffset(currentHeldObject);
 
         return true;
     }
@@ -61,8 +60,7 @@ public class PlayerHoldSystem : MonoBehaviour
 
         currentHeldObject = existingItem;
         currentHeldObject.transform.SetParent(holdPoint);
-        currentHeldObject.transform.localPosition = Vector3.zero;
-        currentHeldObject.transform.localRotation = Quaternion.identity;
+        ApplyHoldOffset(currentHeldObject);
 
         if (currentHeldObject.TryGetComponent<Collider>(out var col))
         {
@@ -106,5 +104,21 @@ public class PlayerHoldSystem : MonoBehaviour
     public GameObject GetHeldItem()
     {
         return currentHeldObject;
+    }
+
+    private void ApplyHoldOffset(GameObject heldObject)
+    {
+        HeldItemOffset offset = heldObject.GetComponentInChildren<HeldItemOffset>();
+
+        if (offset != null)
+        {
+            heldObject.transform.localPosition = offset.positionOffset;
+            heldObject.transform.localRotation = Quaternion.Euler(offset.rotationOffset);
+        }
+        else
+        {
+            heldObject.transform.localPosition = Vector3.zero;
+            heldObject.transform.localRotation = Quaternion.identity;
+        }
     }
 }

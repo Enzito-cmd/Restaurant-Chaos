@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5140c4567e0b84ea2de34260c1e647, type: 3}
+  m_Name: Yakuza
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.ClientTypeDefinition
+  displayName: Yakuza
+  moveSpeed: 3
+  chaseSpeedMultiplier: 1.5
+  queuePatienceSeconds: 90
+  seatedPatienceSeconds: 90
+  carryOverRules:
+  - queueThreshold: 0.6
+    seatedStartFill: 0.8
+  possibleMeals:
+  - {fileID: 11400000, guid: fd4b2fbe76fcf79458fdeff6adad4284, type: 2}
+  - {fileID: 11400000, guid: 8c96ab4858b116a4eaa9373fcdb76f69, type: 2}
+  yellCooldown: 3
+  yellDistance: 1
+  yellDuration: 1

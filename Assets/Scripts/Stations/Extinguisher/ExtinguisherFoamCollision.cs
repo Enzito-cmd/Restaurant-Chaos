@@ -1,3 +1,4 @@
+using RestaurantChaos.Clients;
 using UnityEngine;
 
 public class ExtinguisherFoamCollision : MonoBehaviour
@@ -7,14 +8,25 @@ public class ExtinguisherFoamCollision : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        RestaurantClient client = other.GetComponentInParent<RestaurantClient>();
+        RestaurantClient oldClient = other.GetComponentInParent<RestaurantClient>();
 
-        if (client != null && client.CurrentState == RestaurantClient.ClientState.AngryChasing)
+        if (oldClient != null && oldClient.CurrentState == RestaurantClient.ClientState.AngryChasing)
         {
-            Vector3 pushDirection = (client.transform.position - transform.position).normalized;
+            Vector3 pushDirection = (oldClient.transform.position - transform.position).normalized;
             pushDirection.y = 0;
 
-            client.GetBlownAway(pushDirection * launchForce + Vector3.up * upwardForce);
+            oldClient.GetBlownAway(pushDirection * launchForce + Vector3.up * upwardForce);
+            return;
+        }
+
+        ClientBase newClient = other.GetComponentInParent<ClientBase>();
+
+        if (newClient != null && newClient.IsChasing)
+        {
+            Vector3 pushDirection = (newClient.transform.position - transform.position).normalized;
+            pushDirection.y = 0;
+
+            newClient.GetBlownAway(pushDirection * launchForce + Vector3.up * upwardForce);
         }
     }
 }
