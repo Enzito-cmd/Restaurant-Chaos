@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 925fff2b2288270498fd16276c4b654a, type: 3}
+  m_Name: Day_2
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.DayDefinition
+  displayName: Day_2
+  clientEntries:
+  - clientPrefab: {fileID: 8341922451776090912, guid: 7b8d7958460073247a2881867a58b1d6, type: 3}
+    config: {fileID: 11400000, guid: 07dc2b00ba01eb041910401a7ca22eac, type: 2}
+  - clientPrefab: {fileID: 6477620168788257921, guid: 64f47ac8ca4bbab4c84b7eabcc50bc9f, type: 3}
+    config: {fileID: 11400000, guid: b8468785427be5f46ba3f7505d70d562, type: 2}

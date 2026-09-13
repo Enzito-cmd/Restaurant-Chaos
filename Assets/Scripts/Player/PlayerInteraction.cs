@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using RestaurantChaos.Clients;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
@@ -7,12 +9,54 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float interactRadius = 2.5f;
     [SerializeField] private LayerMask interactableLayer;
 
+    private PlayerHoldSystem holdSystem;
+    private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
+
+    private void Awake()
+    {
+        holdSystem = GetComponentInChildren<PlayerHoldSystem>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
         }
+
+        UpdateLockIconsInRange();
+    }
+
+    private void UpdateLockIconsInRange()
+    {
+        if (interactPoint == null) return;
+
+        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
+        List<LockableStation> stillInRange = new List<LockableStation>();
+
+        foreach (var hit in hitColliders)
+        {
+            if (hit.TryGetComponent<LockableStation>(out var lockable))
+            {
+                stillInRange.Add(lockable);
+
+                if (!visibleLockIcons.Contains(lockable))
+                {
+                    lockable.SetIconVisible(true);
+                }
+            }
+        }
+
+        foreach (LockableStation previous in visibleLockIcons)
+        {
+            if (!stillInRange.Contains(previous))
+            {
+                previous.SetIconVisible(false);
+            }
+        }
+
+        visibleLockIcons.Clear();
+        visibleLockIcons.AddRange(stillInRange);
     }
 
     private void TryInteract()
@@ -21,24 +65,29 @@ public class PlayerInteraction : MonoBehaviour
 
         Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
 
-        bool isChased = IsBeingChased();
+        bool restrictToExtinguisherOnly = IsBeingChased() || IsHoldingExtinguisher();
         IInteractable targetInteractable = null;
 
         foreach (var hit in hitColliders)
         {
             if (hit.TryGetComponent<IInteractable>(out var interactable))
             {
-                if (isChased)
+                if (restrictToExtinguisherOnly)
                 {
                     if (interactable is ExtinguisherProp)
                     {
                         interactable.Interact();
                         return;
                     }
-                    continue; 
+                    continue;
                 }
 
-                if (interactable is RestaurantClient)
+                if (hit.TryGetComponent<LockableStation>(out var lockable) && lockable.IsLocked)
+                {
+                    continue;
+                }
+
+                if (interactable is RestaurantClient || interactable is ClientBase)
                 {
                     targetInteractable = interactable;
                     break;
@@ -59,6 +108,8 @@ public class PlayerInteraction : MonoBehaviour
 
     public bool IsBeingChased()
     {
+        if (ClientRegistry.AnyChasing) return true;
+
         RestaurantClient[] clients = FindObjectsByType<RestaurantClient>(FindObjectsSortMode.None);
         foreach (var c in clients)
         {
@@ -68,6 +119,14 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private bool IsHoldingExtinguisher()
+    {
+        if (holdSystem == null) return false;
+        if (!holdSystem.IsHoldingItem) return false;
+
+        return holdSystem.GetHeldItem().GetComponentInChildren<ExtinguisherItem>() != null;
     }
 
     private void OnDrawGizmosSelected()

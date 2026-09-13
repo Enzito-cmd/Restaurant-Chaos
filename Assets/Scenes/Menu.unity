@@ -629,7 +629,7 @@ GameObject:
   - component: {fileID: 711627992}
   - component: {fileID: 711627994}
   m_Layer: 0
-  m_Name: MusicSourse
+  m_Name: MusicSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

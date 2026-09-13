@@ -263,7 +263,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436970351259025405}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.227}
+  m_LocalPosition: {x: 0, y: 0, z: 0.052}
   m_LocalScale: {x: -0.002082504, y: -0.002082504, z: -0.002082504}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1066,7 +1066,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7643501500221081245}
   m_Layer: 7
-  m_Name: point
+  m_Name: OrderPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1081,7 +1081,7 @@ Transform:
   m_GameObject: {fileID: 2314614462234829619}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.003, y: 1.912, z: 0.114}
+  m_LocalPosition: {x: 0.003, y: 2.816, z: 0.06}
   m_LocalScale: {x: 0.45714247, y: 0.45714247, z: 0.45714247}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2005,10 +2005,11 @@ GameObject:
   - component: {fileID: 8429079253786982178}
   - component: {fileID: 7028554142199720916}
   - component: {fileID: 5108032023741472918}
-  - component: {fileID: 4100829359023521672}
-  - component: {fileID: 1267778983819334860}
   - component: {fileID: 1783731652406503861}
   - component: {fileID: 388440104548388407}
+  - component: {fileID: 279133611285388591}
+  - component: {fileID: -3287057737880890488}
+  - component: {fileID: 8070099512946179855}
   m_Layer: 7
   m_Name: AngryCustomer
   m_TagString: Untagged
@@ -2025,9 +2026,9 @@ Transform:
   m_GameObject: {fileID: 6477620168788257921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.005, y: 0.47301, z: -6.0259}
-  m_LocalScale: {x: 1.7613226, y: 1.7613226, z: 1.7613226}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5998425816588807983}
   - {fileID: 880184471470871295}
@@ -2079,52 +2080,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4100829359023521672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6477620168788257921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64eaef0d1a056c946a258fd582bbb9d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RestaurantClient
-  isAngryCustomer: 1
-  yellDuration: 1.8
-  yellDistance: 1.5
-  yellCooldown: 2.5
-  possibleMeals:
-  - foodType: 7
-    visualPrefab: {fileID: 919132149155446097, guid: 265c2b85236658b44a922d387fa53305, type: 3}
-    rewardAmount: 30
-  - foodType: 6
-    visualPrefab: {fileID: 919132149155446097, guid: cf6e677b33306274a91c50ef888d413d, type: 3}
-    rewardAmount: 30
-  moveSpeed: 3
-  rotationSpeed: 8
-  stopDistance: 0.5
-  foodDeliveryDistance: 10
-  agent: {fileID: 5108032023741472918}
-  animator: {fileID: 7028554142199720916}
-  orderVisualPoint: {fileID: 7643501500221081245}
-  thinkingPrefab: {fileID: 8668267033447084222, guid: f8bd054f47073834e89ad7f85cacc294, type: 3}
-  moneyPrefab: {fileID: 6585275513500336520, guid: c71b153a9c544a84ba23af28c2356f71, type: 3}
---- !u!114 &1267778983819334860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6477620168788257921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 680f6dd5e1f07b64a9dc4a167632bed1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClientHappiness
-  happinessFill: {fileID: 2962468483382136678}
-  maxTime: 120
 --- !u!65 &1783731652406503861
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2169,6 +2124,50 @@ CapsuleCollider:
   m_Height: 1.795052
   m_Direction: 1
   m_Center: {x: -0.0066783302, y: 0.85922515, z: 0.0059241108}
+--- !u!114 &279133611285388591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477620168788257921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8661eeedaccb0647947ffbd2c110900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.ClientPatience
+  fillImage: {fileID: 2962468483382136678}
+--- !u!114 &-3287057737880890488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477620168788257921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042ee9fd59490d444b06dddf96c88d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.ClientOrderDisplay
+  orderVisualPoint: {fileID: 7643501500221081245}
+--- !u!114 &8070099512946179855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477620168788257921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de8490e727fa0ca47b502fd065f663ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.YakuzaClient
+  stopDistance: 0.5
+  thinkingPrefab: {fileID: 8668267033447084222, guid: f8bd054f47073834e89ad7f85cacc294, type: 3}
+  thinkingDuration: 5
+  foodDeliveryDistance: 4
+  moneyPrefab: {fileID: 6585275513500336520, guid: c71b153a9c544a84ba23af28c2356f71, type: 3}
+  debugConfig: {fileID: 11400000, guid: b8468785427be5f46ba3f7505d70d562, type: 2}
 --- !u!1 &6835926461070069814
 GameObject:
   m_ObjectHideFlags: 0
