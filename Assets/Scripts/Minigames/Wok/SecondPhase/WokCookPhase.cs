@@ -297,16 +297,7 @@ public class WokCookPhase : MonoBehaviour
     {
         if (!isCookingActive) return;
 
-        isCookingActive = false;
-        ResetWokTransform();
-
-        if (arrowsCanvas != null)
-        {
-            arrowsCanvas.SetActive(false);
-        }
-
-        if (hitsText != null) hitsText.gameObject.SetActive(false);
-        if (errorsText != null) errorsText.gameObject.SetActive(false);
+        StopCooking();
 
         Debug.Log("Wok won");
 
@@ -320,8 +311,23 @@ public class WokCookPhase : MonoBehaviour
     {
         if (!isCookingActive) return;
 
+        StopCooking();
+
+        Debug.Log("Wok lost");
+
+        if (wokController != null)
+        {
+            wokController.FinishCooking(false);
+        }
+    }
+
+    public void StopCooking()
+    {
+        if (!isCookingActive) return;
+
         isCookingActive = false;
         ResetWokTransform();
+        ClearArrows();
 
         if (arrowsCanvas != null)
         {
@@ -330,12 +336,19 @@ public class WokCookPhase : MonoBehaviour
 
         if (hitsText != null) hitsText.gameObject.SetActive(false);
         if (errorsText != null) errorsText.gameObject.SetActive(false);
+    }
 
-        Debug.Log("Wok lost");
+    private void ClearArrows()
+    {
+        if (arrowsCanvas == null) return;
 
-        if (wokController != null)
+        CookingArrow[] remainingArrows = arrowsCanvas.GetComponentsInChildren<CookingArrow>(true);
+
+        foreach (CookingArrow arrow in remainingArrows)
         {
-            wokController.FinishCooking(false);
+            Destroy(arrow.gameObject);
         }
+
+        activeArrowsCount = 0;
     }
 }

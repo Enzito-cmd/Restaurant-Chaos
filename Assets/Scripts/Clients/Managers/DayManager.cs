@@ -37,6 +37,9 @@ namespace RestaurantChaos.Clients
             }
 
             Instance = this;
+
+            OrderBoard.ClearAll();
+            ClientRegistry.ClearAll();
         }
 
         private void Start()

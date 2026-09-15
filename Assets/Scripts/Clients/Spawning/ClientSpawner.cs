@@ -7,8 +7,8 @@ namespace RestaurantChaos.Clients
     {
         [Header("Spawn Settings")]
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private int maxClients = 3;
-        [SerializeField] private float spawnInterval = 5f;
+        [SerializeField] private int maxClients;
+        [SerializeField] private float spawnInterval;
 
         [Header("Spawnable Clients")]
         [SerializeField] private ClientSpawnEntry[] availableEntries;

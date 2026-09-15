@@ -12,6 +12,7 @@ public class WokController : MonoBehaviour
 
     private WokVisuals visuals;
     private WokPrepPhase prepPhase;
+    private WokCookPhase cookPhase;
     private bool isMinigameActive = false;
     private WokTransition transition;
 
@@ -23,6 +24,7 @@ public class WokController : MonoBehaviour
         }
 
         prepPhase = GetComponent<WokPrepPhase>();
+        cookPhase = GetComponent<WokCookPhase>();
         visuals = GetComponent<WokVisuals>();
         transition = GetComponent<WokTransition>();
     }
@@ -30,7 +32,6 @@ public class WokController : MonoBehaviour
     public void StartMinigame()
     {
         SoundManager.Instance?.PlaySound(SoundType.WokStart);
-        isMinigameActive = true;
 
         if (transition != null)
         {
@@ -52,6 +53,8 @@ public class WokController : MonoBehaviour
             yield return StartCoroutine(visuals.AnimatePanIn());
         }
 
+        isMinigameActive = true;
+
         if (prepPhase != null)
         {
             prepPhase.StartPrepPhase();
@@ -68,6 +71,16 @@ public class WokController : MonoBehaviour
     private IEnumerator EndSequence()
     {
         isMinigameActive = false;
+
+        if (prepPhase != null)
+        {
+            prepPhase.StopPrepPhase();
+        }
+
+        if (cookPhase != null)
+        {
+            cookPhase.StopCooking();
+        }
 
         if (visuals != null)
         {

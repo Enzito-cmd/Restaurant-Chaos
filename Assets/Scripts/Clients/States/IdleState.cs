@@ -19,6 +19,7 @@ namespace RestaurantChaos.Clients
         public override void OnInteract()
         {
             if (ClientRegistry.AnyFollowing) return;
+            if (client.IsPlayerHoldingItem()) return;
 
             client.ChangeState(new FollowPlayerState(client));
         }

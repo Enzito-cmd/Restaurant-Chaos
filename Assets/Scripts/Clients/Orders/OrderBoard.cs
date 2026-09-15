@@ -36,5 +36,10 @@ namespace RestaurantChaos.Clients
                 TicketClosed.Invoke(tableNumber);
             }
         }
+
+        public static void ClearAll()
+        {
+            openTickets.Clear();
+        }
     }
 }

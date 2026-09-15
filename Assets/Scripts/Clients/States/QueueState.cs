@@ -41,6 +41,7 @@ namespace RestaurantChaos.Clients
         {
             if (!client.IsFrontOfQueue) return;
             if (ClientRegistry.AnyFollowing) return;
+            if (client.IsPlayerHoldingItem()) return;
 
             client.ChangeState(new FollowPlayerState(client));
         }

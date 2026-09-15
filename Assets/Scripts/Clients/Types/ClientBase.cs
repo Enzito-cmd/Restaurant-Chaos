@@ -188,6 +188,14 @@ namespace RestaurantChaos.Clients
             }
         }
 
+        public bool IsPlayerHoldingItem()
+        {
+            if (player == null) return false;
+
+            PlayerHoldSystem holdSystem = player.GetComponentInChildren<PlayerHoldSystem>();
+            return holdSystem != null && holdSystem.IsHoldingItem;
+        }
+
         public void TryDeliverFood()
         {
             if (player == null) return;

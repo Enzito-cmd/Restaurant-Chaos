@@ -290,4 +290,15 @@ public class WokPrepPhase : MonoBehaviour
         if (prepUIPanel != null) prepUIPanel.SetActive(false);
         if (wokController != null) wokController.CookPhase();
     }
+
+    public void StopPrepPhase()
+    {
+        if (!isPrepActive) return;
+
+        isPrepActive = false;
+        StopRiceSound();
+        ClearHeldItem();
+
+        if (prepUIPanel != null) prepUIPanel.SetActive(false);
+    }
 }

@@ -104,5 +104,11 @@ namespace RestaurantChaos.Clients
                 ClientDespawned.Invoke(client);
             }
         }
+
+        public static void ClearAll()
+        {
+            activeClients.Clear();
+            servedClients.Clear();
+        }
     }
 }
