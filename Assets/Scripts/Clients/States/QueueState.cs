@@ -40,6 +40,7 @@ namespace RestaurantChaos.Clients
         public override void OnInteract()
         {
             if (!client.IsFrontOfQueue) return;
+            if (ClientRegistry.AnyFollowing) return;
 
             client.ChangeState(new FollowPlayerState(client));
         }

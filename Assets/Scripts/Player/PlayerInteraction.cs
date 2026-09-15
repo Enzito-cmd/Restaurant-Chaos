@@ -11,6 +11,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private PlayerHoldSystem holdSystem;
     private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
+    private readonly List<PlateRest> visiblePlateRests = new List<PlateRest>();
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         UpdateLockIconsInRange();
+        UpdatePlateRestsInRange();
     }
 
     private void UpdateLockIconsInRange()
@@ -57,6 +59,38 @@ public class PlayerInteraction : MonoBehaviour
 
         visibleLockIcons.Clear();
         visibleLockIcons.AddRange(stillInRange);
+    }
+
+    private void UpdatePlateRestsInRange()
+    {
+        if (interactPoint == null) return;
+
+        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
+        List<PlateRest> stillInRange = new List<PlateRest>();
+
+        foreach (var hit in hitColliders)
+        {
+            if (hit.TryGetComponent<PlateRest>(out var plateRest))
+            {
+                stillInRange.Add(plateRest);
+
+                if (!visiblePlateRests.Contains(plateRest))
+                {
+                    plateRest.SetPlayerInRange(true);
+                }
+            }
+        }
+
+        foreach (PlateRest previous in visiblePlateRests)
+        {
+            if (!stillInRange.Contains(previous))
+            {
+                previous.SetPlayerInRange(false);
+            }
+        }
+
+        visiblePlateRests.Clear();
+        visiblePlateRests.AddRange(stillInRange);
     }
 
     private void TryInteract()
@@ -103,6 +137,16 @@ public class PlayerInteraction : MonoBehaviour
         if (targetInteractable != null)
         {
             targetInteractable.Interact();
+            return;
+        }
+
+        if (restrictToExtinguisherOnly) return;
+
+        ClientBase followingClient = ClientRegistry.GetFollowingClient();
+
+        if (followingClient != null)
+        {
+            followingClient.Interact();
         }
     }
 

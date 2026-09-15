@@ -13,6 +13,11 @@ namespace RestaurantChaos.Clients
             ClientChair.ShowFreeChairs();
         }
 
+        public override void OnInteract()
+        {
+            client.ChangeState(new IdleState(client));
+        }
+
         public override void Tick()
         {
             if (client.Player == null) return;

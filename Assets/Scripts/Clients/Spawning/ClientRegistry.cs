@@ -31,6 +31,35 @@ namespace RestaurantChaos.Clients
             }
         }
 
+        public static bool AnyFollowing
+        {
+            get
+            {
+                foreach (ClientBase client in activeClients)
+                {
+                    if (client.IsFollowingPlayer)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        public static ClientBase GetFollowingClient()
+        {
+            foreach (ClientBase client in activeClients)
+            {
+                if (client.IsFollowingPlayer)
+                {
+                    return client;
+                }
+            }
+
+            return null;
+        }
+
         public static void Register(ClientBase client)
         {
             if (activeClients.Contains(client)) return;

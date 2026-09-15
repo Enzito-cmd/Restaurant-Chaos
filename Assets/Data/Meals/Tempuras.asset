@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.MealDefinition
   displayName: Tempuras
   itemType: 6
+  requiredItems: 0400000005000000
   orderVisualPrefab: {fileID: 919132149155446097, guid: cf6e677b33306274a91c50ef888d413d, type: 3}
   uiIcon: {fileID: 21300000, guid: 2054361240b646744b29db6a3962f3cd, type: 3}
   basePrice: 50

@@ -18,9 +18,9 @@ TagManager:
   - Player
   - Client
   - Walkable
-  - 
-  - 
-  - 
+  - Floor
+  - Walls
+  - Obstacles
   - 
   - 
   - 
