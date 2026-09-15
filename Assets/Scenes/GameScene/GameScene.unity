@@ -82084,7 +82084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LockableStation
   isLocked: 1
-  lockIcon: {fileID: 0}
+  lockIcon: {fileID: 1076680549}
 --- !u!1 &1334887508
 GameObject:
   m_ObjectHideFlags: 0
@@ -86705,8 +86705,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.ClientSpawner
   spawnPoint: {fileID: 1421502511}
-  maxClients: 3
-  spawnInterval: 5
+  maxClients: 5
+  spawnInterval: 10
   availableEntries: []
   clientQueue: {fileID: 109769979}
 --- !u!1 &1424591578

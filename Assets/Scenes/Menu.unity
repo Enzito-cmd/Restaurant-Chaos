@@ -760,7 +760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   musicSource: {fileID: 711627992}
-  music: {fileID: 8300000, guid: ef01fb2123e9bc341a2424f63f7849c7, type: 3}
+  music: {fileID: 8300000, guid: 23a04b8f436463449a75286834e690f6, type: 3}
 --- !u!1 &920752939
 GameObject:
   m_ObjectHideFlags: 0
