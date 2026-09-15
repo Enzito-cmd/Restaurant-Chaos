@@ -95,6 +95,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TryInteract()
     {
+        if (Time.timeScale == 0f) return;
         if (interactPoint == null) return;
 
         Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
@@ -113,6 +114,12 @@ public class PlayerInteraction : MonoBehaviour
                         interactable.Interact();
                         return;
                     }
+
+                    if (interactable is PlateRest plateRest && plateRest.TryDepositHeldPlate())
+                    {
+                        return;
+                    }
+
                     continue;
                 }
 

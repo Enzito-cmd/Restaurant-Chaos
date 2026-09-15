@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using RestaurantChaos.Clients;
 
 public class LevelSelector : MonoBehaviour
 {
@@ -14,6 +15,23 @@ public class LevelSelector : MonoBehaviour
     public void LoadLevel2()
     {
         StartCoroutine(LoadSceneWithSound("Level 2"));
+    }
+
+    public void LoadGameScene()
+    {
+        StartCoroutine(LoadSceneWithSound("GameScene"));
+    }
+
+    public void PlayDay1()
+    {
+        DayManager.RequestedStartDayIndex = 0;
+        StartCoroutine(LoadSceneWithSound("GameScene"));
+    }
+
+    public void PlayDay2()
+    {
+        DayManager.RequestedStartDayIndex = 1;
+        StartCoroutine(LoadSceneWithSound("GameScene"));
     }
 
     public void GoToLevelSelector()
@@ -41,7 +59,6 @@ public class LevelSelector : MonoBehaviour
             SoundManager.Instance.PlaySound(SoundType.ButtonClick);
         }
 
-        // Esperamos para que se escuche el sonido
         yield return new WaitForSeconds(0.3f);
 
         Debug.Log("Saliendo del juego...");

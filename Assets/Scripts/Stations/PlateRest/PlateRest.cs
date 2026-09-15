@@ -50,8 +50,15 @@ public class PlateRest : MonoBehaviour, IInteractable
             return;
         }
 
-        if (!playerHoldSystem.IsHoldingItem) return;
-        if (!CanDepositHeldItem()) return;
+        TryDepositHeldPlate();
+    }
+
+    public bool TryDepositHeldPlate()
+    {
+        if (playerHoldSystem == null) return false;
+        if (heldPlate != null) return false;
+        if (!playerHoldSystem.IsHoldingItem) return false;
+        if (!CanDepositHeldItem()) return false;
 
         GameObject released = playerHoldSystem.ReleaseItem();
         released.transform.SetParent(platePoint, true);
@@ -60,6 +67,7 @@ public class PlateRest : MonoBehaviour, IInteractable
 
         heldPlate = released;
         UpdateIndicator();
+        return true;
     }
 
     private bool CanDepositHeldItem()

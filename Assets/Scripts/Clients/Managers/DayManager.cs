@@ -13,12 +13,15 @@ namespace RestaurantChaos.Clients
     {
         public static DayManager Instance { get; private set; }
 
+        public static int RequestedStartDayIndex = 0;
+
         [Header("Days")]
         [SerializeField] private DaySetup[] days;
 
         [Header("References")]
         [SerializeField] private ClientSpawner spawner;
         [SerializeField] private LevelManager levelManager;
+        [SerializeField] private PlayerController playerController;
 
         private int currentDayIndex = -1;
 
@@ -38,7 +41,10 @@ namespace RestaurantChaos.Clients
 
         private void Start()
         {
-            StartDay(0);
+            int startIndex = RequestedStartDayIndex;
+            RequestedStartDayIndex = 0;
+
+            StartDay(startIndex);
         }
 
         public void AdvanceToNextDay()
@@ -46,6 +52,8 @@ namespace RestaurantChaos.Clients
             if (!HasNextDay) return;
 
             StartDay(currentDayIndex + 1);
+            playerController.transform.position = playerController.startPosition;
+            playerController.transform.rotation = playerController.startRotation;
         }
 
         private void StartDay(int index)

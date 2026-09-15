@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 
     private Transform mainCameraTransform;
 
+    public Vector3 startPosition;
+    public Quaternion startRotation;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -22,6 +25,8 @@ public class PlayerController : MonoBehaviour
         {
             mainCameraTransform = Camera.main.transform;
         }
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
     public void SetMovement(bool state)

@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 841140184}
   - component: {fileID: 841140183}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Day2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -660,7 +660,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 694775419}
         m_TargetAssemblyTypeName: LevelSelector, Assembly-CSharp
-        m_MethodName: LoadLevel2
+        m_MethodName: PlayDay2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1116,7 +1116,7 @@ GameObject:
   - component: {fileID: 1329712900}
   - component: {fileID: 1329712899}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Day1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1188,7 +1188,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 694775419}
         m_TargetAssemblyTypeName: LevelSelector, Assembly-CSharp
-        m_MethodName: LoadLevel1
+        m_MethodName: PlayDay1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

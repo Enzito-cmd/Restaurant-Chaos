@@ -19,7 +19,7 @@ public class MusicManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
 
@@ -47,7 +47,7 @@ public class MusicManager : MonoBehaviour
     }
 
     // =========================================================
-    // SLIDER MÚSICA
+    // SLIDER Mï¿½SICA
     // =========================================================
 
     public void SetMusicVolume(float volume)

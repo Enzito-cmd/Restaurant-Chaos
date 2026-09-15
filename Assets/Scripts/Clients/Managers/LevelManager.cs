@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RestaurantChaos.Clients
 {
@@ -62,6 +63,11 @@ namespace RestaurantChaos.Clients
                 }
             }
 
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.HideCursor();
+            }
+
             CancelInvoke(nameof(StartCheckingClients));
             Invoke(nameof(StartCheckingClients), 1f);
         }
@@ -94,6 +100,11 @@ namespace RestaurantChaos.Clients
         private void HandleClientServed(ClientBase client)
         {
             clientsServed++;
+        }
+
+        public void ReturnToMenu()
+        {
+            SceneManager.LoadScene("Menu");
         }
 
         private void EndLevel()
