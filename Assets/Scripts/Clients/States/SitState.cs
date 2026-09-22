@@ -22,6 +22,8 @@ namespace RestaurantChaos.Clients
             chair.SetOccupied(true);
             ClientChair.HideAllIndicators();
 
+            SoundManager.Instance?.PlaySound(SoundType.ClientSit);
+
             if (client.Agent != null)
             {
                 client.Agent.isStopped = true;
@@ -49,6 +51,7 @@ namespace RestaurantChaos.Clients
             {
                 client.OrderDisplay.Show(client.ChosenMeal.orderVisualPrefab);
                 OrderBoard.OpenTicket(chair.TableNumber, client.ChosenMeal, client);
+                SoundManager.Instance?.PlaySound(SoundType.pedido);
             }
 
             float startFill = client.Config.GetSeatedStartFill(queueEndFill);

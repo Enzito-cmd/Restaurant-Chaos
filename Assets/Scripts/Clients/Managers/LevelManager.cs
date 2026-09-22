@@ -106,6 +106,8 @@ namespace RestaurantChaos.Clients
 
         public void ReturnToMenu()
         {
+            SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
             SceneManager.LoadScene("Menu");
         }
 

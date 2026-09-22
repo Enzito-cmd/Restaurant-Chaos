@@ -1438,21 +1438,21 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
   clientPicked: {fileID: 8300000, guid: 433c237b2f997da4aa10c416e8b9ae53, type: 3}
   clientSit: {fileID: 8300000, guid: 433c237b2f997da4aa10c416e8b9ae53, type: 3}
-  foodDelivered: {fileID: 0}
+  foodDelivered: {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
   clientLeave: {fileID: 0}
   clientAngry: {fileID: 0}
-  moneySpawn: {fileID: 0}
+  moneySpawn: {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
   moneyPickup: {fileID: 0}
   wokStart: {fileID: 0}
   eggAdded: {fileID: 8300000, guid: 970c170fb7b8be74ab4a6b14f178a034, type: 3}
   ricePour: {fileID: 8300000, guid: e8424d1187b7c2843ba8cc78a60b1274, type: 3}
-  cookingSuccess: {fileID: 0}
+  cookingSuccess: {fileID: 8300000, guid: c72dfcc88fa8af042a3a51c49056eaea, type: 3}
   cookingFail: {fileID: 0}
   pedido: {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
   Stars: {fileID: 0}
-  WokHit: {fileID: 0}
+  WokHit: {fileID: 8300000, guid: c72dfcc88fa8af042a3a51c49056eaea, type: 3}
   clientSpawn: {fileID: 8300000, guid: 09c56f4c36e3eb3408b39f38722095d7, type: 3}
-  clientDeath: {fileID: 0}
+  clientDeath: {fileID: 8300000, guid: 318699cdb0465c94089e7567bbca98bf, type: 3}
   cookingMiss: {fileID: 0}
 --- !u!82 &1732557654
 AudioSource:

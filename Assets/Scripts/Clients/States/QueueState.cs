@@ -43,6 +43,7 @@ namespace RestaurantChaos.Clients
             if (ClientRegistry.AnyFollowing) return;
             if (client.IsPlayerHoldingItem()) return;
 
+            SoundManager.Instance?.PlaySound(SoundType.ClientPicked);
             client.ChangeState(new FollowPlayerState(client));
         }
 

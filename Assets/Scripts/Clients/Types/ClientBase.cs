@@ -220,6 +220,8 @@ namespace RestaurantChaos.Clients
 
         private void DeliverFood(PlayerHoldSystem holdSystem)
         {
+            SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
+
             holdSystem.ClearHeldItem();
             SpawnMoneyOnTable();
 
@@ -238,6 +240,7 @@ namespace RestaurantChaos.Clients
             if (currentChair.MoneySpawnPoint == null) return;
 
             GameObject moneyInstance = Instantiate(moneyPrefab, currentChair.MoneySpawnPoint.position, currentChair.MoneySpawnPoint.rotation);
+            SoundManager.Instance?.PlaySound(SoundType.MoneySpawn);
 
             if (chosenMeal == null) return;
 

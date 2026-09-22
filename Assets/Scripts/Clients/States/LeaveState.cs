@@ -66,6 +66,7 @@ namespace RestaurantChaos.Clients
 
             if (Vector3.Distance(clientPos, exitPos) <= 2.5f)
             {
+                SoundManager.Instance?.PlaySound(SoundType.ClientLeave);
                 client.RemoveFromLevel();
             }
         }

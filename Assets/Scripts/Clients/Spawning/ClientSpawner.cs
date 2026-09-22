@@ -64,6 +64,7 @@ namespace RestaurantChaos.Clients
             if (entry.clientPrefab == null) return;
 
             GameObject instance = Instantiate(entry.clientPrefab, spawnPoint.position, spawnPoint.rotation);
+            SoundManager.Instance?.PlaySound(SoundType.ClientSpawn);
             ClientBase client = instance.GetComponent<ClientBase>();
 
             if (client == null) return;

@@ -36,7 +36,7 @@ public class PauseMenu : MonoBehaviour
             else
             {
                 // Si estamos en configuraciones,
-                // ESC vuelve al menú de pausa
+                // ESC vuelve al menï¿½ de pausa
                 if (configurationsPanel != null &&
                     configurationsPanel.activeSelf)
                 {
@@ -58,6 +58,8 @@ public class PauseMenu : MonoBehaviour
     {
         if (isPaused)
             return;
+
+        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
         isPaused = true;
 
@@ -81,6 +83,8 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
         isPaused = false;
 
         if (pausePanel != null)
@@ -109,6 +113,8 @@ public class PauseMenu : MonoBehaviour
         if (!isPaused)
             return;
 
+        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
@@ -125,6 +131,8 @@ public class PauseMenu : MonoBehaviour
         if (!isPaused)
             return;
 
+        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
         if (configurationsPanel != null)
             configurationsPanel.SetActive(false);
 
@@ -138,6 +146,8 @@ public class PauseMenu : MonoBehaviour
 
     public void GoBackToMenu()
     {
+        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
         Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }

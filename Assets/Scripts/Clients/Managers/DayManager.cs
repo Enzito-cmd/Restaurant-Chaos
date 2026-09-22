@@ -54,6 +54,8 @@ namespace RestaurantChaos.Clients
         {
             if (!HasNextDay) return;
 
+            SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+
             StartDay(currentDayIndex + 1);
             playerController.transform.position = playerController.startPosition;
             playerController.transform.rotation = playerController.startRotation;

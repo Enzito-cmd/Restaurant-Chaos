@@ -12,6 +12,8 @@ namespace RestaurantChaos.Clients
 
         public override void Enter()
         {
+            SoundManager.Instance?.PlaySound(SoundType.ClientAngry);
+
             client.NotifyLeftQueue();
             client.OrderDisplay.Clear();
 

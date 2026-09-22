@@ -45,6 +45,8 @@ namespace RestaurantChaos.Clients
             rb.AddForce(force, ForceMode.Impulse);
             rb.AddTorque(Random.insideUnitSphere * torqueStrength, ForceMode.Impulse);
 
+            SoundManager.Instance?.PlaySound(SoundType.ClientDeath);
+
             client.StartCoroutine(DestroyAfterDelay());
         }
 
