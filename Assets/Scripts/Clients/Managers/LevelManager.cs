@@ -23,6 +23,8 @@ namespace RestaurantChaos.Clients
         private bool levelEnded;
         private bool hasStartedChecking;
 
+        public bool LevelEnded => levelEnded;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)

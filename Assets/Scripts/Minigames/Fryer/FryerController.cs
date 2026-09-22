@@ -26,6 +26,7 @@ public class FryerController : MonoBehaviour
     private int currentFails = 0;
     private bool isMinigameActive = false;
     private bool isSkillcheckActive = false;
+    private Coroutine fryingSequenceCoroutine;
 
     private float needleAngle = 0f;
     private int needleDirection = 1;
@@ -62,7 +63,7 @@ public class FryerController : MonoBehaviour
             visuals.UpdateMisses(0, fails);
         }
 
-        StartCoroutine(FryingSequence());
+        fryingSequenceCoroutine = StartCoroutine(FryingSequence());
     }
 
     public void EndMinigame()
@@ -72,13 +73,22 @@ public class FryerController : MonoBehaviour
 
     public void EndMinigame(bool won)
     {
+        if (!isMinigameActive) return;
+
         isMinigameActive = false;
         isSkillcheckActive = false;
+
+        if (fryingSequenceCoroutine != null)
+        {
+            StopCoroutine(fryingSequenceCoroutine);
+            fryingSequenceCoroutine = null;
+        }
 
         if (visuals != null)
         {
             visuals.ShowSkillcheck(false);
             visuals.ShowCountdown(false);
+            visuals.ClearTempuras();
         }
 
         StartCoroutine(EndSequence(won));

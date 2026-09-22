@@ -79,7 +79,9 @@ public class MinigameManager : MonoBehaviour
             currentMinigame = null;
         }
 
-        if (CursorManager.Instance != null) CursorManager.Instance.HideCursor();
+        bool levelHasEnded = RestaurantChaos.Clients.LevelManager.Instance != null && RestaurantChaos.Clients.LevelManager.Instance.LevelEnded;
+
+        if (!levelHasEnded && CursorManager.Instance != null) CursorManager.Instance.HideCursor();
 
         if (CameraManager.Instance != null)
         {
@@ -87,7 +89,9 @@ public class MinigameManager : MonoBehaviour
             yield return new WaitForSeconds(CameraManager.Instance.zoomDuration);
         }
 
-        if (player != null) player.SetMovement(true);
+        levelHasEnded = RestaurantChaos.Clients.LevelManager.Instance != null && RestaurantChaos.Clients.LevelManager.Instance.LevelEnded;
+
+        if (!levelHasEnded && player != null) player.SetMovement(true);
 
         isMinigameActive = false;
         isTransitioning = false;

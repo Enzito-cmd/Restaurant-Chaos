@@ -29,6 +29,7 @@ public class SoundManager : MonoBehaviour
 
     [Header("Audio Source")]
     [SerializeField] private AudioSource soundSource;
+    [SerializeField] private AudioSource loopSource;
 
     [Header("Sounds")]
     [SerializeField] private AudioClip buttonClick;
@@ -103,7 +104,7 @@ public class SoundManager : MonoBehaviour
     }
     public void StartLoopingSound(SoundType sound)
     {
-        if (soundSource == null)
+        if (loopSource == null)
             return;
 
         AudioClip clip = GetClip(sound);
@@ -111,25 +112,25 @@ public class SoundManager : MonoBehaviour
         if (clip == null)
             return;
 
-        if (soundSource.isPlaying && soundSource.clip == clip)
+        if (loopSource.isPlaying && loopSource.clip == clip)
             return;
 
-        soundSource.clip = clip;
-        soundSource.loop = true;
+        loopSource.clip = clip;
+        loopSource.loop = true;
 
         UpdateSoundVolume();
 
-        soundSource.Play();
+        loopSource.Play();
     }
 
     public void StopLoopingSound()
     {
-        if (soundSource == null)
+        if (loopSource == null)
             return;
 
-        soundSource.Stop();
-        soundSource.clip = null;
-        soundSource.loop = false;
+        loopSource.Stop();
+        loopSource.clip = null;
+        loopSource.loop = false;
     }
 
     public void SetSoundVolume(float volume)
@@ -152,7 +153,7 @@ public class SoundManager : MonoBehaviour
         // Afectar sonidos
         UpdateSoundVolume();
 
-        // Afectar m�sica
+        // Afectar música
         if (MusicManager.Instance != null)
         {
             MusicManager.Instance.ApplyMasterVolume(masterVolume);
@@ -167,10 +168,16 @@ public class SoundManager : MonoBehaviour
     }
     private void UpdateSoundVolume()
     {
+        float volume = soundVolume * masterVolume;
+
         if (soundSource != null)
         {
-            soundSource.volume =
-                soundVolume * masterVolume;
+            soundSource.volume = volume;
+        }
+
+        if (loopSource != null)
+        {
+            loopSource.volume = volume;
         }
     }
     private void LoadSettings()
