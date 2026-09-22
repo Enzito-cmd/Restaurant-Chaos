@@ -13,6 +13,7 @@ public class PlayerInteraction : MonoBehaviour
     private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
     private readonly List<PlateRest> visiblePlateRests = new List<PlateRest>();
     private readonly List<ClientHighlight> visibleClientHighlights = new List<ClientHighlight>();
+    private readonly List<MoneyHighlight> visibleMoneyHighlights = new List<MoneyHighlight>();
 
     private void Awake()
     {
@@ -29,6 +30,49 @@ public class PlayerInteraction : MonoBehaviour
         UpdateLockIconsInRange();
         UpdatePlateRestsInRange();
         UpdateClientHighlights();
+        UpdateMoneyHighlights();
+    }
+    private void UpdateMoneyHighlights()
+    {
+        if (interactPoint == null) return;
+
+        Collider[] hitColliders = Physics.OverlapSphere(
+            interactPoint.position,
+            interactRadius,
+            interactableLayer
+        );
+
+        List<MoneyHighlight> currentHighlights = new List<MoneyHighlight>();
+
+        foreach (var hit in hitColliders)
+        {
+            MoneyPickup money = hit.GetComponentInParent<MoneyPickup>();
+
+            if (money == null) continue;
+
+            MoneyHighlight highlight = money.GetComponent<MoneyHighlight>();
+
+            if (highlight == null) continue;
+
+            currentHighlights.Add(highlight);
+            highlight.SetHighlight(true);
+        }
+
+        foreach (MoneyHighlight previous in visibleMoneyHighlights)
+        {
+            if (previous == null)
+            {
+                continue;
+            }
+
+            if (!currentHighlights.Contains(previous))
+            {
+                previous.SetHighlight(false);
+            }
+        }
+
+        visibleMoneyHighlights.Clear();
+        visibleMoneyHighlights.AddRange(currentHighlights);
     }
     private void UpdateClientHighlights()
     {

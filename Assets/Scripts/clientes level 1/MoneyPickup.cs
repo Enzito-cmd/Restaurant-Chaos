@@ -4,6 +4,13 @@ public class MoneyPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private int moneyAmount;
 
+    private MoneyHighlight highlight;
+
+    private void Awake()
+    {
+        highlight = GetComponent<MoneyHighlight>();
+    }
+
     public void SetAmount(int amount)
     {
         moneyAmount = amount;
@@ -19,6 +26,11 @@ public class MoneyPickup : MonoBehaviour, IInteractable
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlaySound(SoundType.MoneyPickup);
+        }
+
+        if (highlight != null)
+        {
+            highlight.SetHighlight(false);
         }
 
         Destroy(gameObject);
