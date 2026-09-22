@@ -12,6 +12,7 @@ public class PlayerInteraction : MonoBehaviour
     private PlayerHoldSystem holdSystem;
     private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
     private readonly List<PlateRest> visiblePlateRests = new List<PlateRest>();
+    private readonly List<ClientHighlight> visibleClientHighlights = new List<ClientHighlight>();
 
     private void Awake()
     {
@@ -27,8 +28,65 @@ public class PlayerInteraction : MonoBehaviour
 
         UpdateLockIconsInRange();
         UpdatePlateRestsInRange();
+        UpdateClientHighlights();
     }
+    private void UpdateClientHighlights()
+    {
+        if (interactPoint == null) return;
 
+        ClientBase followingClient = ClientRegistry.GetFollowingClient();
+
+        if (followingClient != null)
+        {
+            foreach (ClientHighlight previous in visibleClientHighlights)
+            {
+                if (previous != null)
+                {
+                    previous.SetHighlight(false);
+                }
+            }
+
+            visibleClientHighlights.Clear();
+            return;
+        }
+
+        Collider[] hitColliders = Physics.OverlapSphere(
+            interactPoint.position,
+            interactRadius,
+            interactableLayer
+        );
+
+        List<ClientHighlight> currentHighlights = new List<ClientHighlight>();
+
+        foreach (var hit in hitColliders)
+        {
+            ClientBase client = hit.GetComponentInParent<ClientBase>();
+
+            if (client == null) continue;
+
+            if (!client.IsFrontOfQueue) continue;
+
+            if (client.CurrentState is SitState) continue;
+
+            ClientHighlight highlight = client.GetComponent<ClientHighlight>();
+
+            if (highlight == null) continue;
+
+            currentHighlights.Add(highlight);
+            highlight.SetHighlight(true);
+        }
+
+        foreach (ClientHighlight previous in visibleClientHighlights)
+        {
+            if (!currentHighlights.Contains(previous))
+            {
+                previous.SetHighlight(false);
+            }
+        }
+
+        visibleClientHighlights.Clear();
+        visibleClientHighlights.AddRange(currentHighlights);
+    }
     private void UpdateLockIconsInRange()
     {
         if (interactPoint == null) return;
