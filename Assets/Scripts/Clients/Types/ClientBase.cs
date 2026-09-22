@@ -57,6 +57,7 @@ namespace RestaurantChaos.Clients
         public bool IsFollowingPlayer => stateMachine.Current is FollowPlayerState;
         public bool IsChasing => stateMachine.Current is AngryChaseState;
         public ClientState CurrentState => stateMachine.Current;
+        public bool IsLeaving => stateMachine.Current is LeaveState;
 
         public ClientChair CurrentChair
         {

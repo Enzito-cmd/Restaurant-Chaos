@@ -67,6 +67,7 @@ public class PlayerInteraction : MonoBehaviour
             if (!client.IsFrontOfQueue) continue;
 
             if (client.CurrentState is SitState) continue;
+            if (client.IsLeaving) continue;
 
             ClientHighlight highlight = client.GetComponent<ClientHighlight>();
 
