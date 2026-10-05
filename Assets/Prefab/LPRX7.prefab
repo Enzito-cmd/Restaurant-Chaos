@@ -95,3 +95,7 @@ MonoBehaviour:
   detectionDistance: 6
   safeDistance: 3
   brakeSpeed: 15
+  visionDistance: 5
+  pedestrianLayer:
+    serializedVersion: 2
+    m_Bits: 16384

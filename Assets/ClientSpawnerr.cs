@@ -1,121 +1,121 @@
-using System.Collections;
-using UnityEngine;
+//using System.Collections;
+//using UnityEngine;
 
-public class ClientSpawner : MonoBehaviour
-{
-    [Header("Client")]
-    [SerializeField]
-    private ClientAI[] clientPrefabs;
-
-
-    [Header("Routes")]
-    [SerializeField]
-    private ClientRoute[] routes;
+//public class ClientSpawner : MonoBehaviour
+//{
+//    [Header("Client")]
+//    [SerializeField]
+//    private ClientMovementE[] clientPrefabs;
 
 
-    [Header("Spawn Time")]
-    [SerializeField]
-    private float minSpawnTime = 3f;
-
-    [SerializeField]
-    private float maxSpawnTime = 8f;
+//    [Header("Routes")]
+//    [SerializeField]
+//    private ClientRoute[] routes;
 
 
-    [Header("Limits")]
-    [SerializeField]
-    private int maxClients = 10;
+//    [Header("Spawn Time")]
+//    [SerializeField]
+//    private float minSpawnTime = 3f;
+
+//    [SerializeField]
+//    private float maxSpawnTime = 8f;
 
 
-    private int activeClients;
+//    [Header("Limits")]
+//    [SerializeField]
+//    private int maxClients = 10;
 
 
-    private void Start()
-    {
-        StartCoroutine(SpawnRoutine());
-    }
+//    private int activeClients;
 
 
-    private IEnumerator SpawnRoutine()
-    {
-        while (true)
-        {
-            float delay = Random.Range(
-                minSpawnTime,
-                maxSpawnTime
-            );
-
-            yield return new WaitForSeconds(delay);
-
-            if (activeClients >= maxClients)
-                continue;
-
-            SpawnClient();
-        }
-    }
+//    private void Start()
+//    {
+//        StartCoroutine(SpawnRoutine());
+//    }
 
 
-    private void SpawnClient()
-    {
-        if (routes.Length == 0)
-            return;
+//    private IEnumerator SpawnRoutine()
+//    {
+//        while (true)
+//        {
+//            float delay = Random.Range(
+//                minSpawnTime,
+//                maxSpawnTime
+//            );
 
-        if (clientPrefabs.Length == 0)
-            return;
+//            yield return new WaitForSeconds(delay);
 
-        // Ruta aleatoria
-        ClientRoute route =
-            routes[
-                Random.Range(
-                    0,
-                    routes.Length
-                )
-            ];
+//            if (activeClients >= maxClients)
+//                continue;
 
-
-        if (route == null ||
-            route.spawnPoint == null)
-        {
-            return;
-        }
+//            SpawnClient();
+//        }
+//    }
 
 
-        // Cliente aleatorio
-        ClientAI prefab =
-            clientPrefabs[
-                Random.Range(
-                    0,
-                    clientPrefabs.Length
-                )
-            ];
+//    private void SpawnClient()
+//    {
+//        if (routes.Length == 0)
+//            return;
+
+//        if (clientPrefabs.Length == 0)
+//            return;
+
+//        // Ruta aleatoria
+//        ClientRoute route =
+//            routes[
+//                Random.Range(
+//                    0,
+//                    routes.Length
+//                )
+//            ];
 
 
-        ClientAI client =
-            Instantiate(
-                prefab,
-                route.spawnPoint.position,
-                route.spawnPoint.rotation
-            );
+//        if (route == null ||
+//            route.spawnPoint == null)
+//        {
+//            return;
+//        }
 
 
-        activeClients++;
+//        // Cliente aleatorio
+//        ClientMovementE prefab =
+//            clientPrefabs[
+//                Random.Range(
+//                    0,
+//                    clientPrefabs.Length
+//                )
+//            ];
 
 
-        client.Initialize(route);
+//        ClientMovementE client =
+//            Instantiate(
+//                prefab,
+//                route.spawnPoint.position,
+//                route.spawnPoint.rotation
+//            );
 
 
-        ClientLifetime lifetime =
-            client.gameObject.AddComponent<ClientLifetime>();
-
-        lifetime.Initialize(this);
-    }
+//        activeClients++;
 
 
-    public void ClientDestroyed()
-    {
-        activeClients =
-            Mathf.Max(
-                0,
-                activeClients - 1
-            );
-    }
-}
+//        client.Initialize(route);
+
+
+//        ClientLifetime lifetime =
+//            client.gameObject.AddComponent<ClientLifetime>();
+
+//        lifetime.Initialize(this);
+//    }
+
+
+//    public void ClientDestroyed()
+//    {
+//        activeClients =
+//            Mathf.Max(
+//                0,
+//                activeClients - 1
+//            );
+//    }
+//}

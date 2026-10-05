@@ -1,18 +1,18 @@
-using UnityEngine;
+//using UnityEngine;
 
-public class ClientLifetime : MonoBehaviour
-{
-    private ClientSpawner spawner;
+//public class ClientLifetime : MonoBehaviour
+//{
+//    private ClientSpawner spawner;
 
-    public void Initialize(
-        ClientSpawner owner)
-    {
-        spawner = owner;
-    }
+//    public void Initialize(
+//        ClientSpawner owner)
+//    {
+//        spawner = owner;
+//    }
 
-    private void OnDestroy()
-    {
-        if (spawner != null)
-            spawner.ClientDestroyed();
-    }
-}
+//    private void OnDestroy()
+//    {
+//        if (spawner != null)
+//            spawner.ClientDestroyed();
+//    }
+//}

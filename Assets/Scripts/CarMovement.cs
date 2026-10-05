@@ -14,7 +14,9 @@ public class CarMovement : MonoBehaviour
     [SerializeField] private float detectionDistance = 6f;
     [SerializeField] private float safeDistance = 3f;
     [SerializeField] private float brakeSpeed = 15f;
-
+    [SerializeField] private float visionDistance = 5f;
+    [SerializeField] private LayerMask pedestrianLayer;
+    private bool pedestrianDetected;
     private Transform target;
     private Action onReachedTarget;
 
@@ -35,9 +37,41 @@ public class CarMovement : MonoBehaviour
         if (target == null)
             return;
 
+        DetectPedestrian();
+
+        if (pedestrianDetected)
+        {
+            currentSpeed = Mathf.MoveTowards(
+                currentSpeed,
+                0f,
+                brakeSpeed * Time.deltaTime
+            );
+
+            return;
+        }
+
         MoveTowardsTarget();
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
 
+        Gizmos.DrawRay(
+            transform.position + Vector3.up,
+            transform.forward * visionDistance
+        );
+    }
+    private void DetectPedestrian()
+    {
+        pedestrianDetected = Physics.SphereCast(
+            transform.position + Vector3.up,
+            1f,
+            transform.forward,
+            out RaycastHit hit,
+            visionDistance,
+            pedestrianLayer
+        );
+    }
     private void MoveTowardsTarget()
     {
         Vector3 direction =
