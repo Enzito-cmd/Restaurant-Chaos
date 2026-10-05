@@ -1,5 +1,71 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2494161497859081739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155261509391041504}
+  - component: {fileID: 4145069313730625909}
+  - component: {fileID: 1403127963816703205}
+  m_Layer: 0
+  m_Name: CarFront
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &155261509391041504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494161497859081739}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4122837644850309466}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4145069313730625909
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494161497859081739}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.8161316, y: 2.9783704, z: 6.720633}
+  m_Center: {x: 3.1405573, y: 0.9891862, z: -0.14895844}
+--- !u!114 &1403127963816703205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494161497859081739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d14f07c6fe18b844ab09125fd3298c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSensor
 --- !u!1001 &4521046145192185521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67,11 +133,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5130861749747748658, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 155261509391041504}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7737268207743804775}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4913686230474794514}
   m_SourcePrefab: {fileID: 100100000, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
 --- !u!1 &3637943480385893344 stripped
 GameObject:
@@ -94,5 +166,42 @@ MonoBehaviour:
   rotationSpeed: 5
   arrivalDistance: 1
   detectionDistance: 6
-  safeDistance: 3
   brakeSpeed: 15
+  visionDistance: 20
+  visionRadius: 2.5
+  pedestrianLayer:
+    serializedVersion: 2
+    m_Bits: 16384
+  frontSensor: {fileID: 1403127963816703205}
+--- !u!54 &4913686230474794514
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3637943480385893344}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!4 &4122837644850309466 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c51263d795e48be4ca0e698a8abc42e9, type: 3}
+  m_PrefabInstance: {fileID: 4521046145192185521}
+  m_PrefabAsset: {fileID: 0}
