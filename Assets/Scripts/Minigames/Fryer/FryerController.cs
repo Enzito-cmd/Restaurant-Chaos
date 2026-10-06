@@ -202,7 +202,6 @@ public class FryerController : MonoBehaviour
         }
 
         needleDirection *= -1;
-        needleSpeed += 20f;
 
         if (currentSuccesses >= successes) EndMinigame(true);
         else GenerateNewZone();

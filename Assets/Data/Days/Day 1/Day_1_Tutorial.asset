@@ -15,6 +15,6 @@ MonoBehaviour:
   displayName: Day_1_Tutorial
   clientEntries:
   - clientPrefab: {fileID: 8341922451776090912, guid: 7b8d7958460073247a2881867a58b1d6, type: 3}
-    config: {fileID: 11400000, guid: 8a2ea7b905860a94e8915be802637a85, type: 2}
+    config: {fileID: 11400000, guid: 561ec5dee64cf604c8ad98b9e2dc6e9c, type: 2}
   clientCount: 1
   spawnInterval: 1

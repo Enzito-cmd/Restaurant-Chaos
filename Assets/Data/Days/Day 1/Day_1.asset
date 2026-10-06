@@ -16,5 +16,5 @@ MonoBehaviour:
   clientEntries:
   - clientPrefab: {fileID: 8341922451776090912, guid: 7b8d7958460073247a2881867a58b1d6, type: 3}
     config: {fileID: 11400000, guid: 8a2ea7b905860a94e8915be802637a85, type: 2}
-  stationsToUnlock:
-  - {fileID: 0}
+  clientCount: 3
+  spawnInterval: 10

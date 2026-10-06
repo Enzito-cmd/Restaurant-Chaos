@@ -17,7 +17,7 @@ public class RestaurantDoor : MonoBehaviour, IInteractable
     private void Start()
     {
         closedRotation = doorPivot.localRotation;
-        openRotation = closedRotation * Quaternion.Euler(0f, openAngle, 0f);
+        openRotation = Quaternion.Euler(0f, openAngle, 0f) * closedRotation;
     }
 
     private void Update()

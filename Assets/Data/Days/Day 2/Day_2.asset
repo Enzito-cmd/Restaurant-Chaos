@@ -16,5 +16,5 @@ MonoBehaviour:
   clientEntries:
   - clientPrefab: {fileID: 8341922451776090912, guid: 7b8d7958460073247a2881867a58b1d6, type: 3}
     config: {fileID: 11400000, guid: 07dc2b00ba01eb041910401a7ca22eac, type: 2}
-  clientCount: 5
+  clientCount: 3
   spawnInterval: 30
