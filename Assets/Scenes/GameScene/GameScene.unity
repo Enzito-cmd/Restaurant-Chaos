@@ -20728,8 +20728,8 @@ MonoBehaviour:
   playerInteraction: {fileID: 1728617281}
   holdSystem: {fileID: 1728617282}
   welcomeSigns:
-  - 'Welcome to your Restaurant! You will have dominate the chaos if you want to
-    progress! '
+  - 'Welcome to your Restaurant! You will have to dominate the Chaos if you want
+    to progress! '
   kitchenSigns:
   - Lets start cooking something. Head to the kitchen first.
   cookSigns:
@@ -80662,7 +80662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1075200995
 Transform:
   m_ObjectHideFlags: 0
