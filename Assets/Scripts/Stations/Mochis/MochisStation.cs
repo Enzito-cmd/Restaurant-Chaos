@@ -44,6 +44,18 @@ public class MochiStation : MonoBehaviour, IInteractable, IMinigame
         }
     }
 
+    public bool CanInteract()
+    {
+        if (MinigameManager.Instance != null && MinigameManager.Instance.IsBusy) return false;
+        if (playerHoldSystem == null || !playerHoldSystem.IsHoldingItem) return false;
+
+        GameObject heldObj = playerHoldSystem.GetHeldItem();
+
+        if (!heldObj.TryGetComponent<HoldableItem>(out HoldableItem itemData)) return false;
+
+        return validIngredients.Contains(itemData.itemType);
+    }
+
     private void StartMinigame()
     {
         if (MinigameManager.Instance != null)

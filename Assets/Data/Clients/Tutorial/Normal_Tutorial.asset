@@ -10,19 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b5140c4567e0b84ea2de34260c1e647, type: 3}
-  m_Name: Yakuza
+  m_Name: Normal_Tutorial
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.ClientTypeDefinition
-  displayName: Yakuza
+  displayName: Normal_Tutorial
   moveSpeed: 3
-  chaseSpeedMultiplier: 1.5
-  queuePatienceSeconds: 90
-  seatedPatienceSeconds: 90
-  carryOverRules:
-  - queueThreshold: 0.6
-    seatedStartFill: 0.8
+  chaseSpeedMultiplier: 1
+  queuePatienceSeconds: 9999
+  seatedPatienceSeconds: 9999
+  carryOverRules: []
   possibleMeals:
   - {fileID: 11400000, guid: fd4b2fbe76fcf79458fdeff6adad4284, type: 2}
-  - {fileID: 11400000, guid: 8c96ab4858b116a4eaa9373fcdb76f69, type: 2}
-  yellCooldown: 3
-  yellDistance: 1
-  yellDuration: 1
+  yellCooldown: 0
+  yellDistance: 0
+  yellDuration: 0

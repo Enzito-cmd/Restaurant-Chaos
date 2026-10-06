@@ -10,5 +10,7 @@ namespace RestaurantChaos.Clients
 
         [Header("Clients")]
         public ClientSpawnEntry[] clientEntries;
+        public int clientCount = 5;
+        public float spawnInterval = 10f;
     }
 }

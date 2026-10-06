@@ -1,3 +1,4 @@
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class HideWhileBlockingUI : MonoBehaviour
@@ -11,7 +12,7 @@ public class HideWhileBlockingUI : MonoBehaviour
     {
         if (visualRoot == null) return;
 
-        bool isBlockingUiOpen = Cursor.visible;
+        bool isBlockingUiOpen = Cursor.visible || TutorialSignUI.IsAnySignShowing;
 
         if (isBlockingUiOpen == wasBlockingUiOpen) return;
 

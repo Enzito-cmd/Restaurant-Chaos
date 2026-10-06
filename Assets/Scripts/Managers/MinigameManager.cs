@@ -13,6 +13,8 @@ public class MinigameManager : MonoBehaviour
 
     private IMinigame currentMinigame;
 
+    public bool IsBusy => isMinigameActive || isTransitioning;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

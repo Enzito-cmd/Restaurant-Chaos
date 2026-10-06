@@ -16,6 +16,7 @@ namespace RestaurantChaos.Clients
 
         private bool isOccupied;
         private GameObject currentFreeIndicator;
+        private GameObject currentMoney;
 
         public bool IsOccupied => isOccupied;
         public bool IsSittable => isSittable;
@@ -38,6 +39,24 @@ namespace RestaurantChaos.Clients
             if (followingClient == null) return;
 
             followingClient.SitOnChair(this);
+        }
+
+        public bool CanInteract()
+        {
+            if (!isSittable) return false;
+            if (isOccupied) return false;
+
+            return ClientRegistry.AnyFollowing;
+        }
+
+        public void ReplaceMoney(GameObject newMoney)
+        {
+            if (currentMoney != null)
+            {
+                Destroy(currentMoney);
+            }
+
+            currentMoney = newMoney;
         }
 
         public void SetOccupied(bool occupied)

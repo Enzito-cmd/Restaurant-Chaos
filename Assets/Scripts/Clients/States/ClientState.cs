@@ -14,5 +14,10 @@ namespace RestaurantChaos.Clients
         public virtual void Exit() { }
         public virtual void OnInteract() { }
         public virtual void UpdateAnimation() { }
+
+        public virtual bool CanInteract()
+        {
+            return false;
+        }
     }
 }

@@ -19,4 +19,9 @@ public class TrashBin : MonoBehaviour, IInteractable
             }
         }
     }
+
+    public bool CanInteract()
+    {
+        return playerHoldSystem != null && playerHoldSystem.IsHoldingItem;
+    }
 }

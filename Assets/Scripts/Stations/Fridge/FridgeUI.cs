@@ -27,6 +27,11 @@ public class FridgeUI : MonoBehaviour
             menuPanel.SetActive(false);
     }
 
+    public bool CanOpen()
+    {
+        return playerHoldSystem == null || !playerHoldSystem.IsHoldingItem;
+    }
+
     public void OpenFridgeMenu()
     {
         if (playerHoldSystem != null && playerHoldSystem.IsHoldingItem)

@@ -1,3 +1,4 @@
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 using Unity.Cinemachine;
 
@@ -14,6 +15,8 @@ public class CameraLookLock : MonoBehaviour
     {
         if (inputAxisController == null) return;
 
-        inputAxisController.enabled = !Cursor.visible;
+        bool isBlockedByUi = Cursor.visible || TutorialSignUI.IsAnySignShowing;
+
+        inputAxisController.enabled = !isBlockedByUi && Input.GetMouseButton(1);
     }
 }

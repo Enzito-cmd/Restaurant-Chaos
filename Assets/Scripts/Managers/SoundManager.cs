@@ -20,7 +20,8 @@ public enum SoundType
     WokHit,
     ClientSpawn,
     ClientDeath,
-    CookingMiss
+    CookingMiss,
+    DoorOpen
 }
 
 public class SoundManager : MonoBehaviour
@@ -52,6 +53,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip clientSpawn;
     [SerializeField] private AudioClip clientDeath;
     [SerializeField] private AudioClip cookingMiss;
+    [SerializeField] private AudioClip doorOpen;
 
     private const string SoundVolumeKey = "SoundVolume";
     private const string MasterVolumeKey = "MasterVolume";
@@ -252,6 +254,9 @@ public class SoundManager : MonoBehaviour
                 return clientDeath;
             case SoundType.CookingMiss:
                 return cookingMiss;
+
+            case SoundType.DoorOpen:
+                return doorOpen;
         }
 
         return null;

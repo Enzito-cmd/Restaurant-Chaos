@@ -7,6 +7,8 @@ namespace RestaurantChaos.Clients
     {
         private readonly ClientChair chair;
         private float queueEndFill;
+        private Coroutine orderCoroutine;
+        private bool orderRevealed;
 
         public SitState(ClientBase client, ClientChair chair) : base(client)
         {
@@ -38,7 +40,7 @@ namespace RestaurantChaos.Clients
 
             client.ChosenMeal = client.Config.ChooseMeal();
 
-            client.StartCoroutine(OrderRoutine());
+            orderCoroutine = client.StartCoroutine(OrderRoutine());
         }
 
         private IEnumerator OrderRoutine()
@@ -54,18 +56,35 @@ namespace RestaurantChaos.Clients
                 SoundManager.Instance?.PlaySound(SoundType.pedido);
             }
 
+            orderRevealed = true;
+
             float startFill = client.Config.GetSeatedStartFill(queueEndFill);
             client.Patience.BeginSeatedPhase(client.Config.seatedPatienceSeconds, startFill);
         }
 
         public override void Exit()
         {
+            if (orderCoroutine != null)
+            {
+                client.StopCoroutine(orderCoroutine);
+                orderCoroutine = null;
+            }
+
             OrderBoard.CloseTicket(chair.TableNumber);
         }
 
         public override void OnInteract()
         {
+            if (!orderRevealed) return;
+
             client.TryDeliverFood();
+        }
+
+        public override bool CanInteract()
+        {
+            if (!orderRevealed) return false;
+
+            return client.CanDeliverFood();
         }
 
         public override void UpdateAnimation()

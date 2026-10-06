@@ -10,10 +10,13 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private LayerMask interactableLayer;
 
     private PlayerHoldSystem holdSystem;
+    private bool isInteractionLocked;
     private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
     private readonly List<PlateRest> visiblePlateRests = new List<PlateRest>();
     private readonly List<ClientHighlight> visibleClientHighlights = new List<ClientHighlight>();
     private readonly List<MoneyHighlight> visibleMoneyHighlights = new List<MoneyHighlight>();
+
+    public bool HasTarget { get; private set; }
 
     private void Awake()
     {
@@ -22,10 +25,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (!isInteractionLocked && Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
         }
+
+        UpdateHasTarget();
 
         UpdateLockIconsInRange();
         UpdatePlateRestsInRange();
@@ -201,48 +206,8 @@ public class PlayerInteraction : MonoBehaviour
         if (Time.timeScale == 0f) return;
         if (interactPoint == null) return;
 
-        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
-
         bool restrictToExtinguisherOnly = IsBeingChased() || IsHoldingExtinguisher();
-        IInteractable targetInteractable = null;
-
-        foreach (var hit in hitColliders)
-        {
-            if (hit.TryGetComponent<IInteractable>(out var interactable))
-            {
-                if (restrictToExtinguisherOnly)
-                {
-                    if (interactable is ExtinguisherProp)
-                    {
-                        interactable.Interact();
-                        return;
-                    }
-
-                    if (interactable is PlateRest plateRest && plateRest.TryDepositHeldPlate())
-                    {
-                        return;
-                    }
-
-                    continue;
-                }
-
-                if (hit.TryGetComponent<LockableStation>(out var lockable) && lockable.IsLocked)
-                {
-                    continue;
-                }
-
-                if (interactable is RestaurantClient || interactable is ClientBase)
-                {
-                    targetInteractable = interactable;
-                    break;
-                }
-
-                if (targetInteractable == null)
-                {
-                    targetInteractable = interactable;
-                }
-            }
-        }
+        IInteractable targetInteractable = FindTarget(restrictToExtinguisherOnly);
 
         if (targetInteractable != null)
         {
@@ -258,6 +223,88 @@ public class PlayerInteraction : MonoBehaviour
         {
             followingClient.Interact();
         }
+    }
+
+    private IInteractable FindTarget(bool restrictToExtinguisherOnly)
+    {
+        if (interactPoint == null)
+        {
+            return null;
+        }
+
+        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
+        IInteractable target = null;
+
+        bool onlyDoorAllowed = DayManager.Instance != null && !DayManager.Instance.CanUseStations;
+
+        foreach (Collider hit in hitColliders)
+        {
+            if (!hit.TryGetComponent<IInteractable>(out IInteractable interactable))
+            {
+                continue;
+            }
+
+            if (onlyDoorAllowed && !(interactable is RestaurantDoor))
+            {
+                continue;
+            }
+
+            if (restrictToExtinguisherOnly)
+            {
+                if (interactable is ExtinguisherProp)
+                {
+                    return interactable;
+                }
+
+                PlateRest plateRest = interactable as PlateRest;
+
+                if (plateRest != null && plateRest.CanDepositHeldPlate())
+                {
+                    return interactable;
+                }
+
+                continue;
+            }
+
+            if (hit.TryGetComponent<LockableStation>(out LockableStation lockable) && lockable.IsLocked)
+            {
+                continue;
+            }
+
+            if (!interactable.CanInteract())
+            {
+                continue;
+            }
+
+            if (interactable is RestaurantClient || interactable is ClientBase)
+            {
+                return interactable;
+            }
+
+            if (target == null)
+            {
+                target = interactable;
+            }
+        }
+
+        return target;
+    }
+
+    private void UpdateHasTarget()
+    {
+        if (isInteractionLocked)
+        {
+            HasTarget = false;
+            return;
+        }
+
+        bool restrictToExtinguisherOnly = ClientRegistry.AnyChasing || IsHoldingExtinguisher();
+        HasTarget = FindTarget(restrictToExtinguisherOnly) != null;
+    }
+
+    public void SetLocked(bool locked)
+    {
+        isInteractionLocked = locked;
     }
 
     public bool IsBeingChased()

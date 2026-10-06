@@ -12,4 +12,9 @@ public class Fridge : MonoBehaviour, IInteractable
             fridgeUI.OpenFridgeMenu();
         }
     }
+
+    public bool CanInteract()
+    {
+        return fridgeUI != null && fridgeUI.CanOpen();
+    }
 }

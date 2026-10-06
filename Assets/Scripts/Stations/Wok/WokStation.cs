@@ -25,6 +25,14 @@ public class WokStation : MonoBehaviour, IInteractable, IMinigame
         StartMinigame();
     }
 
+    public bool CanInteract()
+    {
+        if (MinigameManager.Instance != null && MinigameManager.Instance.IsBusy) return false;
+        if (playerHoldSystem != null && playerHoldSystem.IsHoldingItem) return false;
+
+        return true;
+    }
+
     private void StartMinigame()
     {
         if (MinigameManager.Instance != null)

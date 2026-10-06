@@ -18,6 +18,8 @@ public class PlateRest : MonoBehaviour, IInteractable
     private GameObject currentIndicator;
     private bool isPlayerInRange;
 
+    public GameObject HeldPlate => heldPlate;
+
     private void Awake()
     {
         playerHoldSystem = FindFirstObjectByType<PlayerHoldSystem>();
@@ -53,12 +55,39 @@ public class PlateRest : MonoBehaviour, IInteractable
         TryDepositHeldPlate();
     }
 
-    public bool TryDepositHeldPlate()
+    public void ClearPlate()
+    {
+        if (heldPlate == null) return;
+
+        Destroy(heldPlate);
+        heldPlate = null;
+        UpdateIndicator();
+    }
+
+    public bool CanInteract()
+    {
+        if (playerHoldSystem == null) return false;
+
+        if (heldPlate != null)
+        {
+            return !playerHoldSystem.IsHoldingItem;
+        }
+
+        return CanDepositHeldPlate();
+    }
+
+    public bool CanDepositHeldPlate()
     {
         if (playerHoldSystem == null) return false;
         if (heldPlate != null) return false;
         if (!playerHoldSystem.IsHoldingItem) return false;
-        if (!CanDepositHeldItem()) return false;
+
+        return CanDepositHeldItem();
+    }
+
+    public bool TryDepositHeldPlate()
+    {
+        if (!CanDepositHeldPlate()) return false;
 
         GameObject released = playerHoldSystem.ReleaseItem();
         released.transform.SetParent(platePoint, true);
@@ -78,10 +107,7 @@ public class PlateRest : MonoBehaviour, IInteractable
 
     private void UpdateIndicator()
     {
-        bool canDeposit = heldPlate == null && playerHoldSystem != null && playerHoldSystem.IsHoldingItem && CanDepositHeldItem();
-        bool canRetrieve = heldPlate != null && playerHoldSystem != null && !playerHoldSystem.IsHoldingItem;
-
-        bool shouldShow = isPlayerInRange && (canDeposit || canRetrieve);
+        bool shouldShow = isPlayerInRange && CanInteract();
 
         if (shouldShow) ShowIndicator();
         else HideIndicator();

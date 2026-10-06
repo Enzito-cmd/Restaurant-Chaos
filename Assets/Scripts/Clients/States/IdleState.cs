@@ -25,6 +25,14 @@ namespace RestaurantChaos.Clients
             client.ChangeState(new FollowPlayerState(client));
         }
 
+        public override bool CanInteract()
+        {
+            if (ClientRegistry.AnyFollowing) return false;
+            if (client.IsPlayerHoldingItem()) return false;
+
+            return true;
+        }
+
         public override void UpdateAnimation()
         {
             client.Animator.SetFloat("Speed", 0f);

@@ -11,6 +11,7 @@ namespace RestaurantChaos.Clients
         public static event Action<int> TicketClosed;
 
         public static IEnumerable<OrderTicket> OpenTickets => openTickets.Values;
+        public static int OpenTicketCount => openTickets.Count;
 
         public static void OpenTicket(int tableNumber, MealDefinition meal, ClientBase owner)
         {

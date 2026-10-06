@@ -7,26 +7,41 @@ namespace RestaurantChaos.Clients
     {
         [Header("Spawn Settings")]
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private int maxClients;
-        [SerializeField] private float spawnInterval;
-
-        [Header("Spawnable Clients")]
-        [SerializeField] private ClientSpawnEntry[] availableEntries;
 
         [Header("References")]
         [SerializeField] private ClientQueue clientQueue;
 
+        private ClientSpawnEntry[] availableEntries;
+        private int clientCount;
+        private float spawnInterval;
+        private Coroutine spawnCoroutine;
+
         public bool HasFinishedSpawning { get; private set; }
 
-        public void SetAvailableEntries(ClientSpawnEntry[] entries)
+        public void PrepareDay(DayDefinition day)
         {
-            availableEntries = entries;
+            if (spawnCoroutine != null)
+            {
+                StopCoroutine(spawnCoroutine);
+                spawnCoroutine = null;
+            }
+
+            availableEntries = day.clientEntries;
+            clientCount = day.clientCount;
+            spawnInterval = day.spawnInterval;
+
+            HasFinishedSpawning = false;
         }
 
         public void StartSpawning()
         {
+            if (spawnCoroutine != null)
+            {
+                return;
+            }
+
             HasFinishedSpawning = false;
-            StartCoroutine(SpawnRoutine());
+            spawnCoroutine = StartCoroutine(SpawnRoutine());
         }
 
         private IEnumerator SpawnRoutine()
@@ -34,10 +49,11 @@ namespace RestaurantChaos.Clients
             if (clientQueue == null)
             {
                 HasFinishedSpawning = true;
+                spawnCoroutine = null;
                 yield break;
             }
 
-            int amountToSpawn = Mathf.Min(maxClients, clientQueue.Capacity);
+            int amountToSpawn = Mathf.Min(clientCount, clientQueue.Capacity);
 
             for (int i = 0; i < amountToSpawn; i++)
             {
@@ -50,6 +66,7 @@ namespace RestaurantChaos.Clients
             }
 
             HasFinishedSpawning = true;
+            spawnCoroutine = null;
         }
 
         private void SpawnOne()

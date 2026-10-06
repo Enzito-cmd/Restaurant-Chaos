@@ -22,6 +22,7 @@ namespace RestaurantChaos.Clients
         private int clientsServed;
         private bool levelEnded;
         private bool hasStartedChecking;
+        private bool endPanelEnabled = true;
 
         public bool LevelEnded => levelEnded;
 
@@ -41,8 +42,9 @@ namespace RestaurantChaos.Clients
             ResetForNewDay();
         }
 
-        public void StartNewDay()
+        public void StartNewDay(bool showEndPanel = true)
         {
+            endPanelEnabled = showEndPanel;
             ResetForNewDay();
         }
 
@@ -92,6 +94,7 @@ namespace RestaurantChaos.Clients
         private void Update()
         {
             if (!hasStartedChecking) return;
+            if (!endPanelEnabled) return;
             if (levelEnded) return;
             if (spawner != null && !spawner.HasFinishedSpawning) return;
             if (ClientRegistry.ActiveCount > 0) return;

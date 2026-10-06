@@ -31,6 +31,7 @@ namespace RestaurantChaos.Clients
         private ClientTypeDefinition config;
 
         private Transform player;
+        private PlayerHoldSystem playerHoldSystem;
         private Transform exitPoint;
         private ClientChair currentChair;
         private MealDefinition chosenMeal;
@@ -190,34 +191,56 @@ namespace RestaurantChaos.Clients
             }
         }
 
+        private PlayerHoldSystem GetPlayerHoldSystem()
+        {
+            if (playerHoldSystem == null && player != null)
+            {
+                playerHoldSystem = player.GetComponentInChildren<PlayerHoldSystem>();
+            }
+
+            return playerHoldSystem;
+        }
+
         public bool IsPlayerHoldingItem()
         {
-            if (player == null) return false;
+            PlayerHoldSystem holdSystem = GetPlayerHoldSystem();
 
-            PlayerHoldSystem holdSystem = player.GetComponentInChildren<PlayerHoldSystem>();
             return holdSystem != null && holdSystem.IsHoldingItem;
         }
 
-        public void TryDeliverFood()
+        public bool CanInteract()
         {
-            if (player == null) return;
+            if (stateMachine.Current == null) return false;
+
+            return stateMachine.Current.CanInteract();
+        }
+
+        public bool CanDeliverFood()
+        {
+            if (player == null) return false;
+            if (chosenMeal == null) return false;
 
             float distance = Vector3.Distance(transform.position, player.position);
 
-            if (distance > foodDeliveryDistance) return;
+            if (distance > foodDeliveryDistance) return false;
 
-            PlayerHoldSystem holdSystem = player.GetComponentInChildren<PlayerHoldSystem>();
+            PlayerHoldSystem holdSystem = GetPlayerHoldSystem();
 
-            if (holdSystem == null || !holdSystem.IsHoldingItem) return;
+            if (holdSystem == null || !holdSystem.IsHoldingItem) return false;
 
             GameObject heldItem = holdSystem.GetHeldItem();
             HoldableItem item = heldItem.GetComponentInChildren<HoldableItem>();
 
-            if (item == null) return;
-            if (chosenMeal == null) return;
-            if (item.itemType != chosenMeal.itemType) return;
+            if (item == null) return false;
 
-            DeliverFood(holdSystem);
+            return item.itemType == chosenMeal.itemType;
+        }
+
+        public void TryDeliverFood()
+        {
+            if (!CanDeliverFood()) return;
+
+            DeliverFood(GetPlayerHoldSystem());
         }
 
         private void DeliverFood(PlayerHoldSystem holdSystem)
@@ -242,6 +265,7 @@ namespace RestaurantChaos.Clients
             if (currentChair.MoneySpawnPoint == null) return;
 
             GameObject moneyInstance = Instantiate(moneyPrefab, currentChair.MoneySpawnPoint.position, currentChair.MoneySpawnPoint.rotation);
+            currentChair.ReplaceMoney(moneyInstance);
             SoundManager.Instance?.PlaySound(SoundType.MoneySpawn);
 
             if (chosenMeal == null) return;
