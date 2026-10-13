@@ -65493,20 +65493,14 @@ MonoBehaviour:
   - {fileID: 786912042}
   - {fileID: 949053009}
   - {fileID: 458931764}
-  - {fileID: 1882028947}
-  - {fileID: 447846970}
-  - {fileID: 749857596}
-  - {fileID: 1365725044}
   endPoints:
   - {fileID: 447846970}
   - {fileID: 1882028947}
   - {fileID: 1365725044}
   - {fileID: 749857596}
-  - {fileID: 786912042}
-  - {fileID: 890064013}
-  - {fileID: 458931764}
-  - {fileID: 949053009}
-  spawnInterval: 3
+  spawnInterval: 1
+  clientSpeed: 2
+  poolSize: 20
 --- !u!4 &1075137659
 Transform:
   m_ObjectHideFlags: 0
