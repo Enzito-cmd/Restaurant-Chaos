@@ -20,6 +20,19 @@ public class PlateRest : MonoBehaviour, IInteractable
 
     public GameObject HeldPlate => heldPlate;
 
+    public Transform PlatePoint
+    {
+        get
+        {
+            if (platePoint != null)
+            {
+                return platePoint;
+            }
+
+            return transform;
+        }
+    }
+
     private void Awake()
     {
         playerHoldSystem = FindFirstObjectByType<PlayerHoldSystem>();

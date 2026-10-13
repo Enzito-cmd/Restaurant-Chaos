@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using RestaurantChaos.Clients;
 using UnityEngine;
 
@@ -13,6 +14,13 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] protected PlayerInteraction playerInteraction;
         [SerializeField] protected PlayerHoldSystem holdSystem;
 
+        [Header("Kitchen")]
+        [SerializeField] protected Transform kitchenCheckpoint;
+        [SerializeField] protected float checkpointRadius = 1.5f;
+
+        protected PlateRest[] plateRests;
+
+        private readonly List<Transform> availableRestPoints = new List<Transform>();
         private Coroutine runningSequence;
 
         public void Begin()
@@ -29,6 +37,8 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator RunAndFinish()
         {
+            plateRests = FindObjectsByType<PlateRest>(FindObjectsSortMode.None);
+
             yield return Run();
 
             runningSequence = null;
@@ -52,6 +62,48 @@ namespace RestaurantChaos.Tutorial
             SetPlayerFrozen(true);
             yield return signUI.ShowPages(pages);
             SetPlayerFrozen(false);
+        }
+
+        protected IEnumerator KitchenStep(string[] signs)
+        {
+            yield return ShowSigns(signs);
+
+            pointer.PointAt(kitchenCheckpoint, true);
+
+            while (!IsPlayerNear(kitchenCheckpoint, checkpointRadius))
+            {
+                yield return null;
+            }
+
+            pointer.Clear();
+        }
+
+        protected PlateRest FindRestWithPlate()
+        {
+            foreach (PlateRest rest in plateRests)
+            {
+                if (rest != null && rest.HeldPlate != null)
+                {
+                    return rest;
+                }
+            }
+
+            return null;
+        }
+
+        protected void PointAtAvailableRests()
+        {
+            availableRestPoints.Clear();
+
+            foreach (PlateRest rest in plateRests)
+            {
+                if (rest != null && rest.CanDepositHeldPlate())
+                {
+                    availableRestPoints.Add(rest.PlatePoint);
+                }
+            }
+
+            pointer.PointAtAll(availableRestPoints);
         }
 
         private void SetPlayerFrozen(bool frozen)

@@ -45,7 +45,7 @@ namespace RestaurantChaos.Clients
 
         private IEnumerator OrderRoutine()
         {
-            client.OrderDisplay.Show(client.ThinkingPrefab);
+            client.OrderDisplay.ShowFacingCamera(client.ThinkingPrefab);
 
             yield return new WaitForSeconds(client.ThinkingDuration);
 

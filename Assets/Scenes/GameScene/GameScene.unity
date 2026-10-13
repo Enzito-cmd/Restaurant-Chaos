@@ -20455,6 +20455,83 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342103450}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &344443615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 344443616}
+  - component: {fileID: 344443617}
+  m_Layer: 0
+  m_Name: Day01_Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &344443616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344443615}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 374754174}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &344443617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344443615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 480593bff352b454ca62ad6f5d2349f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Tutorial.Day1Tutorial
+  signUI: {fileID: 530029632}
+  pointer: {fileID: 374754176}
+  player: {fileID: 1728617278}
+  playerInteraction: {fileID: 1728617281}
+  holdSystem: {fileID: 1728617282}
+  kitchenCheckpoint: {fileID: 842586192}
+  checkpointRadius: 1.5
+  welcomeSigns:
+  - 'Welcome to your Restaurant! You will have to dominate the Chaos if you want
+    to progress! '
+  kitchenSigns:
+  - Lets start cooking something. Head to the kitchen first.
+  cookSigns:
+  - Cook your first dish, the wok rice.
+  placeDishSigns:
+  - Once you have the dish in your hands, you can leave it on any table available.
+  openRestaurantSigns:
+  - Now go open the restaurant so you can attend some clients!
+  seatClientSigns:
+  - Guide the client to any table available.
+  orderSigns:
+  - Clients can place different orders that you will have to learn. And be careful,
+    if you look above a client you will see his happiness bar. Dont let it run out
+    and be fast!
+  deliverSigns:
+  - You can give this client the dish you already made.
+  collectMoneySigns:
+  - Any time a client is satisfied, they will leave money for you to pick up. Dont
+    forget it!
+  completeSigns:
+  - Congratulations! You completed your first day, now try for yourself!
+  wokStation: {fileID: 138967393}
+  wokPoint: {fileID: 558383827}
 --- !u!1 &344480036
 GameObject:
   m_ObjectHideFlags: 0
@@ -22014,7 +22091,6 @@ GameObject:
   m_Component:
   - component: {fileID: 374754174}
   - component: {fileID: 374754176}
-  - component: {fileID: 374754175}
   m_Layer: 0
   m_Name: TutorialManager
   m_TagString: Untagged
@@ -22034,55 +22110,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 344443616}
+  - {fileID: 1307318922}
   m_Father: {fileID: 769386453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &374754175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 374754173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 480593bff352b454ca62ad6f5d2349f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Tutorial.Day1Tutorial
-  signUI: {fileID: 530029632}
-  pointer: {fileID: 374754176}
-  player: {fileID: 1728617278}
-  playerInteraction: {fileID: 1728617281}
-  holdSystem: {fileID: 1728617282}
-  welcomeSigns:
-  - 'Welcome to your Restaurant! You will have to dominate the Chaos if you want
-    to progress! '
-  kitchenSigns:
-  - Lets start cooking something. Head to the kitchen first.
-  cookSigns:
-  - Cook your first dish, the wok rice.
-  placeDishSigns:
-  - Once you have the dish in your hands, you can leave it on any table available.
-  openRestaurantSigns:
-  - Now go open the restaurant so you can attend some clients!
-  seatClientSigns:
-  - Guide the client to any table available.
-  orderSigns:
-  - Clients can place different orders that you will have to learn. And be careful,
-    if you look above a client you will see his happiness bar. Dont let it run out
-    and be fast!
-  deliverSigns:
-  - You can give this client the dish you already made.
-  collectMoneySigns:
-  - Any time a client is satisfied, they will leave money for you to pick up. Dont
-    forget it!
-  completeSigns:
-  - Congratulations! You completed your first day, now try for yourself!
-  kitchenCheckpoint: {fileID: 842586192}
-  checkpointRadius: 1.5
-  wokStation: {fileID: 138967393}
-  wokPoint: {fileID: 558383827}
-  doorPoint: {fileID: 175603968}
 --- !u!114 &374754176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22102,6 +22134,8 @@ MonoBehaviour:
   spinSpeed: 90
   bobAmplitude: 0.2
   bobSpeed: 3
+  bodyClearance: 1
+  heightFollowSpeed: 6
   glowHeightOffset: 0.02
 --- !u!1 &375274907
 GameObject:
@@ -31380,6 +31414,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Tutorial.TutorialSignUI
   panel: {fileID: 1002317206}
   messageText: {fileID: 1035275339}
+  fadeDuration: 0.35
+  scaleDuration: 0.3
+  minFit: 0.4
 --- !u!224 &530029633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33803,7 +33840,7 @@ Transform:
   m_GameObject: {fileID: 557880630}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1, y: 0.61000013, z: 0.04}
+  m_LocalPosition: {x: -0.1, y: 0.918, z: 0.04}
   m_LocalScale: {x: 0.49618998, y: 0.49618998, z: 0.49618998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78238,7 +78275,7 @@ Transform:
   m_GameObject: {fileID: 993882407}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.62, y: 3.1075025, z: 16.02}
+  m_LocalPosition: {x: -0.62, y: 3.1075025, z: 15.481}
   m_LocalScale: {x: 0.49619, y: 0.49619, z: 0.49619}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -84096,7 +84133,7 @@ Transform:
   m_GameObject: {fileID: 1076680549}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.1560545, y: 0.78089213, z: 0.0005735728}
+  m_LocalPosition: {x: -21.2, y: 0.78089213, z: 0.0005735728}
   m_LocalScale: {x: 0.28475752, y: 0.1675528, z: 17.92594}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -92124,7 +92161,7 @@ Transform:
   m_GameObject: {fileID: 1184091819}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.07, y: 1.133, z: 0.016}
+  m_LocalPosition: {x: -0.374, y: 1.779, z: 0.016}
   m_LocalScale: {x: 0.49618998, y: 0.49618998, z: 0.49618998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -99533,6 +99570,81 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305168750}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &1307318921
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1307318922}
+  - component: {fileID: 1307318923}
+  m_Layer: 0
+  m_Name: Day02_Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1307318922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307318921}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 374754174}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1307318923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307318921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5ac8639d46a7694e8387ccbb27338cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Tutorial.Day2Tutorial
+  signUI: {fileID: 530029632}
+  pointer: {fileID: 374754176}
+  player: {fileID: 1728617278}
+  playerInteraction: {fileID: 1728617281}
+  holdSystem: {fileID: 1728617282}
+  kitchenCheckpoint: {fileID: 842586192}
+  checkpointRadius: 1.5
+  unlockedSigns:
+  - 'Welcome back! You have unlocked a second dish: Tempuras. Head back to the kitchen
+    to make it.'
+  kitchenSigns:
+  - This dish is made in three different steps. When completing each one of them
+    in order, you will receive the finished dish.
+  phasesSigns:
+  - To do the first step, head to the fridge and grab some seafood.
+  breadSigns:
+  - Now, take the seafood to the breader to start the dish.
+  frySigns:
+  - Great! Now you will have to fry your breaded seafood to finish the dish. Head
+    to the fryer to do so.
+  placeDishSigns:
+  - Nice! Now you can leave the plate in any table available.
+  completeSigns:
+  - You completed the day two tutorial!
+  fridgeStation: {fileID: 543450652700478374}
+  fridgePoint: {fileID: 363892715}
+  breaderStation: {fileID: 1277294347}
+  breaderPoint: {fileID: 1828714341}
+  fryerStation: {fileID: 237860250}
+  fryerPoint: {fileID: 1684680517}
+  trashBin: {fileID: 2001380642}
 --- !u!1 &1307643014
 GameObject:
   m_ObjectHideFlags: 0
@@ -149671,10 +149783,16 @@ MonoBehaviour:
   days:
   - definition: {fileID: 11400000, guid: ac6fe03cdde50c746b3c1646c8f835a0, type: 2}
     stationsToUnlock: []
-    tutorial: {fileID: 374754175}
+    tutorial: {fileID: 344443617}
   - definition: {fileID: 11400000, guid: c78b9519692d14b44ad8d220edf02c12, type: 2}
     stationsToUnlock: []
     tutorial: {fileID: 0}
+  - definition: {fileID: 11400000, guid: dc75b7adbc5455e8efe04758b279e2e4, type: 2}
+    stationsToUnlock:
+    - {fileID: 237860253}
+    - {fileID: 1277294350}
+    - {fileID: 919132148980175135}
+    tutorial: {fileID: 1307318923}
   - definition: {fileID: 11400000, guid: dad6c371198c189468344253075dfeb0, type: 2}
     stationsToUnlock:
     - {fileID: 919132148980175135}

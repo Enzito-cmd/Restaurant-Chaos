@@ -11,6 +11,7 @@ namespace RestaurantChaos.Clients
     {
         [Header("Movement")]
         [SerializeField] private float stopDistance = 0.5f;
+        [SerializeField] private float followDistance = 1.5f;
 
         [Header("Order")]
         [SerializeField] private GameObject thinkingPrefab;
@@ -49,6 +50,7 @@ namespace RestaurantChaos.Clients
         public Transform Player => player;
         public Transform ExitPoint => exitPoint;
         public float StopDistance => stopDistance;
+        public float FollowDistance => followDistance;
         public float FoodDeliveryDistance => foodDeliveryDistance;
         public GameObject ThinkingPrefab => thinkingPrefab;
         public float ThinkingDuration => thinkingDuration;
@@ -176,10 +178,15 @@ namespace RestaurantChaos.Clients
 
         public void MoveTowards(Vector3 target, float speed)
         {
+            MoveTowards(target, speed, stopDistance);
+        }
+
+        public void MoveTowards(Vector3 target, float speed, float arrivalDistance)
+        {
             if (agent == null || !agent.isOnNavMesh) return;
 
             agent.speed = speed;
-            agent.stoppingDistance = stopDistance;
+            agent.stoppingDistance = arrivalDistance;
             agent.SetDestination(target);
         }
 

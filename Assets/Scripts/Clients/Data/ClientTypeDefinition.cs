@@ -26,6 +26,7 @@ namespace RestaurantChaos.Clients
         public float yellCooldown = 2.5f;
         public float yellDistance = 1.5f;
         public float yellDuration = 1.5f;
+        public float chaseStopDistance = 1.35f;
 
         public MealDefinition ChooseMeal()
         {

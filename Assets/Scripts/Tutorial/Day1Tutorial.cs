@@ -19,13 +19,9 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] [TextArea] private string[] completeSigns;
 
         [Header("Targets")]
-        [SerializeField] private Transform kitchenCheckpoint;
-        [SerializeField] private float checkpointRadius = 1.5f;
         [SerializeField] private Transform wokStation;
         [SerializeField] private Transform wokPoint;
-        [SerializeField] private Transform doorPoint;
 
-        private PlateRest[] plateRests;
         private ClientBase client;
 
         private Transform WokArrowTarget
@@ -43,10 +39,8 @@ namespace RestaurantChaos.Tutorial
 
         protected override IEnumerator Run()
         {
-            plateRests = FindObjectsByType<PlateRest>(FindObjectsSortMode.None);
-
             yield return ShowSigns(welcomeSigns);
-            yield return KitchenStep();
+            yield return KitchenStep(kitchenSigns);
             yield return CookStep();
             yield return PlaceDishStep();
             yield return OpenRestaurantStep();
@@ -54,20 +48,6 @@ namespace RestaurantChaos.Tutorial
             yield return OrderStep();
             yield return DeliverStep();
             yield return CollectMoneyStep();
-        }
-
-        private IEnumerator KitchenStep()
-        {
-            yield return ShowSigns(kitchenSigns);
-
-            pointer.PointAt(kitchenCheckpoint, true);
-
-            while (!IsPlayerNear(kitchenCheckpoint, checkpointRadius))
-            {
-                yield return null;
-            }
-
-            pointer.Clear();
         }
 
         private IEnumerator CookStep()
@@ -99,8 +79,12 @@ namespace RestaurantChaos.Tutorial
                     yield return WaitForDishInHand();
                 }
 
+                PointAtAvailableRests();
+
                 yield return null;
             }
+
+            pointer.Clear();
         }
 
         private IEnumerator OpenRestaurantStep()
@@ -108,14 +92,11 @@ namespace RestaurantChaos.Tutorial
             yield return ShowSigns(openRestaurantSigns);
 
             DayManager.Instance.SetOpeningAllowed(true);
-            pointer.PointAt(doorPoint, false);
 
             while (!DayManager.Instance.IsRestaurantOpen)
             {
                 yield return null;
             }
-
-            pointer.Clear();
         }
 
         private IEnumerator SeatClientStep()
@@ -135,7 +116,7 @@ namespace RestaurantChaos.Tutorial
 
                 if (shouldPoint && !pointer.IsPointing)
                 {
-                    pointer.PointAt(client.transform, false);
+                    pointer.PointAtCharacter(client.transform);
                 }
                 else if (!shouldPoint && pointer.IsPointing)
                 {
@@ -189,7 +170,15 @@ namespace RestaurantChaos.Tutorial
                 {
                     pointedArrow = wantedArrow;
                     pointedGlow = wantedGlow;
-                    pointer.PointAt(pointedArrow, pointedGlow);
+
+                    if (pointedArrow == client.transform)
+                    {
+                        pointer.PointAtCharacter(pointedArrow);
+                    }
+                    else
+                    {
+                        pointer.PointAt(pointedArrow, pointedGlow);
+                    }
                 }
 
                 yield return null;
@@ -217,19 +206,6 @@ namespace RestaurantChaos.Tutorial
             pointer.Clear();
 
             yield return ShowSigns(completeSigns);
-        }
-
-        private PlateRest FindRestWithPlate()
-        {
-            foreach (PlateRest rest in plateRests)
-            {
-                if (rest != null && rest.HeldPlate != null)
-                {
-                    return rest;
-                }
-            }
-
-            return null;
         }
     }
 }

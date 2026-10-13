@@ -27,6 +27,7 @@ namespace RestaurantChaos.Clients
 
         private int currentDayIndex = -1;
         private bool currentDayHasTutorial;
+        private PlayerHoldSystem playerHoldSystem;
 
         public int CurrentDayIndex => currentDayIndex;
         public bool HasNextDay => currentDayIndex + 1 < days.Length;
@@ -144,6 +145,7 @@ namespace RestaurantChaos.Clients
 
             UnlockStationsUpTo(index);
             ClearRestingPlates();
+            ClearPlayerHands();
 
             bool hasTutorial = setup.tutorial != null;
 
@@ -174,6 +176,26 @@ namespace RestaurantChaos.Clients
             foreach (PlateRest plateRest in plateRests)
             {
                 plateRest.ClearPlate();
+            }
+        }
+
+        private void ClearPlayerHands()
+        {
+            if (playerHoldSystem == null)
+            {
+                playerHoldSystem = FindFirstObjectByType<PlayerHoldSystem>();
+            }
+
+            if (playerHoldSystem != null)
+            {
+                playerHoldSystem.ClearHeldItem();
+            }
+
+            ExtinguisherProp[] extinguishers = FindObjectsByType<ExtinguisherProp>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            foreach (ExtinguisherProp extinguisher in extinguishers)
+            {
+                extinguisher.ResetProp();
             }
         }
 

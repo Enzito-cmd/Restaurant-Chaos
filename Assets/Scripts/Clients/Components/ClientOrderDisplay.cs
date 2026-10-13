@@ -27,6 +27,13 @@ namespace RestaurantChaos.Clients
                 prefabScale.z / parentScale.z);
         }
 
+        public void ShowFacingCamera(GameObject prefab)
+        {
+            Show(prefab);
+
+            Billboard.Attach(currentVisual);
+        }
+
         public void Clear()
         {
             if (currentVisual == null) return;

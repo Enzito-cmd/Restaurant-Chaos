@@ -14,6 +14,7 @@ public class LockableStation : MonoBehaviour
 
     private void Start()
     {
+        Billboard.Attach(lockIcon);
         UpdateLockIcon();
     }
 

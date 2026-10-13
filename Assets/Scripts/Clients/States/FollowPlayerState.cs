@@ -4,6 +4,8 @@ namespace RestaurantChaos.Clients
 {
     public class FollowPlayerState : ClientState
     {
+        private const float WalkingVelocityThreshold = 0.1f;
+
         public FollowPlayerState(ClientBase client) : base(client)
         {
         }
@@ -24,9 +26,9 @@ namespace RestaurantChaos.Clients
 
             float distance = Vector3.Distance(client.transform.position, client.Player.position);
 
-            if (distance > client.StopDistance)
+            if (distance > client.FollowDistance)
             {
-                client.MoveTowards(client.Player.position, client.Config.moveSpeed);
+                client.MoveTowards(client.Player.position, client.Config.moveSpeed, client.FollowDistance);
             }
             else if (client.Agent != null)
             {
@@ -36,9 +38,12 @@ namespace RestaurantChaos.Clients
 
         public override void UpdateAnimation()
         {
-            if (client.Player == null) return;
+            bool isWalking = false;
 
-            bool isWalking = Vector3.Distance(client.transform.position, client.Player.position) > client.StopDistance;
+            if (client.Agent != null && client.Agent.isOnNavMesh)
+            {
+                isWalking = client.Agent.velocity.magnitude > WalkingVelocityThreshold;
+            }
 
             if (isWalking)
             {

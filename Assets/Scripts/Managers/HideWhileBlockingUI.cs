@@ -12,7 +12,7 @@ public class HideWhileBlockingUI : MonoBehaviour
     {
         if (visualRoot == null) return;
 
-        bool isBlockingUiOpen = Cursor.visible || TutorialSignUI.IsAnySignShowing;
+        bool isBlockingUiOpen = Cursor.visible || TutorialSignUI.IsScreenCovered;
 
         if (isBlockingUiOpen == wasBlockingUiOpen) return;
 

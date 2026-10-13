@@ -22,7 +22,7 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
-        Time.timeScale = 1f;
+        WorldTime.SetMenuPaused(false);
     }
 
     private void Update()
@@ -71,7 +71,7 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(true);
 
-        Time.timeScale = 0f;
+        WorldTime.SetMenuPaused(true);
 
         if (CursorManager.Instance != null)
             CursorManager.Instance.ShowCursor();
@@ -93,7 +93,7 @@ public class PauseMenu : MonoBehaviour
         if (configurationsPanel != null)
             configurationsPanel.SetActive(false);
 
-        Time.timeScale = 1f;
+        WorldTime.SetMenuPaused(false);
 
         if (CursorManager.Instance != null)
         {
@@ -148,7 +148,7 @@ public class PauseMenu : MonoBehaviour
     {
         SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
-        Time.timeScale = 1f;
+        WorldTime.Reset();
         SceneManager.LoadScene(0);
     }
 }

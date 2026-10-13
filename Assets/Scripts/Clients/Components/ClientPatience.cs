@@ -15,6 +15,14 @@ namespace RestaurantChaos.Clients
         private float duration;
         private float remaining;
 
+        private void Awake()
+        {
+            if (fillImage != null && fillImage.canvas != null)
+            {
+                Billboard.Attach(fillImage.canvas.gameObject);
+            }
+        }
+
         public float NormalizedFill
         {
             get
