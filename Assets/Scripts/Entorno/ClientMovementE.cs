@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 using System;
 
 public class ClientMovementE : MonoBehaviour
@@ -38,11 +37,15 @@ public class ClientMovementE : MonoBehaviour
         {
             transform.forward = direction;
         }
-
-        if (Vector3.Distance(transform.position, target.position) < 0.2f)
+        if (Vector3.Distance(
+            transform.position,
+            target.position
+        ) < 0.2f)
         {
+            target = null;
+
             onArrived?.Invoke();
-            Destroy(gameObject);
+            onArrived = null;
         }
     }
 }

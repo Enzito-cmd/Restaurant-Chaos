@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System;
+using System.Collections.Generic;
 
 public class ClientSpawnerE : MonoBehaviour
 {
@@ -15,111 +15,97 @@ public class ClientSpawnerE : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private float clientSpeed = 2f;
 
-    private int clientsWalking = 0;
+    [Header("Pool")]
+    [SerializeField] private int poolSize = 20;
 
-    private int currentPair = 0;
-
-    // Orden inverso al tráfico
-    private readonly int[][] spawnPairs =
-    {
-    new int[] { 6, 7 }, // 7 y 8
-    new int[] { 4, 5 }, // 5 y 6
-    new int[] { 2, 3 }, // 3 y 4
-    new int[] { 0, 1 } // 1 y 2
-};
+    private List<GameObject> clientPool = new List<GameObject>();
 
     private void Start()
     {
+        CreatePool();
+
         StartCoroutine(SpawnClientsCoroutine());
+    }
+
+    private void CreatePool()
+    {
+        if (clientPrefabs == null || clientPrefabs.Length == 0)
+            return;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject prefab = clientPrefabs[
+                Random.Range(0, clientPrefabs.Length)
+            ];
+
+            if (prefab == null)
+                continue;
+
+            GameObject client = Instantiate(prefab);
+            client.SetActive(false);
+
+            clientPool.Add(client);
+        }
     }
 
     private IEnumerator SpawnClientsCoroutine()
     {
         while (true)
         {
-            if (clientsWalking == 0)
-            {
-                SpawnClientPair();
-            }
-
             yield return new WaitForSeconds(spawnInterval);
+
+            SpawnClient();
         }
     }
 
-    private void SpawnClientPair()
+    private void SpawnClient()
     {
-        if (clientPrefabs == null || clientPrefabs.Length == 0)
+        if (spawnPoints == null || spawnPoints.Length == 0)
             return;
 
-        if (spawnPoints == null || spawnPoints.Length != 8)
+        if (endPoints == null || endPoints.Length != spawnPoints.Length)
             return;
 
-        if (endPoints == null || endPoints.Length != 8)
-            return;
+        GameObject client = null;
 
-        int spawnIndex1 = spawnPairs[currentPair][0];
-        int spawnIndex2 = spawnPairs[currentPair][1];
-
-        SpawnClient(spawnIndex1);
-        SpawnClient(spawnIndex2);
-
-        currentPair++;
-
-        if (currentPair >= spawnPairs.Length)
+        for (int i = 0; i < clientPool.Count; i++)
         {
-            currentPair = 0;
+            if (!clientPool[i].activeInHierarchy)
+            {
+                client = clientPool[i];
+                break;
+            }
         }
-    }
 
-    private void SpawnClient(int spawnIndex)
-    {
+        if (client == null)
+            return;
+
+        int spawnIndex = Random.Range(0, spawnPoints.Length);
+
         Transform spawnPoint = spawnPoints[spawnIndex];
         Transform endPoint = endPoints[spawnIndex];
 
         if (spawnPoint == null || endPoint == null)
             return;
 
-        GameObject clientPrefab =
-        clientPrefabs[UnityEngine.Random.Range(0, clientPrefabs.Length)];
+        client.transform.position = spawnPoint.position;
+        client.transform.rotation = spawnPoint.rotation;
+        ClientMovementE movement =
+            client.GetComponent<ClientMovementE>();
 
-        if (clientPrefab == null)
+        if (movement == null)
             return;
 
-        GameObject clientObject = Instantiate(
-        clientPrefab,
-        spawnPoint.position,
-        spawnPoint.rotation
-        );
+        movement.SetSpeed(clientSpeed);
 
-        ClientMovementE clientMovement =
-        clientObject.GetComponent<ClientMovementE>();
-
-        if (clientMovement != null)
+        movement.SetTarget(endPoint, () =>
         {
-            float randomSpeed =
-            UnityEngine.Random.Range(1.5f, 3.5f);
+            client.SetActive(false);
+        });
 
-            clientMovement.SetSpeed(randomSpeed);
-
-            clientsWalking++;
-
-            clientMovement.SetTarget(
-            endPoint,
-            ClientFinished
-            );
-        }
-    }
-
-    private void ClientFinished()
-    {
-        clientsWalking--;
-
-        if (clientsWalking < 0)
-        {
-            clientsWalking = 0;
-        }
+        client.SetActive(true);
     }
 }
-
 

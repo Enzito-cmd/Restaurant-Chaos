@@ -1,6 +1,7 @@
+
 using UnityEngine;
-using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CarSpawner : MonoBehaviour
 {
@@ -15,120 +16,110 @@ public class CarSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private float carSpeed = 15f;
+    [SerializeField] private int poolSize = 16;
 
-    // Cantidad de autos que están circulando
-    private int carsDriving = 0;
-
-    // Parejas:
-    // 1 - 2
-    // 3 - 4
-    // 5 - 6
-    // 7 - 8
-    private int currentPair = 0;
-
-    private readonly int[][] spawnPairs =
-    {
-        new int[] { 0, 1 }, // Spawn 1 y 2
-        new int[] { 2, 3 }, // Spawn 3 y 4
-        new int[] { 4, 5 }, // Spawn 5 y 6
-        new int[] { 6, 7 }  // Spawn 7 y 8
-    };
+    private List<GameObject> carPool = new List<GameObject>();
 
     private void Start()
     {
+        CreatePool();
+
         StartCoroutine(SpawnCarsCoroutine());
+    }
+
+    private void CreatePool()
+    {
+        if (carPrefabs == null || carPrefabs.Length == 0)
+            return;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject prefab = carPrefabs[
+                Random.Range(0, carPrefabs.Length)
+            ];
+
+            if (prefab == null)
+                continue;
+
+            GameObject car = Instantiate(prefab);
+
+            car.SetActive(false);
+
+            carPool.Add(car);
+        }
     }
 
     private IEnumerator SpawnCarsCoroutine()
     {
         while (true)
         {
-            // Esperamos a que terminen los dos autos
-            if (carsDriving == 0)
-            {
-                SpawnCarPair();
-            }
+            SpawnCar();
 
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
-    private void SpawnCarPair()
+    private void SpawnCar()
     {
-        if (carPrefabs == null || carPrefabs.Length == 0)
+        if (spawnPoints == null || spawnPoints.Length == 0)
             return;
 
-        if (spawnPoints == null || spawnPoints.Length != 8)
+        if (endPoints == null || endPoints.Length == 0)
             return;
 
-        if (endPoints == null || endPoints.Length != 8)
+        int spawnIndex = Random.Range(0, spawnPoints.Length);
+
+        if (spawnPoints[spawnIndex] == null)
             return;
 
-        // Obtenemos la pareja actual
-        int spawnIndex1 = spawnPairs[currentPair][0];
-        int spawnIndex2 = spawnPairs[currentPair][1];
+        if (spawnIndex >= endPoints.Length)
+            return;
 
-        // Spawneamos los dos
-        SpawnCar(spawnIndex1);
-        SpawnCar(spawnIndex2);
+        if (endPoints[spawnIndex] == null)
+            return;
+        GameObject car = GetCarFromPool();
 
-        // Pasamos a la siguiente pareja
-        currentPair++;
+        if (car == null)
+            return;
 
-        if (currentPair >= spawnPairs.Length)
-        {
-            currentPair = 0;
-        }
-    }
-
-    private void SpawnCar(int spawnIndex)
-    {
         Transform spawnPoint = spawnPoints[spawnIndex];
         Transform endPoint = endPoints[spawnIndex];
 
-        if (spawnPoint == null || endPoint == null)
-            return;
+        car.transform.position = spawnPoint.position;
+        car.transform.rotation = spawnPoint.rotation;
 
-        // Elegimos un auto al azar
-        GameObject carPrefab =
-            carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)];
+        CarMovement carMovement = car.GetComponent<CarMovement>();
 
-        if (carPrefab == null)
-            return;
-
-        GameObject carObject = Instantiate(
-            carPrefab,
-            spawnPoint.position,
-            spawnPoint.rotation
-        );
-
-        CarMovement carMovement =
-    carObject.GetComponent<CarMovement>();
-
-        if (carMovement != null)
+        if (carMovement == null)
         {
-            // Velocidad aleatoria entre 20 y 30
-            float randomSpeed = UnityEngine.Random.Range(10f, 30f);
-
-            carMovement.SetSpeed(randomSpeed);
-
-            carsDriving++;
-
-            carMovement.SetTarget(
-                endPoint,
-                FreeTraffic
-            );
+            car.SetActive(false);
+            return;
         }
+        carMovement.SetSpeed(carSpeed);
+
+        carMovement.SetTarget(
+            endPoint,
+            () => ReturnCarToPool(car)
+        );
+        car.SetActive(true);
     }
 
-    private void FreeTraffic()
+    private GameObject GetCarFromPool()
     {
-        carsDriving--;
-
-        if (carsDriving < 0)
+        for (int i = 0; i < carPool.Count; i++)
         {
-            carsDriving = 0;
+            if (!carPool[i].activeInHierarchy)
+            {
+                return carPool[i];
+            }
         }
+
+        return null;
+    }
+
+    private void ReturnCarToPool(GameObject car)
+    {
+        car.SetActive(false);
     }
 }
-

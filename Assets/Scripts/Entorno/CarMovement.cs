@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System;
 
@@ -37,6 +38,7 @@ public class CarMovement : MonoBehaviour
         onReachedTarget = reachedTargetCallback;
 
         currentSpeed = moveSpeed;
+        pedestrianDetected = false;
     }
 
     private void Update()
@@ -79,28 +81,39 @@ public class CarMovement : MonoBehaviour
         if (target == null)
             return;
 
-        Vector3 direction =
-            target.position - transform.position;
-
+        Vector3 direction = target.position - transform.position;
         direction.y = 0f;
 
         float distance = direction.magnitude;
 
+        // Si llegó al endPoint, termina el recorrido.
         if (distance <= arrivalDistance)
         {
-            onReachedTarget?.Invoke();
-            Destroy(gameObject);
+            // Guardamos el callback.
+            Action callback = onReachedTarget;
+
+            // Limpiamos los datos del recorrido.
+            target = null;
+            onReachedTarget = null;
+
+            // Devolvemos el auto al pool.
+            if (callback != null)
+            {
+                callback.Invoke();
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+
             return;
         }
 
         direction.Normalize();
 
-        // Detectamos al peatón usando la dirección REAL
-        // hacia donde se mueve el auto.
         DetectPedestrian(direction);
 
-        bool carAhead =
-            IsCarAhead(direction);
+        bool carAhead = IsCarAhead(direction);
 
         bool emergencyStop =
             frontSensor != null &&
@@ -131,19 +144,15 @@ public class CarMovement : MonoBehaviour
         transform.position +=
             direction * currentSpeed * Time.deltaTime;
 
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation =
-                Quaternion.LookRotation(direction) *
-                Quaternion.Euler(0f, -90f, 0f);
+        Quaternion targetRotation =
+            Quaternion.LookRotation(direction) *
+            Quaternion.Euler(0f, -90f, 0f);
 
-            transform.rotation =
-                Quaternion.Slerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
-        }
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     private bool IsCarAhead(Vector3 direction)
@@ -162,8 +171,7 @@ public class CarMovement : MonoBehaviour
             CarMovement otherCar =
                 hit.collider.GetComponentInParent<CarMovement>();
 
-            if (otherCar != null &&
-                otherCar != this)
+            if (otherCar != null && otherCar != this)
             {
                 return true;
             }
@@ -178,4 +186,3 @@ public class CarMovement : MonoBehaviour
         currentSpeed = speed;
     }
 }
-
