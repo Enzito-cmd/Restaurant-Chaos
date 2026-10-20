@@ -1,7 +1,12 @@
+using System.Collections;
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class TempuraController : MonoBehaviour
 {
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide guide;
+
     [Header("References")]
     [SerializeField] private TempuraGridLogic logic;
     [SerializeField] private TempuraGridVisuals visuals;
@@ -19,6 +24,7 @@ public class TempuraController : MonoBehaviour
     private int currentStepIndex = 0;
     private Vector2Int playerPos;
     private bool isPlaying = false;
+    private Coroutine startRoutine;
 
     private bool isWaitingForInputBuffer = false;
     private bool bufferW, bufferS, bufferA, bufferD;
@@ -28,11 +34,29 @@ public class TempuraController : MonoBehaviour
         currentRound = 0;
         StartRound();
         tempuraTray.SetActive(true);
+
+        startRoutine = StartCoroutine(BeginPlaying());
+    }
+
+    private IEnumerator BeginPlaying()
+    {
+        if (guide != null)
+        {
+            yield return guide.PlayIfNeeded();
+        }
+
+        startRoutine = null;
         isPlaying = true;
     }
 
     public void EndMinigame()
     {
+        if (startRoutine != null)
+        {
+            StopCoroutine(startRoutine);
+            startRoutine = null;
+        }
+
         tempuraTray.SetActive(false);
         isPlaying = false;
         ResetBuffers();

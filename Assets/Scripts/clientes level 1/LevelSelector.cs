@@ -20,12 +20,21 @@ public class LevelSelector : MonoBehaviour
     public void LoadGameScene()
     {
         DayManager.RequestedDayNumber = 0;
+        DayManager.RequestedTutorialNumber = 0;
         StartCoroutine(LoadSceneWithSound("GameScene"));
     }
 
     public void PlayDay(int dayNumber)
     {
         DayManager.RequestedDayNumber = dayNumber;
+        DayManager.RequestedTutorialNumber = 0;
+        StartCoroutine(LoadSceneWithSound("GameScene"));
+    }
+
+    public void PlayTutorial(int tutorialNumber)
+    {
+        DayManager.RequestedDayNumber = 0;
+        DayManager.RequestedTutorialNumber = tutorialNumber;
         StartCoroutine(LoadSceneWithSound("GameScene"));
     }
 

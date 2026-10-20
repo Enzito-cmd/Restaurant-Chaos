@@ -1,3 +1,4 @@
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class MinigameManager : MonoBehaviour
@@ -27,7 +28,7 @@ public class MinigameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isMinigameActive && !isTransitioning && Input.GetKeyDown(KeyCode.Q))
+        if (isMinigameActive && !isTransitioning && !TutorialSignUI.IsAnySignShowing && Input.GetKeyDown(KeyCode.Q))
         {
             ExitMinigame();
         }

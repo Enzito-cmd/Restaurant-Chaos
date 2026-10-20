@@ -18,6 +18,9 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] protected Transform kitchenCheckpoint;
         [SerializeField] protected float checkpointRadius = 1.5f;
 
+        [Header("Clients")]
+        [SerializeField] protected float clientSightDelay = 2.5f;
+
         protected PlateRest[] plateRests;
 
         private readonly List<Transform> availableRestPoints = new List<Transform>();
@@ -44,6 +47,11 @@ namespace RestaurantChaos.Tutorial
             runningSequence = null;
             pointer.Clear();
 
+            while (signUI.IsShowing)
+            {
+                yield return null;
+            }
+
             DayManager.Instance.StartNextDay();
         }
 
@@ -64,10 +72,26 @@ namespace RestaurantChaos.Tutorial
             SetPlayerFrozen(false);
         }
 
+        protected IEnumerator WaitForClientToBeSeen(ClientBase client)
+        {
+            float elapsed = 0f;
+
+            while (client != null && elapsed < clientSightDelay && !(client.CurrentState is SitState))
+            {
+                elapsed += Time.deltaTime;
+
+                yield return null;
+            }
+        }
+
         protected IEnumerator KitchenStep(string[] signs)
         {
             yield return ShowSigns(signs);
+            yield return GoToKitchen();
+        }
 
+        protected IEnumerator GoToKitchen()
+        {
             pointer.PointAt(kitchenCheckpoint, true);
 
             while (!IsPlayerNear(kitchenCheckpoint, checkpointRadius))

@@ -40,7 +40,8 @@ namespace RestaurantChaos.Tutorial
         protected override IEnumerator Run()
         {
             yield return ShowSigns(unlockedSigns);
-            yield return KitchenStep(kitchenSigns);
+            yield return GoToKitchen();
+            yield return ShowSigns(kitchenSigns);
             yield return ShowSigns(phasesSigns);
             yield return CookTempuraStep();
             yield return OpenRestaurantStep();

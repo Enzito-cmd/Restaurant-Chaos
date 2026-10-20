@@ -1,10 +1,14 @@
 using System.Collections;
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class WokController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject minigameContainer;
+
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide prepGuide;
 
     [Header("Food")]
     [SerializeField] private GameObject wokRicePrefab;
@@ -55,6 +59,11 @@ public class WokController : MonoBehaviour
             yield return StartCoroutine(visuals.AnimatePanIn());
         }
 
+        if (prepGuide != null)
+        {
+            yield return prepGuide.PlayIfNeeded();
+        }
+
         startSequenceCoroutine = null;
 
         if (prepPhase != null)
@@ -73,6 +82,8 @@ public class WokController : MonoBehaviour
     private IEnumerator EndSequence()
     {
         isMinigameActive = false;
+
+        CursorManager.Request(CursorStyle.Default);
 
         if (startSequenceCoroutine != null)
         {

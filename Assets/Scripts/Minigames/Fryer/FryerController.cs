@@ -1,8 +1,12 @@
 using System.Collections;
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class FryerController : MonoBehaviour
 {
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide guide;
+
     [Header("References")]
     public FryerVisuals visuals;
     public GameObject minigameContainer;
@@ -88,7 +92,6 @@ public class FryerController : MonoBehaviour
         {
             visuals.ShowSkillcheck(false);
             visuals.ShowCountdown(false);
-            visuals.ClearTempuras();
         }
 
         StartCoroutine(EndSequence(won));
@@ -99,6 +102,8 @@ public class FryerController : MonoBehaviour
         if (visuals != null) visuals.MoveBasketUp();
 
         yield return new WaitForSeconds(1.5f);
+
+        if (visuals != null) visuals.ClearTempuras();
 
         if (MinigameManager.Instance != null)
         {
@@ -142,6 +147,15 @@ public class FryerController : MonoBehaviour
         {
             visuals.UpdateSkillcheckUI(needleAngle, currentZoneStartAngle, zoneSizeRatio);
             visuals.ShowSkillcheck(true);
+        }
+
+        if (guide != null)
+        {
+            yield return guide.PlayIfNeeded();
+        }
+
+        if (visuals != null)
+        {
             visuals.ShowCountdown(true);
         }
 

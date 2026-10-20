@@ -322,7 +322,7 @@ public class PlayerInteraction : MonoBehaviour
         return false;
     }
 
-    private bool IsHoldingExtinguisher()
+    public bool IsHoldingExtinguisher()
     {
         if (holdSystem == null) return false;
         if (!holdSystem.IsHoldingItem) return false;

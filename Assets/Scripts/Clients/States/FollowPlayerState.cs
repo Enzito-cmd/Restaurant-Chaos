@@ -22,18 +22,12 @@ namespace RestaurantChaos.Clients
 
         public override void Tick()
         {
-            if (client.Player == null) return;
-
-            float distance = Vector3.Distance(client.transform.position, client.Player.position);
-
-            if (distance > client.FollowDistance)
+            if (client.Player == null)
             {
-                client.MoveTowards(client.Player.position, client.Config.moveSpeed, client.FollowDistance);
+                return;
             }
-            else if (client.Agent != null)
-            {
-                client.Agent.ResetPath();
-            }
+
+            client.ApproachTarget(client.Player.position, client.Config.moveSpeed, client.FollowDistance);
         }
 
         public override void UpdateAnimation()

@@ -4,10 +4,19 @@ namespace RestaurantChaos.Clients
 {
     public class AngryChaseState : ClientState
     {
-        private const float ArrivalTolerance = 0.15f;
-        private const float MovingVelocityThreshold = 0.1f;
+        private const string YellTrigger = "Yell";
+        private const float MovingStartThreshold = 0.25f;
+        private const float MovingStopThreshold = 0.1f;
+        private const float TurnSpeed = 360f;
+        private const float ChaseAngularSpeed = 360f;
+        private const float YellEnterTimeout = 0.5f;
+        private const float YellMaxDuration = 6f;
 
-        private float lastYellTime = -99f;
+        private bool isYelling;
+        private bool yellEntered;
+        private bool isMovingForAnimation;
+        private float yellStartTime;
+        private float nextYellTime;
 
         public AngryChaseState(ClientBase client) : base(client)
         {
@@ -30,61 +39,153 @@ namespace RestaurantChaos.Clients
             {
                 client.Agent.enabled = true;
                 client.Agent.isStopped = false;
+                client.Agent.angularSpeed = ChaseAngularSpeed;
             }
+
+            nextYellTime = Time.time;
         }
 
         public override void Tick()
         {
-            if (client.Player == null) return;
-            if (client.Agent == null) return;
-            if (!client.Agent.isOnNavMesh) return;
-
-            float distanceToPlayer = Vector3.Distance(client.transform.position, client.Player.position);
-            float arrivalDistance = client.Config.chaseStopDistance;
-            float yellRange = Mathf.Max(client.Config.yellDistance, arrivalDistance + ArrivalTolerance);
-
-            if (distanceToPlayer <= yellRange && Time.time >= lastYellTime + client.Config.yellCooldown)
+            if (client.Player == null || client.Agent == null || !client.Agent.isOnNavMesh)
             {
-                lastYellTime = Time.time;
-                client.Agent.isStopped = true;
-                client.Agent.ResetPath();
-
-                if (client.Animator != null)
-                {
-                    client.Animator.SetTrigger("Yell");
-                }
-
-                Vector3 direction = (client.Player.position - client.transform.position).normalized;
-                direction.y = 0f;
-
-                if (direction != Vector3.zero)
-                {
-                    client.transform.rotation = Quaternion.LookRotation(direction);
-                }
-
                 return;
             }
 
-            if (Time.time < lastYellTime + client.Config.yellDuration)
+            if (isYelling)
             {
-                client.Agent.isStopped = true;
+                UpdateYell();
                 return;
             }
 
-            client.Agent.isStopped = false;
-            client.MoveTowards(client.Player.position, client.Config.moveSpeed * client.Config.chaseSpeedMultiplier, arrivalDistance);
+            float chaseSpeed = client.Config.moveSpeed * client.Config.chaseSpeedMultiplier;
+            bool arrived = client.ApproachTarget(client.Player.position, chaseSpeed, client.Config.chaseStopDistance);
+
+            if (!arrived)
+            {
+                return;
+            }
+
+            FacePlayer();
+
+            if (Time.time >= nextYellTime)
+            {
+                StartYell();
+            }
+        }
+
+        private void StartYell()
+        {
+            isYelling = true;
+            yellEntered = false;
+            yellStartTime = Time.time;
+
+            client.Agent.isStopped = true;
+            client.Agent.velocity = Vector3.zero;
+
+            if (client.Animator != null)
+            {
+                client.Animator.SetTrigger(YellTrigger);
+            }
+        }
+
+        private void UpdateYell()
+        {
+            FacePlayer();
+
+            if (HasYellFinished())
+            {
+                isYelling = false;
+                nextYellTime = Time.time + client.Config.yellCooldown;
+                client.Agent.isStopped = false;
+            }
+        }
+
+        private bool HasYellFinished()
+        {
+            float elapsed = Time.time - yellStartTime;
+
+            if (client.Animator == null)
+            {
+                return elapsed >= client.Config.yellDuration;
+            }
+
+            if (elapsed >= YellMaxDuration)
+            {
+                client.Animator.ResetTrigger(YellTrigger);
+                return true;
+            }
+
+            bool inYellState = IsInYellState();
+
+            if (inYellState)
+            {
+                yellEntered = true;
+                return false;
+            }
+
+            if (yellEntered)
+            {
+                return true;
+            }
+
+            if (elapsed >= YellEnterTimeout)
+            {
+                client.Animator.ResetTrigger(YellTrigger);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsInYellState()
+        {
+            Animator animator = client.Animator;
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName(YellTrigger))
+            {
+                return true;
+            }
+
+            return animator.IsInTransition(0) && animator.GetNextAnimatorStateInfo(0).IsName(YellTrigger);
+        }
+
+        private void FacePlayer()
+        {
+            Vector3 direction = client.Player.position - client.transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude < 0.0001f)
+            {
+                return;
+            }
+
+            Quaternion wanted = Quaternion.LookRotation(direction);
+            client.transform.rotation = Quaternion.RotateTowards(client.transform.rotation, wanted, TurnSpeed * Time.deltaTime);
         }
 
         public override void UpdateAnimation()
         {
-            bool isMoving = false;
+            float velocity = 0f;
 
             if (client.Agent != null && client.Agent.isOnNavMesh)
             {
-                isMoving = client.Agent.velocity.magnitude > MovingVelocityThreshold;
+                velocity = client.Agent.velocity.magnitude;
             }
 
-            if (isMoving)
+            if (isMovingForAnimation)
+            {
+                if (velocity < MovingStopThreshold)
+                {
+                    isMovingForAnimation = false;
+                }
+            }
+            else if (velocity > MovingStartThreshold)
+            {
+                isMovingForAnimation = true;
+            }
+
+            if (isMovingForAnimation)
             {
                 client.Animator.SetFloat("Speed", 2f);
             }

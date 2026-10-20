@@ -31,7 +31,7 @@ namespace RestaurantChaos.Clients
         {
             Show(prefab);
 
-            Billboard.Attach(currentVisual);
+            Billboard.AttachAlwaysVisible(currentVisual);
         }
 
         public void Clear()

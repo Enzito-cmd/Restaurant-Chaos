@@ -7,10 +7,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 12f;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
+    private const string MovingParameter = "IsMoving";
+
     private CharacterController characterController;
     private Vector3 moveDirection;
 
     private bool canMove = true;
+    private bool drivesAnimator;
 
     private Transform mainCameraTransform;
 
@@ -27,6 +33,21 @@ public class PlayerController : MonoBehaviour
         }
         startPosition = transform.position;
         startRotation = transform.rotation;
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        if (animator != null)
+        {
+            animator.applyRootMotion = false;
+        }
+    }
+
+    private void Start()
+    {
+        drivesAnimator = CanDriveAnimator();
     }
 
     public void SetMovement(bool state)
@@ -36,11 +57,42 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!canMove) return;
+        if (!canMove)
+        {
+            UpdateAnimator(false);
+            return;
+        }
 
         HandleInput();
         HandleMovement();
         HandleRotation();
+        UpdateAnimator(moveDirection.sqrMagnitude >= 0.01f);
+    }
+
+    private bool CanDriveAnimator()
+    {
+        if (animator == null || animator.runtimeAnimatorController == null)
+        {
+            return false;
+        }
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.name == MovingParameter)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void UpdateAnimator(bool isMoving)
+    {
+        if (drivesAnimator)
+        {
+            animator.SetBool(MovingParameter, isMoving);
+        }
     }
 
     private void HandleInput()

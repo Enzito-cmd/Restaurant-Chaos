@@ -7,10 +7,12 @@ namespace RestaurantChaos.Tutorial
     public class Day1Tutorial : TutorialSequence
     {
         [Header("Signs")]
+        [SerializeField] [TextArea] private string[] controlsSigns;
         [SerializeField] [TextArea] private string[] welcomeSigns;
         [SerializeField] [TextArea] private string[] kitchenSigns;
         [SerializeField] [TextArea] private string[] cookSigns;
         [SerializeField] [TextArea] private string[] placeDishSigns;
+        [SerializeField] [TextArea] private string[] trashSigns;
         [SerializeField] [TextArea] private string[] openRestaurantSigns;
         [SerializeField] [TextArea] private string[] seatClientSigns;
         [SerializeField] [TextArea] private string[] orderSigns;
@@ -40,6 +42,7 @@ namespace RestaurantChaos.Tutorial
         protected override IEnumerator Run()
         {
             yield return ShowSigns(welcomeSigns);
+            yield return ShowSigns(controlsSigns);
             yield return KitchenStep(kitchenSigns);
             yield return CookStep();
             yield return PlaceDishStep();
@@ -71,6 +74,7 @@ namespace RestaurantChaos.Tutorial
         private IEnumerator PlaceDishStep()
         {
             yield return ShowSigns(placeDishSigns);
+            yield return ShowSigns(trashSigns);
 
             while (FindRestWithPlate() == null)
             {
@@ -108,7 +112,12 @@ namespace RestaurantChaos.Tutorial
 
             client = FindFirstObjectByType<ClientBase>();
 
-            yield return ShowSigns(seatClientSigns);
+            yield return WaitForClientToBeSeen(client);
+
+            if (client != null && !(client.CurrentState is SitState))
+            {
+                yield return ShowSigns(seatClientSigns);
+            }
 
             while (client != null && !(client.CurrentState is SitState))
             {

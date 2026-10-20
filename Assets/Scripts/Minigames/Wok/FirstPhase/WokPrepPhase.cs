@@ -38,6 +38,10 @@ public class WokPrepPhase : MonoBehaviour
     public float pourSpeed;
     public float tiltAngle;
 
+    [Header("Cursor")]
+    [SerializeField] private CursorStyle idleCursor = CursorStyle.OpenHand;
+    [SerializeField] private CursorStyle grabCursor = CursorStyle.ClosedHand;
+
     private PrepItem currentItem = PrepItem.None;
     private GameObject heldObjInstance;
     private ParticleSystem heldParticles;
@@ -65,6 +69,41 @@ public class WokPrepPhase : MonoBehaviour
 
         HandleMouseInput();
         UpdateHeldObjectPosition();
+        UpdateCursor();
+    }
+
+    private void UpdateCursor()
+    {
+        if (!isPrepActive)
+        {
+            return;
+        }
+
+        if (currentItem != PrepItem.None || IsHoveringGrabbable())
+        {
+            CursorManager.Request(grabCursor);
+        }
+        else
+        {
+            CursorManager.Request(idleCursor);
+        }
+    }
+
+    private bool IsHoveringGrabbable()
+    {
+        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (!Physics.Raycast(ray, out RaycastHit hit))
+        {
+            return false;
+        }
+
+        if (hit.collider == eggBowlCollider && currentEggs < requiredEggs)
+        {
+            return true;
+        }
+
+        return hit.collider == riceBowlCollider && currentRice < requiredRice;
     }
 
     private void StartRiceSound()

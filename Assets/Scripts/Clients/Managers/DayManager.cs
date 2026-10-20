@@ -16,6 +16,7 @@ namespace RestaurantChaos.Clients
         public static DayManager Instance { get; private set; }
 
         public static int RequestedDayNumber = 0;
+        public static int RequestedTutorialNumber = 0;
 
         [Header("Days")]
         [SerializeField] private DaySetup[] days;
@@ -33,6 +34,7 @@ namespace RestaurantChaos.Clients
         public bool HasNextDay => currentDayIndex + 1 < days.Length;
         public bool IsRestaurantOpen { get; private set; }
         public bool CanOpenRestaurant { get; private set; }
+        public bool IsTutorialDay => currentDayHasTutorial;
 
         public bool CanUseStations
         {
@@ -64,7 +66,16 @@ namespace RestaurantChaos.Clients
         private void Start()
         {
             int requestedDay = RequestedDayNumber;
+            int requestedTutorial = RequestedTutorialNumber;
+
             RequestedDayNumber = 0;
+            RequestedTutorialNumber = 0;
+
+            if (requestedTutorial > 0)
+            {
+                StartDay(ResolveTutorialIndex(requestedTutorial));
+                return;
+            }
 
             StartDay(ResolveStartIndex(requestedDay));
         }
@@ -104,6 +115,28 @@ namespace RestaurantChaos.Clients
             {
                 spawner.StartSpawning();
             }
+        }
+
+        private int ResolveTutorialIndex(int tutorialNumber)
+        {
+            int tutorialsFound = 0;
+
+            for (int i = 0; i < days.Length; i++)
+            {
+                if (days[i].tutorial == null)
+                {
+                    continue;
+                }
+
+                tutorialsFound++;
+
+                if (tutorialsFound == tutorialNumber)
+                {
+                    return i;
+                }
+            }
+
+            return 0;
         }
 
         private int ResolveStartIndex(int dayNumber)
