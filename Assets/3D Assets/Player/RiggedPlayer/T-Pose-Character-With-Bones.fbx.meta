@@ -3,7 +3,27 @@ guid: 72763698d6c316d489ebc40553f98d98
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mt_Accesorios
+    second: {fileID: 2100000, guid: 34e9d827a61757e4f8c4307fa2cdd3e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mt_Pelo
+    second: {fileID: 2100000, guid: 6ca029c7413b16c42a30fa4491376a8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mt_Piel
+    second: {fileID: 2100000, guid: 2d1b279843cbc864686ee18b6e91d15f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mt_Ropa
+    second: {fileID: 2100000, guid: ddbef7665af73b847ada8cca8a18fd35, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
