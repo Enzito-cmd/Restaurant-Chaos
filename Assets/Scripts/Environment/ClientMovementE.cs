@@ -8,6 +8,8 @@ public class ClientMovementE : MonoBehaviour
 
     [SerializeField] private float speed = 2f;
 
+    private bool isGrounded;
+
     public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
@@ -37,6 +39,7 @@ public class ClientMovementE : MonoBehaviour
         {
             transform.forward = direction;
         }
+
         if (Vector3.Distance(
             transform.position,
             target.position
@@ -48,5 +51,22 @@ public class ClientMovementE : MonoBehaviour
             onArrived = null;
         }
     }
-}
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+            Debug.Log("TOCANDO SUELO");
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+            Debug.Log("NO TOCA SUELO");
+        }
+    }
+}
