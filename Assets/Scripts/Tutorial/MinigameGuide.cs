@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RestaurantChaos.Clients;
@@ -7,241 +8,164 @@ namespace RestaurantChaos.Tutorial
 {
     public class MinigameGuide : MonoBehaviour
     {
-        [System.Serializable]
+        [Serializable]
         public class Step
         {
             [TextArea] public string text;
             public Camera worldCamera;
-            public Transform[] worldTargets;
+            public Collider[] colliders;
+            public Renderer[] renderers;
             public RectTransform[] uiTargets;
+            public Collider[] clickColliders;
+            public bool showMouseIcon;
+            public GameObject[] showObjects;
+            public Color holeTint = new Color(1f, 1f, 1f, 0f);
         }
 
-        [Header("Steps")]
+        [SerializeField] private TutorialSignUI signUI;
         [SerializeField] private Step[] steps;
-
-        [Header("Highlight")]
         [SerializeField] private float highlightPadding = 28f;
 
-        private readonly List<Rect> stepRects = new List<Rect>();
-        private readonly List<Renderer> renderersBuffer = new List<Renderer>();
-        private readonly Vector3[] cornersBuffer = new Vector3[4];
-        private TutorialSignUI signUI;
-        private int lastPlayedDayIndex = -1;
+        private readonly List<Rect> rects = new List<Rect>();
+        private readonly Vector3[] corners = new Vector3[4];
+        private int lastPlayedDay = -1;
+
+        public Collider LastClickedCollider { get; private set; }
 
         public IEnumerator PlayIfNeeded()
         {
-            if (!ShouldPlay())
+            DayManager dayManager = DayManager.Instance;
+
+            if (dayManager == null || !dayManager.IsTutorialDay || dayManager.CurrentDayIndex == lastPlayedDay)
             {
                 yield break;
             }
 
-            signUI = FindFirstObjectByType<TutorialSignUI>();
-
-            if (signUI == null)
-            {
-                yield break;
-            }
-
-            lastPlayedDayIndex = DayManager.Instance.CurrentDayIndex;
+            lastPlayedDay = dayManager.CurrentDayIndex;
+            LastClickedCollider = null;
 
             CursorManager.Request(CursorStyle.Default);
 
-            foreach (Step step in steps)
+            for (int i = 0; i < steps.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(step.text))
-                {
-                    continue;
-                }
-
-                BuildRects(step);
-
-                yield return signUI.ShowPages(new string[] { step.text }, stepRects);
-            }
-
-            while (signUI != null && signUI.IsShowing)
-            {
-                yield return null;
+                yield return PlayStep(steps[i], i == steps.Length - 1);
             }
         }
 
-        private bool ShouldPlay()
+        public Collider ConsumeClickedCollider()
         {
-            if (steps == null || steps.Length == 0)
+            Collider clicked = LastClickedCollider;
+            LastClickedCollider = null;
+
+            return clicked;
+        }
+
+        private IEnumerator PlayStep(Step step, bool isLastStep)
+        {
+            Camera camera = step.worldCamera;
+
+            if (camera == null)
+            {
+                camera = Camera.main;
+            }
+
+            rects.Clear();
+
+            foreach (Collider target in step.colliders)
+            {
+                AddBounds(target.bounds, camera);
+            }
+
+            foreach (Renderer target in step.renderers)
+            {
+                AddBounds(target.bounds, camera);
+            }
+
+            foreach (RectTransform target in step.uiTargets)
+            {
+                AddUiRect(target);
+            }
+
+            SignOptions options = new SignOptions();
+            options.highlightRects = new List<Rect>(rects);
+            options.holeTint = step.holeTint;
+            options.showMouseIcon = step.showMouseIcon;
+            options.showObjects = step.showObjects;
+            options.releaseAtOnce = isLastStep;
+
+            if (step.clickColliders.Length > 0)
+            {
+                options.advanceCondition = () => ClickHits(step.clickColliders, camera);
+            }
+
+            yield return signUI.ShowPages(new string[] { step.text }, options);
+        }
+
+        private bool ClickHits(Collider[] clickColliders, Camera camera)
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+            if (!Physics.Raycast(ray, out RaycastHit hit) || Array.IndexOf(clickColliders, hit.collider) < 0)
             {
                 return false;
             }
 
-            DayManager dayManager = DayManager.Instance;
+            LastClickedCollider = hit.collider;
 
-            if (dayManager == null || !dayManager.IsTutorialDay)
-            {
-                return false;
-            }
-
-            return lastPlayedDayIndex != dayManager.CurrentDayIndex;
+            return true;
         }
 
-        private void BuildRects(Step step)
+        private void AddBounds(Bounds bounds, Camera camera)
         {
-            stepRects.Clear();
-
-            if (step.worldTargets != null)
-            {
-                Camera camera = step.worldCamera;
-
-                if (camera == null)
-                {
-                    camera = Camera.main;
-                }
-
-                foreach (Transform target in step.worldTargets)
-                {
-                    if (target != null && camera != null && TryGetWorldRect(target, camera, out Rect worldRect))
-                    {
-                        stepRects.Add(Inflate(worldRect));
-                    }
-                }
-            }
-
-            if (step.uiTargets != null)
-            {
-                foreach (RectTransform target in step.uiTargets)
-                {
-                    if (target != null && TryGetUiRect(target, out Rect uiRect))
-                    {
-                        stepRects.Add(Inflate(uiRect));
-                    }
-                }
-            }
-        }
-
-        private Rect Inflate(Rect rect)
-        {
-            rect.xMin -= highlightPadding;
-            rect.xMax += highlightPadding;
-            rect.yMin -= highlightPadding;
-            rect.yMax += highlightPadding;
-
-            return rect;
-        }
-
-        private bool TryGetWorldRect(Transform target, Camera camera, out Rect rect)
-        {
-            rect = new Rect();
-
-            if (!TryGetWorldBounds(target, out Bounds bounds))
-            {
-                return false;
-            }
-
-            Vector3 min = bounds.min;
-            Vector3 max = bounds.max;
-            Vector2 screenMin = new Vector2(float.MaxValue, float.MaxValue);
-            Vector2 screenMax = new Vector2(float.MinValue, float.MinValue);
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
 
             for (int i = 0; i < 8; i++)
             {
-                Vector3 corner = new Vector3(
-                    PickEdge(i & 1, min.x, max.x),
-                    PickEdge(i & 2, min.y, max.y),
-                    PickEdge(i & 4, min.z, max.z));
-
+                Vector3 corner = bounds.center + Vector3.Scale(bounds.extents, new Vector3(Sign(i & 1), Sign(i & 2), Sign(i & 4)));
                 Vector3 screenPoint = camera.WorldToScreenPoint(corner);
 
-                if (screenPoint.z <= 0f)
-                {
-                    return false;
-                }
-
-                screenMin = Vector2.Min(screenMin, screenPoint);
-                screenMax = Vector2.Max(screenMax, screenPoint);
+                min = Vector2.Min(min, screenPoint);
+                max = Vector2.Max(max, screenPoint);
             }
 
-            rect = Rect.MinMaxRect(screenMin.x, screenMin.y, screenMax.x, screenMax.y);
-
-            return true;
+            AddRect(min, max);
         }
 
-        private float PickEdge(int bit, float low, float high)
+        private void AddUiRect(RectTransform target)
         {
-            if (bit == 0)
-            {
-                return low;
-            }
+            Camera canvasCamera = target.GetComponentInParent<Canvas>(true).rootCanvas.worldCamera;
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
 
-            return high;
-        }
+            target.GetWorldCorners(corners);
 
-        private bool TryGetWorldBounds(Transform target, out Bounds bounds)
-        {
-            bounds = new Bounds(target.position, Vector3.zero);
-
-            bool found = false;
-
-            target.GetComponentsInChildren(false, renderersBuffer);
-
-            foreach (Renderer targetRenderer in renderersBuffer)
-            {
-                if (!targetRenderer.enabled || targetRenderer is ParticleSystemRenderer || targetRenderer is TrailRenderer)
-                {
-                    continue;
-                }
-
-                if (!found)
-                {
-                    bounds = targetRenderer.bounds;
-                    found = true;
-                }
-                else
-                {
-                    bounds.Encapsulate(targetRenderer.bounds);
-                }
-            }
-
-            if (found)
-            {
-                return true;
-            }
-
-            Collider targetCollider = target.GetComponentInChildren<Collider>();
-
-            if (targetCollider != null)
-            {
-                bounds = targetCollider.bounds;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool TryGetUiRect(RectTransform target, out Rect rect)
-        {
-            rect = new Rect();
-
-            Canvas canvas = target.GetComponentInParent<Canvas>();
-            Camera canvasCamera = null;
-
-            if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-            {
-                canvasCamera = canvas.worldCamera;
-            }
-
-            target.GetWorldCorners(cornersBuffer);
-
-            Vector2 screenMin = new Vector2(float.MaxValue, float.MaxValue);
-            Vector2 screenMax = new Vector2(float.MinValue, float.MinValue);
-
-            foreach (Vector3 corner in cornersBuffer)
+            foreach (Vector3 corner in corners)
             {
                 Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(canvasCamera, corner);
 
-                screenMin = Vector2.Min(screenMin, screenPoint);
-                screenMax = Vector2.Max(screenMax, screenPoint);
+                min = Vector2.Min(min, screenPoint);
+                max = Vector2.Max(max, screenPoint);
             }
 
-            rect = Rect.MinMaxRect(screenMin.x, screenMin.y, screenMax.x, screenMax.y);
+            AddRect(min, max);
+        }
 
-            return true;
+        private void AddRect(Vector2 min, Vector2 max)
+        {
+            Vector2 padding = Vector2.one * highlightPadding;
+
+            rects.Add(Rect.MinMaxRect(min.x - padding.x, min.y - padding.y, max.x + padding.x, max.y + padding.y));
+        }
+
+        private float Sign(int bit)
+        {
+            if (bit == 0)
+            {
+                return -1f;
+            }
+
+            return 1f;
         }
     }
 }

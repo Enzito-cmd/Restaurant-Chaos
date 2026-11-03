@@ -88,6 +88,14 @@ public class WokCookPhase : MonoBehaviour
         }
     }
 
+    public void ShowArrowSlots()
+    {
+        if (arrowsCanvas != null)
+        {
+            arrowsCanvas.SetActive(true);
+        }
+    }
+
     public void StartCooking()
     {
         if (wokTransform != null)

@@ -21,6 +21,9 @@ namespace RestaurantChaos.Clients
         [SerializeField] private float thinkingDuration = 5f;
         [SerializeField] private float foodDeliveryDistance = 4f;
 
+        [Header("Eating")]
+        [SerializeField] private float eatDuration = 10f;
+
         [Header("Money")]
         [SerializeField] private GameObject moneyPrefab;
 
@@ -57,12 +60,14 @@ namespace RestaurantChaos.Clients
         public float FoodDeliveryDistance => foodDeliveryDistance;
         public GameObject ThinkingPrefab => thinkingPrefab;
         public float ThinkingDuration => thinkingDuration;
+        public float EatDuration => eatDuration;
 
         public bool IsFrontOfQueue { get; set; } = true;
 
         public bool IsFollowingPlayer => stateMachine.Current is FollowPlayerState;
         public bool IsChasing => stateMachine.Current is AngryChaseState;
         public ClientState CurrentState => stateMachine.Current;
+        public bool IsEating => stateMachine.Current is EatState;
         public bool IsLeaving => stateMachine.Current is LeaveState;
 
         public ClientChair CurrentChair
@@ -303,7 +308,7 @@ namespace RestaurantChaos.Clients
                 Served.Invoke();
             }
 
-            ChangeState(new LeaveState(this));
+            ChangeState(new EatState(this));
         }
 
         private void SpawnMoneyOnTable()

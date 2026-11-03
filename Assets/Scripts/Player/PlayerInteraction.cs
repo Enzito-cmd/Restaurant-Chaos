@@ -116,6 +116,7 @@ public class PlayerInteraction : MonoBehaviour
             if (!client.IsFrontOfQueue) continue;
 
             if (client.CurrentState is SitState) continue;
+            if (client.IsEating) continue;
             if (client.IsLeaving) continue;
 
             ClientHighlight highlight = client.GetComponent<ClientHighlight>();
@@ -259,6 +260,11 @@ public class PlayerInteraction : MonoBehaviour
                 PlateRest plateRest = interactable as PlateRest;
 
                 if (plateRest != null && plateRest.CanDepositHeldPlate())
+                {
+                    return interactable;
+                }
+
+                if (interactable is TrashBin && interactable.CanInteract() && !IsHoldingExtinguisher())
                 {
                     return interactable;
                 }

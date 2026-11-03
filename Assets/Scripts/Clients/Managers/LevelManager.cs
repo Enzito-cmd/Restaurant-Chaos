@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace RestaurantChaos.Clients
 {
@@ -12,12 +12,16 @@ namespace RestaurantChaos.Clients
         [SerializeField] private ClientSpawner spawner;
 
         [Header("End Panel")]
-        [SerializeField] private GameObject endPanel;
+        [SerializeField] private UIPanelPop endPanel;
 
         [Header("Stars")]
         [SerializeField] private GameObject[] stars;
         [SerializeField] private float delayBetweenStars = 0.5f;
         [SerializeField] private float starAnimationDuration = 0.4f;
+
+        [Header("Rating (sprites: 0-1 stars, 2 stars, 3 stars)")]
+        [SerializeField] private Image ratingImage;
+        [SerializeField] private Sprite[] ratingSprites;
 
         private int clientsServed;
         private bool levelEnded;
@@ -35,6 +39,11 @@ namespace RestaurantChaos.Clients
             }
 
             Instance = this;
+
+            if (endPanel != null)
+            {
+                endPanel.HideInstantly();
+            }
         }
 
         private void Start()
@@ -56,15 +65,7 @@ namespace RestaurantChaos.Clients
 
             if (endPanel != null)
             {
-                endPanel.SetActive(false);
-            }
-
-            foreach (GameObject star in stars)
-            {
-                if (star != null)
-                {
-                    star.SetActive(false);
-                }
+                endPanel.Hide();
             }
 
             if (CursorManager.Instance != null)
@@ -111,7 +112,7 @@ namespace RestaurantChaos.Clients
         {
             SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
-            SceneManager.LoadScene("Menu");
+            SceneTransition.Load("Menu");
         }
 
         private void EndLevel()
@@ -124,9 +125,11 @@ namespace RestaurantChaos.Clients
 
         private void ShowEndPanel()
         {
+            HideResults();
+
             if (endPanel != null)
             {
-                endPanel.SetActive(true);
+                endPanel.Show();
             }
 
             if (CursorManager.Instance != null)
@@ -137,44 +140,58 @@ namespace RestaurantChaos.Clients
             StartCoroutine(ShowStars());
         }
 
-        private IEnumerator ShowStars()
+        private void HideResults()
         {
-            for (int i = 0; i < stars.Length; i++)
+            foreach (GameObject star in stars)
             {
-                if (i >= clientsServed) break;
-                if (stars[i] == null) continue;
+                if (star != null)
+                {
+                    star.SetActive(false);
+                }
+            }
 
-                yield return new WaitForSeconds(delayBetweenStars);
-                yield return StartCoroutine(AnimateStar(stars[i]));
+            if (ratingImage != null)
+            {
+                ratingImage.gameObject.SetActive(false);
             }
         }
 
-        private IEnumerator AnimateStar(GameObject star)
+        private IEnumerator ShowStars()
         {
-            star.SetActive(true);
+            int earned = Mathf.Min(clientsServed, stars.Length);
 
-            Transform starTransform = star.transform;
-            Vector3 targetScale = starTransform.localScale;
-            starTransform.localScale = Vector3.zero;
-
-            float elapsed = 0f;
-
-            while (elapsed < starAnimationDuration)
+            for (int i = 0; i < earned; i++)
             {
-                elapsed += Time.deltaTime;
-                float t = elapsed / starAnimationDuration;
-                t = 1f - Mathf.Pow(1f - t, 3f);
+                yield return new WaitForSeconds(delayBetweenStars);
+                if (!levelEnded) yield break;
 
-                starTransform.localScale = Vector3.Lerp(Vector3.zero, targetScale, t);
+                SoundManager.Instance?.PlaySound(SoundType.Stars);
+                yield return Pop(stars[i].transform);
+            }
+
+            if (ratingImage == null || ratingSprites.Length == 0) yield break;
+
+            yield return new WaitForSeconds(delayBetweenStars);
+            if (!levelEnded) yield break;
+
+            ratingImage.sprite = ratingSprites[Mathf.Clamp(earned - 1, 0, ratingSprites.Length - 1)];
+            ratingImage.SetNativeSize();
+            yield return Pop(ratingImage.transform);
+        }
+
+        private IEnumerator Pop(Transform target)
+        {
+            Vector3 finalScale = target.localScale;
+            target.localScale = Vector3.zero;
+            target.gameObject.SetActive(true);
+
+            for (float t = 0f; t < 1f; t += Time.deltaTime / starAnimationDuration)
+            {
+                target.localScale = finalScale * UIPanelPop.EaseOutBack(t);
                 yield return null;
             }
 
-            starTransform.localScale = targetScale * 0.8f;
-
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.PlaySound(SoundType.Stars);
-            }
+            target.localScale = finalScale;
         }
     }
 }

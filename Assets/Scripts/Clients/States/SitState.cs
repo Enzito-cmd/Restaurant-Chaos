@@ -53,7 +53,7 @@ namespace RestaurantChaos.Clients
             {
                 client.OrderDisplay.Show(client.ChosenMeal.orderVisualPrefab);
                 OrderBoard.OpenTicket(chair.TableNumber, client.ChosenMeal, client);
-                SoundManager.Instance?.PlaySound(SoundType.pedido);
+                SoundManager.Instance?.PlaySound(SoundType.OrderPlaced);
             }
 
             orderRevealed = true;

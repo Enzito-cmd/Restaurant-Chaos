@@ -69,6 +69,11 @@ public class WokController : MonoBehaviour
         if (prepPhase != null)
         {
             prepPhase.StartPrepPhase();
+
+            if (prepGuide != null)
+            {
+                prepPhase.GrabFromCollider(prepGuide.ConsumeClickedCollider());
+            }
         }
     }
 
@@ -89,6 +94,11 @@ public class WokController : MonoBehaviour
         {
             StopCoroutine(startSequenceCoroutine);
             startSequenceCoroutine = null;
+        }
+
+        if (transition != null)
+        {
+            transition.StopTransition();
         }
 
         if (prepPhase != null)

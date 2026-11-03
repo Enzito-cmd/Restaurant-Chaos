@@ -117,7 +117,8 @@ public class FryerController : MonoBehaviour
 
         if (won)
         {
-            Debug.Log("Won");
+            SoundManager.Instance?.PlaySound(SoundType.FryerComplete);
+
             if (holdSystem != null && friedTempuraPrefab != null)
             {
                 holdSystem.HoldItem(friedTempuraPrefab);
@@ -125,7 +126,7 @@ public class FryerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Lost");
+            SoundManager.Instance?.PlaySound(SoundType.FryerLose);
         }
     }
 
@@ -209,6 +210,8 @@ public class FryerController : MonoBehaviour
     {
         currentSuccesses++;
 
+        SoundManager.Instance?.PlaySound(SoundType.FryerHit);
+
         if (visuals != null)
         {
             visuals.UpdateHits(currentSuccesses, successes);
@@ -224,6 +227,8 @@ public class FryerController : MonoBehaviour
     private void Fail()
     {
         currentFails++;
+
+        SoundManager.Instance?.PlaySound(SoundType.FryerMiss);
 
         if (visuals != null)
         {

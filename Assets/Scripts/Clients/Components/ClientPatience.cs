@@ -57,6 +57,14 @@ namespace RestaurantChaos.Clients
             isRunning = false;
         }
 
+        public void Hide()
+        {
+            if (fillImage != null)
+            {
+                fillImage.canvas.gameObject.SetActive(false);
+            }
+        }
+
         private void Update()
         {
             if (!isRunning) return;

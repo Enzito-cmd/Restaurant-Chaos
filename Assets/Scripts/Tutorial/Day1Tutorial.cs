@@ -7,7 +7,6 @@ namespace RestaurantChaos.Tutorial
     public class Day1Tutorial : TutorialSequence
     {
         [Header("Signs")]
-        [SerializeField] [TextArea] private string[] controlsSigns;
         [SerializeField] [TextArea] private string[] welcomeSigns;
         [SerializeField] [TextArea] private string[] kitchenSigns;
         [SerializeField] [TextArea] private string[] cookSigns;
@@ -19,6 +18,9 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] [TextArea] private string[] deliverSigns;
         [SerializeField] [TextArea] private string[] collectMoneySigns;
         [SerializeField] [TextArea] private string[] completeSigns;
+
+        [Header("Images")]
+        [SerializeField] private GameObject controlsImage;
 
         [Header("Targets")]
         [SerializeField] private Transform wokStation;
@@ -42,7 +44,7 @@ namespace RestaurantChaos.Tutorial
         protected override IEnumerator Run()
         {
             yield return ShowSigns(welcomeSigns);
-            yield return ShowSigns(controlsSigns);
+            yield return ShowImage(controlsImage);
             yield return KitchenStep(kitchenSigns);
             yield return CookStep();
             yield return PlaceDishStep();
@@ -155,7 +157,7 @@ namespace RestaurantChaos.Tutorial
             Transform pointedArrow = null;
             Transform pointedGlow = null;
 
-            while (client != null && !client.IsLeaving)
+            while (client != null && !client.IsEating && !client.IsLeaving)
             {
                 PlateRest restWithPlate = FindRestWithPlate();
                 Transform wantedArrow = null;

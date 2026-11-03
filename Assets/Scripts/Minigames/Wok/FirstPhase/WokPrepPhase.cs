@@ -49,6 +49,7 @@ public class WokPrepPhase : MonoBehaviour
     private bool isPrepActive = false;
     private bool isPlayingRiceSound = false;
     private bool isRiceSoundPlaying = false;
+    private Coroutine transitionCoroutine;
     public void StartPrepPhase()
     {
         currentEggs = 0;
@@ -70,6 +71,23 @@ public class WokPrepPhase : MonoBehaviour
         HandleMouseInput();
         UpdateHeldObjectPosition();
         UpdateCursor();
+    }
+
+    public void GrabFromCollider(Collider clicked)
+    {
+        if (clicked == null || !isPrepActive || currentItem != PrepItem.None)
+        {
+            return;
+        }
+
+        if (clicked == eggBowlCollider && currentEggs < requiredEggs)
+        {
+            GrabItem(PrepItem.Egg, dragEggPrefab);
+        }
+        else if (clicked == riceBowlCollider && currentRice < requiredRice)
+        {
+            GrabItem(PrepItem.Rice, dragRiceBowlPrefab);
+        }
     }
 
     private void UpdateCursor()
@@ -126,7 +144,7 @@ public class WokPrepPhase : MonoBehaviour
 
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.StopLoopingSound();
+            SoundManager.Instance.StopLoopingSound(SoundType.RicePour);
         }
 
         isRiceSoundPlaying = false;
@@ -318,7 +336,7 @@ public class WokPrepPhase : MonoBehaviour
         {
             isPrepActive = false;
             ClearHeldItem();
-            StartCoroutine(TransitionToCooking());
+            transitionCoroutine = StartCoroutine(TransitionToCooking());
         }
     }
 
@@ -326,13 +344,19 @@ public class WokPrepPhase : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
+        transitionCoroutine = null;
+
         if (prepUIPanel != null) prepUIPanel.SetActive(false);
         if (wokController != null) wokController.CookPhase();
     }
 
     public void StopPrepPhase()
     {
-        if (!isPrepActive) return;
+        if (transitionCoroutine != null)
+        {
+            StopCoroutine(transitionCoroutine);
+            transitionCoroutine = null;
+        }
 
         isPrepActive = false;
         StopRiceSound();

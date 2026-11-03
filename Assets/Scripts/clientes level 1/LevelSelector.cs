@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using RestaurantChaos.Clients;
 
@@ -46,6 +45,12 @@ public class LevelSelector : MonoBehaviour
     {
         StartCoroutine(LoadSceneWithSound("Configuration"));
     }
+
+    public void GoToCredits()
+    {
+        StartCoroutine(LoadSceneWithSound("Credits"));
+    }
+
     public void GoToMainMenu()
     {
         StartCoroutine(LoadSceneWithSound("Menu"));
@@ -78,6 +83,6 @@ public class LevelSelector : MonoBehaviour
 
         yield return new WaitForSeconds(sceneLoadDelay);
 
-        SceneManager.LoadScene(sceneName);
+        SceneTransition.Load(sceneName);
     }
 }

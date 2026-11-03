@@ -18,6 +18,7 @@ public class WokTransition : MonoBehaviour
 
     private Vector3 eggStartPosition;
     private Vector3 riceStartPosition;
+    private Coroutine animationsCoroutine;
 
     private void Awake()
     {
@@ -37,7 +38,15 @@ public class WokTransition : MonoBehaviour
     }
     public void StartTransition()
     {
-        StartCoroutine(Animations());
+        animationsCoroutine = StartCoroutine(Animations());
+    }
+
+    public void StopTransition()
+    {
+        if (animationsCoroutine == null) return;
+
+        StopCoroutine(animationsCoroutine);
+        animationsCoroutine = null;
     }
 
     private IEnumerator Animations()
@@ -64,6 +73,9 @@ public class WokTransition : MonoBehaviour
 
         if (cookGuide != null)
         {
+            cookPhase.ShowArrowSlots();
+
+            yield return null;
             yield return cookGuide.PlayIfNeeded();
         }
 

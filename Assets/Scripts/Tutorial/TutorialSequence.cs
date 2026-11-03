@@ -40,6 +40,11 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator RunAndFinish()
         {
+            while (SceneTransition.IsRunning)
+            {
+                yield return null;
+            }
+
             plateRests = FindObjectsByType<PlateRest>(FindObjectsSortMode.None);
 
             yield return Run();
@@ -57,6 +62,26 @@ namespace RestaurantChaos.Tutorial
 
         protected IEnumerator ShowSigns(string[] pages)
         {
+            yield return ShowWithOptions(pages, null);
+        }
+
+        protected IEnumerator ShowImage(GameObject image)
+        {
+            if (image == null)
+            {
+                yield break;
+            }
+
+            SignOptions options = new SignOptions();
+
+            options.showObjects = new GameObject[] { image };
+            options.hideBubble = true;
+
+            yield return ShowWithOptions(new string[] { string.Empty }, options);
+        }
+
+        private IEnumerator ShowWithOptions(string[] pages, SignOptions options)
+        {
             if (pages == null || pages.Length == 0)
             {
                 yield break;
@@ -68,7 +93,7 @@ namespace RestaurantChaos.Tutorial
             }
 
             SetPlayerFrozen(true);
-            yield return signUI.ShowPages(pages);
+            yield return signUI.ShowPages(pages, options);
             SetPlayerFrozen(false);
         }
 

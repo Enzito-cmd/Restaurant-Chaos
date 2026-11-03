@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject configurationsPanel;
+    [SerializeField] private UIPanelPop pausePanel;
+    [SerializeField] private UIPanelPop buttonsPanel;
+    [SerializeField] private UIPanelPop configurationsPanel;
 
     private bool isPaused = false;
     private bool cursorWasVisible;
@@ -14,10 +14,13 @@ public class PauseMenu : MonoBehaviour
     {
         // SIEMPRE empiezan ocultos
         if (pausePanel != null)
-            pausePanel.SetActive(false);
+            pausePanel.HideInstantly();
+
+        if (buttonsPanel != null)
+            buttonsPanel.HideInstantly();
 
         if (configurationsPanel != null)
-            configurationsPanel.SetActive(false);
+            configurationsPanel.HideInstantly();
     }
 
     private void Start()
@@ -38,7 +41,7 @@ public class PauseMenu : MonoBehaviour
                 // Si estamos en configuraciones,
                 // ESC vuelve al men� de pausa
                 if (configurationsPanel != null &&
-                    configurationsPanel.activeSelf)
+                    configurationsPanel.IsOpen)
                 {
                     CloseConfigurations();
                 }
@@ -66,10 +69,13 @@ public class PauseMenu : MonoBehaviour
         cursorWasVisible = Cursor.visible;
 
         if (configurationsPanel != null)
-            configurationsPanel.SetActive(false);
+            configurationsPanel.HideInstantly();
+
+        if (buttonsPanel != null)
+            buttonsPanel.Show();
 
         if (pausePanel != null)
-            pausePanel.SetActive(true);
+            pausePanel.Show();
 
         WorldTime.SetMenuPaused(true);
 
@@ -88,10 +94,13 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
 
         if (pausePanel != null)
-            pausePanel.SetActive(false);
+            pausePanel.Hide();
+
+        if (buttonsPanel != null)
+            buttonsPanel.Hide();
 
         if (configurationsPanel != null)
-            configurationsPanel.SetActive(false);
+            configurationsPanel.Hide();
 
         WorldTime.SetMenuPaused(false);
 
@@ -115,11 +124,11 @@ public class PauseMenu : MonoBehaviour
 
         SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
+        if (buttonsPanel != null)
+            buttonsPanel.Hide();
 
         if (configurationsPanel != null)
-            configurationsPanel.SetActive(true);
+            configurationsPanel.Show();
     }
 
     // =====================================================
@@ -134,10 +143,10 @@ public class PauseMenu : MonoBehaviour
         SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
         if (configurationsPanel != null)
-            configurationsPanel.SetActive(false);
+            configurationsPanel.Hide();
 
-        if (pausePanel != null)
-            pausePanel.SetActive(true);
+        if (buttonsPanel != null)
+            buttonsPanel.Show();
     }
 
     // =====================================================
@@ -149,6 +158,6 @@ public class PauseMenu : MonoBehaviour
         SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
         WorldTime.Reset();
-        SceneManager.LoadScene(0);
+        SceneTransition.Load("Menu");
     }
 }

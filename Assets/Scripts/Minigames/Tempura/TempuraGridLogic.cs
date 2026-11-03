@@ -5,14 +5,35 @@ public class TempuraGridLogic : MonoBehaviour
 {
     public enum TileType { Empty, Path, Start, End, Passed }
 
+    private const int MaxAttempts = 100;
+
     [Header("Grid config")]
     public int width = 4;
     public int height = 4;
+
+    [Header("Diagonals per pattern")]
+    [SerializeField] private int minDiagonals = 1;
+    [SerializeField] private int maxDiagonals = 2;
 
     public TileType[,] gridLogic { get; private set; }
     public List<Vector2Int> currentPath { get; private set; }
 
     public void GenerateNewGrid()
+    {
+        int diagonalTarget = Random.Range(minDiagonals, maxDiagonals + 1);
+
+        for (int attempt = 0; attempt < MaxAttempts; attempt++)
+        {
+            if (TryGenerateGrid(diagonalTarget))
+            {
+                return;
+            }
+        }
+
+        TryGenerateGrid(0);
+    }
+
+    private bool TryGenerateGrid(int diagonalTarget)
     {
         gridLogic = new TileType[width, height];
         currentPath = new List<Vector2Int>();
@@ -25,37 +46,49 @@ public class TempuraGridLogic : MonoBehaviour
         gridLogic[current.x, current.y] = TileType.Start;
         currentPath.Add(current);
 
-        int maxAttempts = 100;
-        int attempts = 0;
+        int diagonalsUsed = 0;
 
-        while (current.x < width - 1 && attempts < maxAttempts)
+        while (current.x < width - 1)
         {
-            attempts++;
-            List<Vector2Int> validNeighbors = GetValidNeighbors(current);
+            List<Vector2Int> validNeighbors = GetValidNeighbors(current, diagonalsUsed < diagonalTarget);
 
-            if (validNeighbors.Count > 0)
+            if (validNeighbors.Count == 0)
             {
-                Vector2Int next = validNeighbors[Random.Range(0, validNeighbors.Count)];
-                gridLogic[next.x, next.y] = TileType.Path;
-                currentPath.Add(next);
-                current = next;
+                return false;
             }
-            else
+
+            Vector2Int next = validNeighbors[Random.Range(0, validNeighbors.Count)];
+
+            if (next.x != current.x && next.y != current.y)
             {
-                GenerateNewGrid();
-                return;
+                diagonalsUsed++;
             }
+
+            gridLogic[next.x, next.y] = TileType.Path;
+            currentPath.Add(next);
+            current = next;
         }
+
+        if (diagonalsUsed < diagonalTarget)
+        {
+            return false;
+        }
+
         gridLogic[current.x, current.y] = TileType.End;
+
+        return true;
     }
 
-    private List<Vector2Int> GetValidNeighbors(Vector2Int pos)
+    private List<Vector2Int> GetValidNeighbors(Vector2Int pos, bool allowDiagonals)
     {
         List<Vector2Int> neighbors = new List<Vector2Int>();
-        Vector2Int[] dirs = {
-            new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0),
-            new Vector2Int(1, 1), new Vector2Int(1, -1)
-        };
+        List<Vector2Int> dirs = new List<Vector2Int> { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0) };
+
+        if (allowDiagonals)
+        {
+            dirs.Add(new Vector2Int(1, 1));
+            dirs.Add(new Vector2Int(1, -1));
+        }
 
         foreach (var dir in dirs)
         {

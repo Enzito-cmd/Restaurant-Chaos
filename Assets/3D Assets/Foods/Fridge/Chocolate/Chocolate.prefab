@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6538847412617093130
+--- !u!1 &2836416315902219343
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,11 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5285267720515319671}
-  - component: {fileID: 8002551699399781828}
-  - component: {fileID: 784682652052783698}
-  - component: {fileID: 7539481055683255502}
-  - component: {fileID: -1231424078373620459}
+  - component: {fileID: 7343746883434544649}
+  - component: {fileID: 8300101004309698789}
+  - component: {fileID: 952247446014048408}
+  - component: {fileID: 5322262158257170898}
+  - component: {fileID: -7136127244732129840}
   m_Layer: 0
   m_Name: Chocolate
   m_TagString: Untagged
@@ -20,36 +20,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5285267720515319671
+--- !u!4 &7343746883434544649
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6538847412617093130}
+  m_GameObject: {fileID: 2836416315902219343}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.049, y: 2.687, z: -4.82}
-  m_LocalScale: {x: 0.59896505, y: 0.59896505, z: 0.59896505}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.000084923, z: 0.00091742}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8002551699399781828
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!33 &8300101004309698789
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6538847412617093130}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &784682652052783698
+  m_GameObject: {fileID: 2836416315902219343}
+  m_Mesh: {fileID: 3653254532769019950, guid: ed60c8903490caf49aec91496d4d0e83, type: 3}
+--- !u!23 &952247446014048408
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6538847412617093130}
+  m_GameObject: {fileID: 2836416315902219343}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 50b30a7d138df8f46b91189befb5ef95, type: 2}
+  - {fileID: 8465884703884202779, guid: ed60c8903490caf49aec91496d4d0e83, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,13 +92,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7539481055683255502
-SphereCollider:
+--- !u!64 &5322262158257170898
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6538847412617093130}
+  m_GameObject: {fileID: 2836416315902219343}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -110,19 +110,20 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-1231424078373620459
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3653254532769019950, guid: ed60c8903490caf49aec91496d4d0e83, type: 3}
+--- !u!114 &-7136127244732129840
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6538847412617093130}
+  m_GameObject: {fileID: 2836416315902219343}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6228a5ee1de02b84f9be9306281176f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoldableItem
-  itemType: 1
+  itemType: 0
