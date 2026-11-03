@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using RestaurantChaos.Clients;
 
@@ -20,12 +19,21 @@ public class LevelSelector : MonoBehaviour
     public void LoadGameScene()
     {
         DayManager.RequestedDayNumber = 0;
+        DayManager.RequestedTutorialNumber = 0;
         StartCoroutine(LoadSceneWithSound("GameScene"));
     }
 
     public void PlayDay(int dayNumber)
     {
         DayManager.RequestedDayNumber = dayNumber;
+        DayManager.RequestedTutorialNumber = 0;
+        StartCoroutine(LoadSceneWithSound("GameScene"));
+    }
+
+    public void PlayTutorial(int tutorialNumber)
+    {
+        DayManager.RequestedDayNumber = 0;
+        DayManager.RequestedTutorialNumber = tutorialNumber;
         StartCoroutine(LoadSceneWithSound("GameScene"));
     }
 
@@ -37,6 +45,12 @@ public class LevelSelector : MonoBehaviour
     {
         StartCoroutine(LoadSceneWithSound("Configuration"));
     }
+
+    public void GoToCredits()
+    {
+        StartCoroutine(LoadSceneWithSound("Credits"));
+    }
+
     public void GoToMainMenu()
     {
         StartCoroutine(LoadSceneWithSound("Menu"));
@@ -69,6 +83,6 @@ public class LevelSelector : MonoBehaviour
 
         yield return new WaitForSeconds(sceneLoadDelay);
 
-        SceneManager.LoadScene(sceneName);
+        SceneTransition.Load(sceneName);
     }
 }

@@ -19,7 +19,7 @@ namespace RestaurantChaos.Clients
         {
             if (fillImage != null && fillImage.canvas != null)
             {
-                Billboard.Attach(fillImage.canvas.gameObject);
+                Billboard.AttachAlwaysVisible(fillImage.canvas.gameObject);
             }
         }
 
@@ -55,6 +55,14 @@ namespace RestaurantChaos.Clients
         public void Stop()
         {
             isRunning = false;
+        }
+
+        public void Hide()
+        {
+            if (fillImage != null)
+            {
+                fillImage.canvas.gameObject.SetActive(false);
+            }
         }
 
         private void Update()

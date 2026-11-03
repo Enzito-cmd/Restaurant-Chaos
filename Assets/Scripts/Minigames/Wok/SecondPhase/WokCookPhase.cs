@@ -33,6 +33,10 @@ public class WokCookPhase : MonoBehaviour
     public float spawnInterval = 1.5f;
     public int maxArrowsOnScreen = 3;
 
+    [Header("Cursor")]
+    [SerializeField] private CursorStyle idleCursor = CursorStyle.OpenHand;
+    [SerializeField] private CursorStyle grabCursor = CursorStyle.ClosedHand;
+
     [Header("Game Rules")]
     public int maxErrors = 3;
     public int requiredHits = 10;
@@ -84,6 +88,14 @@ public class WokCookPhase : MonoBehaviour
         }
     }
 
+    public void ShowArrowSlots()
+    {
+        if (arrowsCanvas != null)
+        {
+            arrowsCanvas.SetActive(true);
+        }
+    }
+
     public void StartCooking()
     {
         if (wokTransform != null)
@@ -123,6 +135,31 @@ public class WokCookPhase : MonoBehaviour
         HandleWokDragging();
         HandleWokTilt();
         HandleArrowSpawning();
+        UpdateCursor();
+    }
+
+    private void UpdateCursor()
+    {
+        if (isDragging || IsHoveringHandle())
+        {
+            CursorManager.Request(grabCursor);
+        }
+        else
+        {
+            CursorManager.Request(idleCursor);
+        }
+    }
+
+    private bool IsHoveringHandle()
+    {
+        if (handleCollider == null)
+        {
+            return false;
+        }
+
+        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
+        return Physics.Raycast(ray, out RaycastHit hit) && hit.collider == handleCollider;
     }
 
     private void HandleWokDragging()

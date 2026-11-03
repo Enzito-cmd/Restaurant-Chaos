@@ -1,0 +1,2 @@
+El fondo de opacidad está desde el inicio de la animación. 
+Los cuadrados rosas aparecen cuando pasas el cursor por encima de cada uno de los cuadrados.

@@ -9,6 +9,9 @@ namespace RestaurantChaos.Clients
     [RequireComponent(typeof(ClientOrderDisplay))]
     public abstract class ClientBase : MonoBehaviour, IInteractable
     {
+        private const float ArrivalTolerance = 0.1f;
+        private const float ArrivalSpeed = 0.3f;
+
         [Header("Movement")]
         [SerializeField] private float stopDistance = 0.5f;
         [SerializeField] private float followDistance = 1.5f;
@@ -17,6 +20,9 @@ namespace RestaurantChaos.Clients
         [SerializeField] private GameObject thinkingPrefab;
         [SerializeField] private float thinkingDuration = 5f;
         [SerializeField] private float foodDeliveryDistance = 4f;
+
+        [Header("Eating")]
+        [SerializeField] private float eatDuration = 10f;
 
         [Header("Money")]
         [SerializeField] private GameObject moneyPrefab;
@@ -54,12 +60,14 @@ namespace RestaurantChaos.Clients
         public float FoodDeliveryDistance => foodDeliveryDistance;
         public GameObject ThinkingPrefab => thinkingPrefab;
         public float ThinkingDuration => thinkingDuration;
+        public float EatDuration => eatDuration;
 
         public bool IsFrontOfQueue { get; set; } = true;
 
         public bool IsFollowingPlayer => stateMachine.Current is FollowPlayerState;
         public bool IsChasing => stateMachine.Current is AngryChaseState;
         public ClientState CurrentState => stateMachine.Current;
+        public bool IsEating => stateMachine.Current is EatState;
         public bool IsLeaving => stateMachine.Current is LeaveState;
 
         public ClientChair CurrentChair
@@ -190,6 +198,44 @@ namespace RestaurantChaos.Clients
             agent.SetDestination(target);
         }
 
+        public bool ApproachTarget(Vector3 target, float speed, float keepDistance)
+        {
+            if (agent == null || !agent.isOnNavMesh)
+            {
+                return false;
+            }
+
+            Vector3 offset = target - transform.position;
+            offset.y = 0f;
+
+            float distance = offset.magnitude;
+
+            agent.isStopped = false;
+            agent.speed = speed;
+            agent.stoppingDistance = 0f;
+
+            if (distance <= keepDistance + ArrivalTolerance)
+            {
+                if (agent.hasPath)
+                {
+                    agent.ResetPath();
+                }
+
+                return agent.velocity.sqrMagnitude <= ArrivalSpeed * ArrivalSpeed;
+            }
+
+            Vector3 destination = target - offset / distance * keepDistance;
+
+            if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+            {
+                destination = hit.position;
+            }
+
+            agent.SetDestination(destination);
+
+            return false;
+        }
+
         public void NotifyLeftQueue()
         {
             if (LeftQueue != null)
@@ -262,7 +308,7 @@ namespace RestaurantChaos.Clients
                 Served.Invoke();
             }
 
-            ChangeState(new LeaveState(this));
+            ChangeState(new EatState(this));
         }
 
         private void SpawnMoneyOnTable()

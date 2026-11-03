@@ -38,6 +38,10 @@ public class WokPrepPhase : MonoBehaviour
     public float pourSpeed;
     public float tiltAngle;
 
+    [Header("Cursor")]
+    [SerializeField] private CursorStyle idleCursor = CursorStyle.OpenHand;
+    [SerializeField] private CursorStyle grabCursor = CursorStyle.ClosedHand;
+
     private PrepItem currentItem = PrepItem.None;
     private GameObject heldObjInstance;
     private ParticleSystem heldParticles;
@@ -45,6 +49,7 @@ public class WokPrepPhase : MonoBehaviour
     private bool isPrepActive = false;
     private bool isPlayingRiceSound = false;
     private bool isRiceSoundPlaying = false;
+    private Coroutine transitionCoroutine;
     public void StartPrepPhase()
     {
         currentEggs = 0;
@@ -65,6 +70,58 @@ public class WokPrepPhase : MonoBehaviour
 
         HandleMouseInput();
         UpdateHeldObjectPosition();
+        UpdateCursor();
+    }
+
+    public void GrabFromCollider(Collider clicked)
+    {
+        if (clicked == null || !isPrepActive || currentItem != PrepItem.None)
+        {
+            return;
+        }
+
+        if (clicked == eggBowlCollider && currentEggs < requiredEggs)
+        {
+            GrabItem(PrepItem.Egg, dragEggPrefab);
+        }
+        else if (clicked == riceBowlCollider && currentRice < requiredRice)
+        {
+            GrabItem(PrepItem.Rice, dragRiceBowlPrefab);
+        }
+    }
+
+    private void UpdateCursor()
+    {
+        if (!isPrepActive)
+        {
+            return;
+        }
+
+        if (currentItem != PrepItem.None || IsHoveringGrabbable())
+        {
+            CursorManager.Request(grabCursor);
+        }
+        else
+        {
+            CursorManager.Request(idleCursor);
+        }
+    }
+
+    private bool IsHoveringGrabbable()
+    {
+        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (!Physics.Raycast(ray, out RaycastHit hit))
+        {
+            return false;
+        }
+
+        if (hit.collider == eggBowlCollider && currentEggs < requiredEggs)
+        {
+            return true;
+        }
+
+        return hit.collider == riceBowlCollider && currentRice < requiredRice;
     }
 
     private void StartRiceSound()
@@ -87,7 +144,7 @@ public class WokPrepPhase : MonoBehaviour
 
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.StopLoopingSound();
+            SoundManager.Instance.StopLoopingSound(SoundType.RicePour);
         }
 
         isRiceSoundPlaying = false;
@@ -279,7 +336,7 @@ public class WokPrepPhase : MonoBehaviour
         {
             isPrepActive = false;
             ClearHeldItem();
-            StartCoroutine(TransitionToCooking());
+            transitionCoroutine = StartCoroutine(TransitionToCooking());
         }
     }
 
@@ -287,13 +344,19 @@ public class WokPrepPhase : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
+        transitionCoroutine = null;
+
         if (prepUIPanel != null) prepUIPanel.SetActive(false);
         if (wokController != null) wokController.CookPhase();
     }
 
     public void StopPrepPhase()
     {
-        if (!isPrepActive) return;
+        if (transitionCoroutine != null)
+        {
+            StopCoroutine(transitionCoroutine);
+            transitionCoroutine = null;
+        }
 
         isPrepActive = false;
         StopRiceSound();

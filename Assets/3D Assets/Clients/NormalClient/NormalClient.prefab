@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 5490057487438851849}
   - component: {fileID: 8451367137753649204}
   - component: {fileID: -2759846549300129475}
+  - component: {fileID: 2935475159414370474}
   m_Layer: 9
   m_Name: NormalClient
   m_TagString: Untagged
@@ -537,8 +538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e761eea574abf0c49b77721105554336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  emissionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  emissionIntensity: 2
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  brightness: 2
 --- !u!114 &5490057487438851849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,11 +579,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.NormalClient
   stopDistance: 0.5
+  followDistance: 1.5
   thinkingPrefab: {fileID: 4219246300002157302, guid: 718706e58cb9a1a4d9e551e92941ad03, type: 3}
   thinkingDuration: 5
   foodDeliveryDistance: 4
+  eatDuration: 10
   moneyPrefab: {fileID: 6585275513500336520, guid: c71b153a9c544a84ba23af28c2356f71, type: 3}
   debugConfig: {fileID: 11400000, guid: 8a2ea7b905860a94e8915be802637a85, type: 2}
+--- !u!136 &2935475159414370474
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341922451776090912}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.22
+  m_Height: 1.85
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!1001 &6250146473642846220
 PrefabInstance:
   m_ObjectHideFlags: 0

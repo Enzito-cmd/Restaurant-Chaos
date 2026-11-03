@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum SoundType
@@ -15,13 +17,37 @@ public enum SoundType
     RicePour,
     CookingSuccess,
     CookingFail,
-    pedido,
+    OrderPlaced,
     Stars,
     WokHit,
     ClientSpawn,
     ClientDeath,
     CookingMiss,
-    DoorOpen
+    DoorOpen,
+    FridgeOpen,
+    FridgeClose,
+    IngredientGrab,
+    TempuraStep,
+    TempuraFail,
+    TempuraComplete,
+    TempuraLose,
+    FryerHit,
+    FryerMiss,
+    FryerComplete,
+    FryerLose,
+    TutorialPop,
+    TutorialType
+}
+
+[Serializable]
+public class SoundEntry
+{
+    public SoundType type;
+    public AudioClip[] clips;
+    [Range(0f, 1f)] public float volume = 1f;
+    [Range(0.5f, 2f)] public float pitchMin = 1f;
+    [Range(0.5f, 2f)] public float pitchMax = 1f;
+    public float minInterval;
 }
 
 public class SoundManager : MonoBehaviour
@@ -30,39 +56,24 @@ public class SoundManager : MonoBehaviour
 
     [Header("Audio Source")]
     [SerializeField] private AudioSource soundSource;
-    [SerializeField] private AudioSource loopSource;
 
     [Header("Sounds")]
-    [SerializeField] private AudioClip buttonClick;
-    [SerializeField] private AudioClip clientPicked;
-    [SerializeField] private AudioClip clientSit;
-    [SerializeField] private AudioClip foodDelivered;
-    [SerializeField] private AudioClip clientLeave;
-    [SerializeField] private AudioClip clientAngry;
-    [SerializeField] private AudioClip moneySpawn;
-    [SerializeField] private AudioClip moneyPickup;
-    [SerializeField] private AudioClip wokStart;
-    [SerializeField] private AudioClip eggAdded;
-    [SerializeField] private AudioClip ricePour;
-    [SerializeField] private AudioClip cookingSuccess;
-    [SerializeField] private AudioClip cookingFail;
-    [SerializeField] private AudioClip pedido;
-    [SerializeField] private AudioClip Stars;
-    [SerializeField] private AudioClip WokHit;
-
-    [SerializeField] private AudioClip clientSpawn;
-    [SerializeField] private AudioClip clientDeath;
-    [SerializeField] private AudioClip cookingMiss;
-    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private SoundEntry[] sounds;
 
     private const string SoundVolumeKey = "SoundVolume";
     private const string MasterVolumeKey = "MasterVolume";
+
+    private readonly Dictionary<SoundType, SoundEntry> entries = new Dictionary<SoundType, SoundEntry>();
+    private readonly Dictionary<SoundType, float> lastPlayTimes = new Dictionary<SoundType, float>();
+    private readonly Dictionary<SoundType, AudioSource> activeLoops = new Dictionary<SoundType, AudioSource>();
+    private readonly List<AudioSource> sourcePool = new List<AudioSource>();
 
     private float soundVolume = 1f;
     private float masterVolume = 1f;
 
     public float SoundVolume => soundVolume;
     public float MasterVolume => masterVolume;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -73,192 +84,211 @@ public class SoundManager : MonoBehaviour
 
         Instance = this;
 
-        // Mantener entre escenas
         DontDestroyOnLoad(gameObject);
+
+        foreach (SoundEntry entry in sounds)
+        {
+            entries[entry.type] = entry;
+        }
+
+        if (soundSource == null)
+        {
+            soundSource = gameObject.AddComponent<AudioSource>();
+            soundSource.playOnAwake = false;
+        }
+
+        sourcePool.Add(soundSource);
 
         LoadSettings();
     }
+
     public void PlaySound(SoundType sound)
     {
-        if (soundSource == null)
-            return;
-
-        AudioClip clip = GetClip(sound);
-
-        if (clip != null)
-        {
-            soundSource.PlayOneShot(clip);
-        }
+        PlaySoundAndGetLength(sound);
     }
+
     public float PlaySoundAndGetLength(SoundType sound)
     {
-        if (soundSource == null)
+        if (!entries.TryGetValue(sound, out SoundEntry entry))
             return 0f;
 
-        AudioClip clip = GetClip(sound);
+        AudioClip clip = PickClip(entry);
 
         if (clip == null)
             return 0f;
 
-        soundSource.PlayOneShot(clip);
+        if (lastPlayTimes.TryGetValue(sound, out float lastTime) && Time.unscaledTime - lastTime < entry.minInterval)
+            return 0f;
 
-        return clip.length;
+        lastPlayTimes[sound] = Time.unscaledTime;
+
+        AudioSource source = GetFreeSource();
+
+        source.loop = false;
+        source.clip = clip;
+        source.pitch = UnityEngine.Random.Range(entry.pitchMin, entry.pitchMax);
+        source.volume = entry.volume * soundVolume * masterVolume;
+        source.Play();
+
+        return clip.length / source.pitch;
     }
+
     public void StartLoopingSound(SoundType sound)
     {
-        if (loopSource == null)
+        if (activeLoops.ContainsKey(sound))
             return;
 
-        AudioClip clip = GetClip(sound);
+        if (!entries.TryGetValue(sound, out SoundEntry entry))
+            return;
+
+        AudioClip clip = PickClip(entry);
 
         if (clip == null)
             return;
 
-        if (loopSource.isPlaying && loopSource.clip == clip)
-            return;
+        AudioSource source = GetFreeSource();
 
-        loopSource.clip = clip;
-        loopSource.loop = true;
+        source.loop = true;
+        source.clip = clip;
+        source.pitch = 1f;
+        source.volume = entry.volume * soundVolume * masterVolume;
+        source.Play();
 
-        UpdateSoundVolume();
-
-        loopSource.Play();
+        activeLoops[sound] = source;
     }
 
-    public void StopLoopingSound()
+    public void StopLoopingSound(SoundType sound)
     {
-        if (loopSource == null)
+        if (!activeLoops.TryGetValue(sound, out AudioSource source))
             return;
 
-        loopSource.Stop();
-        loopSource.clip = null;
-        loopSource.loop = false;
+        source.Stop();
+        source.loop = false;
+        source.clip = null;
+
+        activeLoops.Remove(sound);
     }
 
     public void SetSoundVolume(float volume)
     {
         soundVolume = Mathf.Clamp01(volume);
 
-        UpdateSoundVolume();
+        UpdateLoopVolumes();
 
-        PlayerPrefs.SetFloat(
-            SoundVolumeKey,
-            soundVolume
-        );
-
+        PlayerPrefs.SetFloat(SoundVolumeKey, soundVolume);
         PlayerPrefs.Save();
     }
+
     public void SetMasterVolume(float volume)
     {
         masterVolume = Mathf.Clamp01(volume);
 
-        // Afectar sonidos
-        UpdateSoundVolume();
+        UpdateLoopVolumes();
 
-        // Afectar música
         if (MusicManager.Instance != null)
         {
             MusicManager.Instance.ApplyMasterVolume(masterVolume);
         }
 
-        PlayerPrefs.SetFloat(
-            MasterVolumeKey,
-            masterVolume
-        );
-
+        PlayerPrefs.SetFloat(MasterVolumeKey, masterVolume);
         PlayerPrefs.Save();
     }
-    private void UpdateSoundVolume()
-    {
-        float volume = soundVolume * masterVolume;
 
-        if (soundSource != null)
+    private AudioClip PickClip(SoundEntry entry)
+    {
+        if (entry.clips == null || entry.clips.Length == 0)
+            return null;
+
+        return entry.clips[UnityEngine.Random.Range(0, entry.clips.Length)];
+    }
+
+    private AudioSource GetFreeSource()
+    {
+        foreach (AudioSource source in sourcePool)
         {
-            soundSource.volume = volume;
+            if (!source.isPlaying)
+                return source;
         }
 
-        if (loopSource != null)
+        AudioSource created = gameObject.AddComponent<AudioSource>();
+
+        created.playOnAwake = false;
+        created.spatialBlend = 0f;
+        created.outputAudioMixerGroup = soundSource.outputAudioMixerGroup;
+
+        sourcePool.Add(created);
+
+        return created;
+    }
+
+    private void UpdateLoopVolumes()
+    {
+        foreach (KeyValuePair<SoundType, AudioSource> loop in activeLoops)
         {
-            loopSource.volume = volume;
+            loop.Value.volume = entries[loop.Key].volume * soundVolume * masterVolume;
         }
     }
+
     private void LoadSettings()
     {
-        soundVolume = PlayerPrefs.GetFloat(
-            SoundVolumeKey,
-            1f
-        );
-
-        masterVolume = PlayerPrefs.GetFloat(
-            MasterVolumeKey,
-            1f
-        );
-
-        UpdateSoundVolume();
+        soundVolume = PlayerPrefs.GetFloat(SoundVolumeKey, 1f);
+        masterVolume = PlayerPrefs.GetFloat(MasterVolumeKey, 1f);
     }
-    private AudioClip GetClip(SoundType sound)
+
+#if UNITY_EDITOR
+    [ContextMenu("Add Missing Sound Rows")]
+    private void AddMissingRows()
     {
-        switch (sound)
+        List<SoundEntry> all = new List<SoundEntry>(sounds);
+
+        foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
         {
-            case SoundType.ButtonClick:
-                return buttonClick;
+            if (all.Exists(entry => entry.type == type))
+                continue;
 
-            case SoundType.ClientPicked:
-                return clientPicked;
-
-            case SoundType.ClientSit:
-                return clientSit;
-
-            case SoundType.FoodDelivered:
-                return foodDelivered;
-
-            case SoundType.ClientLeave:
-                return clientLeave;
-
-            case SoundType.ClientAngry:
-                return clientAngry;
-
-            case SoundType.MoneySpawn:
-                return moneySpawn;
-
-            case SoundType.MoneyPickup:
-                return moneyPickup;
-
-            case SoundType.WokStart:
-                return wokStart;
-
-            case SoundType.EggAdded:
-                return eggAdded;
-
-            case SoundType.RicePour:
-                return ricePour;
-
-            case SoundType.CookingSuccess:
-                return cookingSuccess;
-
-            case SoundType.CookingFail:
-                return cookingFail;
-
-            case SoundType.pedido:
-                return pedido;
-
-            case SoundType.Stars:
-                return Stars;
-
-            case SoundType.WokHit:
-                return WokHit;
-            case SoundType.ClientSpawn:
-                return clientSpawn;
-
-            case SoundType.ClientDeath:
-                return clientDeath;
-            case SoundType.CookingMiss:
-                return cookingMiss;
-
-            case SoundType.DoorOpen:
-                return doorOpen;
+            SoundEntry added = new SoundEntry();
+            added.type = type;
+            all.Add(added);
         }
 
-        return null;
+        sounds = all.ToArray();
+
+        UnityEditor.EditorUtility.SetDirty(this);
     }
+
+    [ContextMenu("Log Sounds Without Clips")]
+    private void LogSoundsWithoutClips()
+    {
+        foreach (SoundType type in Enum.GetValues(typeof(SoundType)))
+        {
+            SoundEntry found = Array.Find(sounds, entry => entry.type == type);
+
+            if (found == null || found.clips == null || found.clips.Length == 0 || Array.TrueForAll(found.clips, clip => clip == null))
+            {
+                Debug.Log($"No clip for {type}", this);
+            }
+        }
+    }
+
+    private void OnValidate()
+    {
+        if (sounds == null)
+            return;
+
+        HashSet<SoundType> seen = new HashSet<SoundType>();
+
+        foreach (SoundEntry entry in sounds)
+        {
+            if (!seen.Add(entry.type))
+            {
+                Debug.LogWarning($"Duplicate sound row: {entry.type}", this);
+            }
+
+            if (entry.pitchMax < entry.pitchMin)
+            {
+                entry.pitchMax = entry.pitchMin;
+            }
+        }
+    }
+#endif
 }

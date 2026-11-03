@@ -116,6 +116,7 @@ public class PlayerInteraction : MonoBehaviour
             if (!client.IsFrontOfQueue) continue;
 
             if (client.CurrentState is SitState) continue;
+            if (client.IsEating) continue;
             if (client.IsLeaving) continue;
 
             ClientHighlight highlight = client.GetComponent<ClientHighlight>();
@@ -263,6 +264,11 @@ public class PlayerInteraction : MonoBehaviour
                     return interactable;
                 }
 
+                if (interactable is TrashBin && interactable.CanInteract() && !IsHoldingExtinguisher())
+                {
+                    return interactable;
+                }
+
                 continue;
             }
 
@@ -322,7 +328,7 @@ public class PlayerInteraction : MonoBehaviour
         return false;
     }
 
-    private bool IsHoldingExtinguisher()
+    public bool IsHoldingExtinguisher()
     {
         if (holdSystem == null) return false;
         if (!holdSystem.IsHoldingItem) return false;

@@ -1,8 +1,12 @@
 using System.Collections;
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class FryerController : MonoBehaviour
 {
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide guide;
+
     [Header("References")]
     public FryerVisuals visuals;
     public GameObject minigameContainer;
@@ -88,7 +92,6 @@ public class FryerController : MonoBehaviour
         {
             visuals.ShowSkillcheck(false);
             visuals.ShowCountdown(false);
-            visuals.ClearTempuras();
         }
 
         StartCoroutine(EndSequence(won));
@@ -99,6 +102,8 @@ public class FryerController : MonoBehaviour
         if (visuals != null) visuals.MoveBasketUp();
 
         yield return new WaitForSeconds(1.5f);
+
+        if (visuals != null) visuals.ClearTempuras();
 
         if (MinigameManager.Instance != null)
         {
@@ -112,7 +117,8 @@ public class FryerController : MonoBehaviour
 
         if (won)
         {
-            Debug.Log("Won");
+            SoundManager.Instance?.PlaySound(SoundType.FryerComplete);
+
             if (holdSystem != null && friedTempuraPrefab != null)
             {
                 holdSystem.HoldItem(friedTempuraPrefab);
@@ -120,7 +126,7 @@ public class FryerController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Lost");
+            SoundManager.Instance?.PlaySound(SoundType.FryerLose);
         }
     }
 
@@ -142,6 +148,15 @@ public class FryerController : MonoBehaviour
         {
             visuals.UpdateSkillcheckUI(needleAngle, currentZoneStartAngle, zoneSizeRatio);
             visuals.ShowSkillcheck(true);
+        }
+
+        if (guide != null)
+        {
+            yield return guide.PlayIfNeeded();
+        }
+
+        if (visuals != null)
+        {
             visuals.ShowCountdown(true);
         }
 
@@ -195,6 +210,8 @@ public class FryerController : MonoBehaviour
     {
         currentSuccesses++;
 
+        SoundManager.Instance?.PlaySound(SoundType.FryerHit);
+
         if (visuals != null)
         {
             visuals.UpdateHits(currentSuccesses, successes);
@@ -210,6 +227,8 @@ public class FryerController : MonoBehaviour
     private void Fail()
     {
         currentFails++;
+
+        SoundManager.Instance?.PlaySound(SoundType.FryerMiss);
 
         if (visuals != null)
         {

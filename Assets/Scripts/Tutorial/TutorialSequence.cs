@@ -18,6 +18,9 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] protected Transform kitchenCheckpoint;
         [SerializeField] protected float checkpointRadius = 1.5f;
 
+        [Header("Clients")]
+        [SerializeField] protected float clientSightDelay = 2.5f;
+
         protected PlateRest[] plateRests;
 
         private readonly List<Transform> availableRestPoints = new List<Transform>();
@@ -37,6 +40,11 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator RunAndFinish()
         {
+            while (SceneTransition.IsRunning)
+            {
+                yield return null;
+            }
+
             plateRests = FindObjectsByType<PlateRest>(FindObjectsSortMode.None);
 
             yield return Run();
@@ -44,10 +52,35 @@ namespace RestaurantChaos.Tutorial
             runningSequence = null;
             pointer.Clear();
 
+            while (signUI.IsShowing)
+            {
+                yield return null;
+            }
+
             DayManager.Instance.StartNextDay();
         }
 
         protected IEnumerator ShowSigns(string[] pages)
+        {
+            yield return ShowWithOptions(pages, null);
+        }
+
+        protected IEnumerator ShowImage(GameObject image)
+        {
+            if (image == null)
+            {
+                yield break;
+            }
+
+            SignOptions options = new SignOptions();
+
+            options.showObjects = new GameObject[] { image };
+            options.hideBubble = true;
+
+            yield return ShowWithOptions(new string[] { string.Empty }, options);
+        }
+
+        private IEnumerator ShowWithOptions(string[] pages, SignOptions options)
         {
             if (pages == null || pages.Length == 0)
             {
@@ -60,14 +93,30 @@ namespace RestaurantChaos.Tutorial
             }
 
             SetPlayerFrozen(true);
-            yield return signUI.ShowPages(pages);
+            yield return signUI.ShowPages(pages, options);
             SetPlayerFrozen(false);
+        }
+
+        protected IEnumerator WaitForClientToBeSeen(ClientBase client)
+        {
+            float elapsed = 0f;
+
+            while (client != null && elapsed < clientSightDelay && !(client.CurrentState is SitState))
+            {
+                elapsed += Time.deltaTime;
+
+                yield return null;
+            }
         }
 
         protected IEnumerator KitchenStep(string[] signs)
         {
             yield return ShowSigns(signs);
+            yield return GoToKitchen();
+        }
 
+        protected IEnumerator GoToKitchen()
+        {
             pointer.PointAt(kitchenCheckpoint, true);
 
             while (!IsPlayerNear(kitchenCheckpoint, checkpointRadius))

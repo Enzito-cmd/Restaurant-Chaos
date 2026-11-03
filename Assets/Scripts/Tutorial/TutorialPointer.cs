@@ -21,6 +21,7 @@ namespace RestaurantChaos.Tutorial
         [Header("Arrow")]
         [SerializeField] private float arrowScale = 3f;
         [SerializeField] private float arrowHeight = 2.5f;
+        [SerializeField] private float topClearance = 0.8f;
         [SerializeField] private float spinSpeed = 90f;
         [SerializeField] private float bobAmplitude = 0.2f;
         [SerializeField] private float bobSpeed = 3f;
@@ -213,7 +214,7 @@ namespace RestaurantChaos.Tutorial
 
                 UpdateHeight(marker);
 
-                marker.anchor.position = marker.target.position + Vector3.up * (marker.currentHeight + bob);
+                marker.anchor.position = GetAimPosition(marker.target) + Vector3.up * (marker.currentHeight + bob);
                 marker.anchor.Rotate(0f, spinSpeed * Time.deltaTime, 0f, Space.World);
             }
 
@@ -221,6 +222,35 @@ namespace RestaurantChaos.Tutorial
             {
                 glowInstance.transform.position = glowTarget.position + Vector3.up * glowHeightOffset;
             }
+        }
+
+        private Vector3 GetAimPosition(Transform target)
+        {
+            Vector3 position = target.position;
+
+            if (target.TryGetComponent(out Collider targetCollider) && targetCollider.enabled)
+            {
+                Vector3 center = targetCollider.bounds.center;
+
+                position.x = center.x;
+                position.z = center.z;
+            }
+
+            return position;
+        }
+
+        private bool TryGetColliderTop(Transform target, out float top)
+        {
+            top = 0f;
+
+            if (!target.TryGetComponent(out Collider targetCollider) || !targetCollider.enabled)
+            {
+                return false;
+            }
+
+            top = targetCollider.bounds.max.y;
+
+            return true;
         }
 
         private void UpdateHeight(ArrowMarker marker)
@@ -232,6 +262,10 @@ namespace RestaurantChaos.Tutorial
                 float bodyTop = GetBodyTopOffset(marker.target);
 
                 wantedHeight = Mathf.Max(arrowHeight, bodyTop + bodyClearance);
+            }
+            else if (TryGetColliderTop(marker.target, out float colliderTop))
+            {
+                wantedHeight = Mathf.Max(arrowHeight, colliderTop + topClearance - marker.target.position.y);
             }
 
             if (!marker.hasHeight)

@@ -1,7 +1,14 @@
+using System.Collections;
+using RestaurantChaos.Tutorial;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TempuraController : MonoBehaviour
 {
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide guide;
+
     [Header("References")]
     [SerializeField] private TempuraGridLogic logic;
     [SerializeField] private TempuraGridVisuals visuals;
@@ -11,14 +18,23 @@ public class TempuraController : MonoBehaviour
 
     [Header("Rules")]
     public int roundsToWin = 3;
+    [SerializeField] private int maxMistakes = 3;
+
+    [Header("Panel")]
+    [SerializeField] private GameObject panel;
+    [FormerlySerializedAs("remainingText")]
+    [SerializeField] private TMP_Text completedText;
+    [SerializeField] private TMP_Text mistakesText;
 
     [Header("Input Tolerance")]
     [SerializeField] private float diagonalBufferTime = 0.05f;
 
     private int currentRound = 0;
+    private int currentMistakes = 0;
     private int currentStepIndex = 0;
     private Vector2Int playerPos;
     private bool isPlaying = false;
+    private Coroutine startRoutine;
 
     private bool isWaitingForInputBuffer = false;
     private bool bufferW, bufferS, bufferA, bufferD;
@@ -26,14 +42,36 @@ public class TempuraController : MonoBehaviour
     public void StartMinigame()
     {
         currentRound = 0;
+        currentMistakes = 0;
         StartRound();
         tempuraTray.SetActive(true);
+        panel.SetActive(true);
+        UpdatePanel();
+
+        startRoutine = StartCoroutine(BeginPlaying());
+    }
+
+    private IEnumerator BeginPlaying()
+    {
+        if (guide != null)
+        {
+            yield return guide.PlayIfNeeded();
+        }
+
+        startRoutine = null;
         isPlaying = true;
     }
 
     public void EndMinigame()
     {
+        if (startRoutine != null)
+        {
+            StopCoroutine(startRoutine);
+            startRoutine = null;
+        }
+
         tempuraTray.SetActive(false);
+        panel.SetActive(false);
         isPlaying = false;
         ResetBuffers();
         visuals.ClearGrid();
@@ -131,6 +169,7 @@ public class TempuraController : MonoBehaviour
             }
 
             visuals.UpdateTile(playerPos.x, playerPos.y, logic.gridLogic[playerPos.x, playerPos.y]);
+            SoundManager.Instance?.PlaySound(SoundType.TempuraStep);
             UpdateArrow();
             visuals.UpdateTempuraTarget(playerPos.x, playerPos.y);
             if (reachedEnd)
@@ -159,17 +198,48 @@ public class TempuraController : MonoBehaviour
 
     private void FailRound()
     {
+        currentMistakes++;
+        UpdatePanel();
+
+        if (currentMistakes >= maxMistakes)
+        {
+            SoundManager.Instance?.PlaySound(SoundType.TempuraLose);
+            LoseMinigame();
+            return;
+        }
+
+        SoundManager.Instance?.PlaySound(SoundType.TempuraFail);
+
         StartRound();
+    }
+
+    private void LoseMinigame()
+    {
+        isPlaying = false;
+        ResetBuffers();
+
+        if (MinigameManager.Instance != null)
+        {
+            MinigameManager.Instance.ExitMinigame();
+        }
+    }
+
+    private void UpdatePanel()
+    {
+        completedText.text = $"{currentRound}/{roundsToWin}";
+        mistakesText.text = $"{currentMistakes}/{maxMistakes}";
     }
 
     private void WinRound()
     {
         currentRound++;
-        Debug.Log($"{currentRound} / {roundsToWin}");
+        UpdatePanel();
 
         if (currentRound >= roundsToWin)
         {
             isPlaying = false;
+
+            SoundManager.Instance?.PlaySound(SoundType.TempuraComplete);
 
             playerHoldSystem.ClearHeldItem();
             playerHoldSystem.HoldItem(breadedTempuraPrefab);

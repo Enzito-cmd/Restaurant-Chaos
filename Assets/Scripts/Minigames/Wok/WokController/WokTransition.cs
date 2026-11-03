@@ -1,8 +1,12 @@
 using System.Collections;
+using RestaurantChaos.Tutorial;
 using UnityEngine;
 
 public class WokTransition : MonoBehaviour
 {
+    [Header("Tutorial")]
+    [SerializeField] private MinigameGuide cookGuide;
+
     [Header("Bowl References (Visuals)")]
     [SerializeField] private Transform eggBowl;
     [SerializeField] private Transform riceBowl;
@@ -14,6 +18,7 @@ public class WokTransition : MonoBehaviour
 
     private Vector3 eggStartPosition;
     private Vector3 riceStartPosition;
+    private Coroutine animationsCoroutine;
 
     private void Awake()
     {
@@ -33,7 +38,15 @@ public class WokTransition : MonoBehaviour
     }
     public void StartTransition()
     {
-        StartCoroutine(Animations());
+        animationsCoroutine = StartCoroutine(Animations());
+    }
+
+    public void StopTransition()
+    {
+        if (animationsCoroutine == null) return;
+
+        StopCoroutine(animationsCoroutine);
+        animationsCoroutine = null;
     }
 
     private IEnumerator Animations()
@@ -57,6 +70,14 @@ public class WokTransition : MonoBehaviour
 
         eggBowl.gameObject.SetActive(false);
         riceBowl.gameObject.SetActive(false);
+
+        if (cookGuide != null)
+        {
+            cookPhase.ShowArrowSlots();
+
+            yield return null;
+            yield return cookGuide.PlayIfNeeded();
+        }
 
         if (cookPhase != null) cookPhase.StartCooking();
     }
