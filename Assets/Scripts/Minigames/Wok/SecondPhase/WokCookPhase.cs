@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -33,6 +34,10 @@ public class WokCookPhase : MonoBehaviour
     public float spawnInterval = 1.5f;
     public int maxArrowsOnScreen = 3;
 
+    [Header("Toss Skillcheck")]
+    [SerializeField] private WokTossPhase tossPhase;
+    [SerializeField] private float tossDistance = 1.5f;
+
     [Header("Cursor")]
     [SerializeField] private CursorStyle idleCursor = CursorStyle.OpenHand;
     [SerializeField] private CursorStyle grabCursor = CursorStyle.ClosedHand;
@@ -52,6 +57,10 @@ public class WokCookPhase : MonoBehaviour
 
     private Plane dragPlane;
     private bool isCookingActive = false;
+    private bool isTossPhase = false;
+    private bool isTossing = false;
+    private Vector3 screenUp;
+    private Coroutine tossRoutine;
 
     private Color[] arrowColors = new Color[]
     {
@@ -122,6 +131,8 @@ public class WokCookPhase : MonoBehaviour
             dragPlane = new Plane(Vector3.up, dragPlaneCollider.transform.position);
         }
 
+        isTossPhase = false;
+        isTossing = false;
         isCookingActive = true;
         UpdateUI();
 
@@ -134,8 +145,16 @@ public class WokCookPhase : MonoBehaviour
 
         HandleWokDragging();
         HandleWokTilt();
-        HandleArrowSpawning();
         UpdateCursor();
+
+        if (isTossPhase)
+        {
+            UpdateToss();
+        }
+        else
+        {
+            HandleArrowSpawning();
+        }
     }
 
     private void UpdateCursor()
@@ -164,7 +183,7 @@ public class WokCookPhase : MonoBehaviour
 
     private void HandleWokDragging()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isTossing)
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -296,7 +315,7 @@ public class WokCookPhase : MonoBehaviour
 
         if (currentHits >= requiredHits)
         {
-            WinMinigame();
+            BeginToss();
         }
     }
 
@@ -328,6 +347,53 @@ public class WokCookPhase : MonoBehaviour
         {
             errorsText.text = $"{currentErrors}/{maxErrors}";
         }
+    }
+
+    private void BeginToss()
+    {
+        if (isTossPhase) return;
+
+        if (tossPhase == null)
+        {
+            WinMinigame();
+            return;
+        }
+
+        isTossPhase = true;
+        screenUp = Vector3.ProjectOnPlane(wokCamera.transform.up, Vector3.up).normalized;
+
+        HideCookUI();
+        tossPhase.Begin();
+    }
+
+    private void UpdateToss()
+    {
+        if (isTossing) return;
+
+        float reach = Mathf.Min(tossDistance, maxDragDistance * 0.95f);
+        float progress = Mathf.Clamp01(Vector3.Dot(wokTransform.position - startPos, screenUp) / reach);
+
+        tossPhase.SetProgress(progress);
+
+        if (progress >= 1f)
+        {
+            isTossing = true;
+            isDragging = false;
+            tossRoutine = StartCoroutine(TossRoutine());
+        }
+    }
+
+    private IEnumerator TossRoutine()
+    {
+        if (MinigameManager.Instance != null)
+        {
+            MinigameManager.Instance.ExitLocked = true;
+        }
+
+        yield return tossPhase.Play();
+
+        tossRoutine = null;
+        WinMinigame();
     }
 
     private void WinMinigame()
@@ -363,7 +429,30 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         isCookingActive = false;
+        isTossPhase = false;
+        isTossing = false;
         ResetWokTransform();
+        HideCookUI();
+
+        if (tossRoutine != null)
+        {
+            StopCoroutine(tossRoutine);
+            tossRoutine = null;
+        }
+
+        if (tossPhase != null)
+        {
+            tossPhase.ResetState();
+        }
+
+        if (MinigameManager.Instance != null)
+        {
+            MinigameManager.Instance.ExitLocked = false;
+        }
+    }
+
+    private void HideCookUI()
+    {
         ClearArrows();
 
         if (arrowsCanvas != null)

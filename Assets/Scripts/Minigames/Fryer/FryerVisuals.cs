@@ -21,6 +21,21 @@ public class FryerVisuals : MonoBehaviour
 
     private List<Rigidbody> spawnedTempuras = new List<Rigidbody>();
 
+    [Header("Serve Animation")]
+    public Transform plate;
+    public Transform plateFoodPoint;
+    public Transform plateStartPoint;
+    public Transform plateStopPoint;
+    public Transform plateEndPoint;
+    public float plateMoveDuration = 0.8f;
+    public Vector3 basketTiltAxis = Vector3.forward;
+    public float basketTiltAngle = -70f;
+    public float basketTiltDuration = 0.35f;
+    public float tempuraFlightTime = 0.6f;
+    public float tempuraArcHeight = 1f;
+    public float tempuraDelay = 0.15f;
+    public float tempuraSpacing = 0.5f;
+
     [Header("Skillcheck UI")]
     public GameObject skillcheckCanvas;
     public RectTransform needle;
@@ -76,6 +91,74 @@ public class FryerVisuals : MonoBehaviour
     {
         if (basketUpPoint != null) targetBasketPos = basketUpPoint.position;
         WakeUpTempuras();
+    }
+
+    public IEnumerator ServeTempuras()
+    {
+        if (basket == null || plate == null || plateFoodPoint == null || plateStartPoint == null || plateStopPoint == null || plateEndPoint == null) yield break;
+
+        plate.position = plateStartPoint.position;
+        plate.gameObject.SetActive(true);
+
+        foreach (Rigidbody tempura in spawnedTempuras)
+        {
+            if (tempura == null) continue;
+
+            tempura.isKinematic = true;
+            tempura.detectCollisions = false;
+            tempura.transform.SetParent(basket, true);
+        }
+
+        yield return MinigameMotion.Move(plate, plateStopPoint.position, plateMoveDuration);
+
+        Quaternion rest = basket.rotation;
+
+        StartCoroutine(TiltBasket(rest, Quaternion.AngleAxis(basketTiltAngle, basketTiltAxis) * rest));
+
+        yield return new WaitForSeconds(basketTiltDuration * 0.5f);
+
+        Coroutine last = null;
+        float center = (spawnedTempuras.Count - 1) * 0.5f;
+
+        for (int i = 0; i < spawnedTempuras.Count; i++)
+        {
+            if (spawnedTempuras[i] == null) continue;
+
+            Vector3 landing = plateFoodPoint.position + plateFoodPoint.right * ((i - center) * tempuraSpacing);
+
+            last = StartCoroutine(ThrowTempura(spawnedTempuras[i].transform, landing));
+
+            yield return new WaitForSeconds(tempuraDelay);
+        }
+
+        yield return last;
+
+        StartCoroutine(TiltBasket(basket.rotation, rest));
+
+        yield return MinigameMotion.Move(plate, plateEndPoint.position, plateMoveDuration);
+
+        plate.gameObject.SetActive(false);
+    }
+
+    private IEnumerator ThrowTempura(Transform tempura, Vector3 landing)
+    {
+        tempura.SetParent(null, true);
+
+        yield return MinigameMotion.Arc(tempura, () => landing, tempuraFlightTime, tempuraArcHeight);
+
+        tempura.SetParent(plateFoodPoint, true);
+    }
+
+    private IEnumerator TiltBasket(Quaternion from, Quaternion to)
+    {
+        for (float t = 0f; t < 1f; t += Time.deltaTime / basketTiltDuration)
+        {
+            basket.rotation = Quaternion.Slerp(from, to, Mathf.SmoothStep(0f, 1f, t));
+
+            yield return null;
+        }
+
+        basket.rotation = to;
     }
 
     private void WakeUpTempuras()

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace RestaurantChaos.Clients
@@ -7,19 +8,45 @@ namespace RestaurantChaos.Clients
     public class ClientPatience : MonoBehaviour
     {
         [Header("UI")]
-        [SerializeField] private Image fillImage;
+        [SerializeField] private Image ringFill;
+        [SerializeField, FormerlySerializedAs("fillImage")] private Image barFill;
 
         public event Action Expired;
 
+        private GameObject ringRoot;
+        private GameObject barRoot;
         private bool isRunning;
         private float duration;
         private float remaining;
 
         private void Awake()
         {
-            if (fillImage != null && fillImage.canvas != null)
+            ringRoot = GetRoot(ringFill);
+            barRoot = GetRoot(barFill);
+
+            if (barRoot != null)
             {
-                Billboard.AttachAlwaysVisible(fillImage.canvas.gameObject);
+                Billboard.AttachAlwaysVisible(barRoot);
+            }
+
+            Hide();
+        }
+
+        private static GameObject GetRoot(Image image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+
+            return image.GetComponentInParent<Canvas>(true).gameObject;
+        }
+
+        private static void SetVisible(GameObject root, bool visible)
+        {
+            if (root != null)
+            {
+                root.SetActive(visible);
             }
         }
 
@@ -41,6 +68,7 @@ namespace RestaurantChaos.Clients
             duration = durationSeconds;
             remaining = durationSeconds;
             isRunning = true;
+            ShowRing();
             UpdateFill();
         }
 
@@ -57,12 +85,22 @@ namespace RestaurantChaos.Clients
             isRunning = false;
         }
 
+        public void ShowRing()
+        {
+            SetVisible(ringRoot, true);
+            SetVisible(barRoot, false);
+        }
+
+        public void ShowBar()
+        {
+            SetVisible(ringRoot, false);
+            SetVisible(barRoot, true);
+        }
+
         public void Hide()
         {
-            if (fillImage != null)
-            {
-                fillImage.canvas.gameObject.SetActive(false);
-            }
+            SetVisible(ringRoot, false);
+            SetVisible(barRoot, false);
         }
 
         private void Update()
@@ -90,9 +128,17 @@ namespace RestaurantChaos.Clients
 
         private void UpdateFill()
         {
-            if (fillImage == null) return;
+            float fill = NormalizedFill;
 
-            fillImage.fillAmount = NormalizedFill;
+            if (ringFill != null)
+            {
+                ringFill.fillAmount = fill;
+            }
+
+            if (barFill != null)
+            {
+                barFill.fillAmount = fill;
+            }
         }
     }
 }

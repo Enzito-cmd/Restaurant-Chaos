@@ -29492,6 +29492,8 @@ MonoBehaviour:
   - {fileID: 189371154}
   spawnInterval: 1.5
   maxArrowsOnScreen: 3
+  tossPhase: {fileID: 0}
+  tossDistance: 1.5
   idleCursor: 1
   grabCursor: 2
   maxErrors: 3
@@ -160026,7 +160028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPanelPop
   duration: 0.25
-  animateScale: 1
+  animateScale: 0
   fade: {fileID: 1895525702}
 --- !u!225 &1895525702
 CanvasGroup:
@@ -160239,6 +160241,19 @@ MonoBehaviour:
   - {fileID: 1470947672}
   bumpForce: 2
   torqueForce: 1
+  plate: {fileID: 0}
+  plateFoodPoint: {fileID: 0}
+  plateStartPoint: {fileID: 0}
+  plateStopPoint: {fileID: 0}
+  plateEndPoint: {fileID: 0}
+  plateMoveDuration: 0.8
+  basketTiltAxis: {x: 0, y: 0, z: 1}
+  basketTiltAngle: -70
+  basketTiltDuration: 0.35
+  tempuraFlightTime: 0.6
+  tempuraArcHeight: 1
+  tempuraDelay: 0.15
+  tempuraSpacing: 0.5
   skillcheckCanvas: {fileID: 1869018005}
   needle: {fileID: 1905458090}
   successZone: {fileID: 1998713804}

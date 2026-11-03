@@ -99,14 +99,25 @@ public class FryerController : MonoBehaviour
 
     private IEnumerator EndSequence(bool won)
     {
+        if (won && MinigameManager.Instance != null)
+        {
+            MinigameManager.Instance.ExitLocked = true;
+        }
+
         if (visuals != null) visuals.MoveBasketUp();
 
         yield return new WaitForSeconds(1.5f);
+
+        if (won && visuals != null)
+        {
+            yield return visuals.ServeTempuras();
+        }
 
         if (visuals != null) visuals.ClearTempuras();
 
         if (MinigameManager.Instance != null)
         {
+            MinigameManager.Instance.ExitLocked = false;
             MinigameManager.Instance.ExitMinigame();
         }
 

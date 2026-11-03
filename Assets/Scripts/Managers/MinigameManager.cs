@@ -15,6 +15,7 @@ public class MinigameManager : MonoBehaviour
     private IMinigame currentMinigame;
 
     public bool IsBusy => isMinigameActive || isTransitioning;
+    public bool ExitLocked { get; set; }
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class MinigameManager : MonoBehaviour
 
     private void Update()
     {
-        if (isMinigameActive && !isTransitioning && !TutorialSignUI.IsAnySignShowing && Input.GetKeyDown(KeyCode.Q))
+        if (isMinigameActive && !isTransitioning && !ExitLocked && !TutorialSignUI.IsAnySignShowing && Input.GetKeyDown(KeyCode.Q))
         {
             ExitMinigame();
         }
@@ -46,8 +47,9 @@ public class MinigameManager : MonoBehaviour
 
     private System.Collections.IEnumerator EnterMinigameRoutine(GameObject transitionCam, IMinigame minigame)
     {
-        isTransitioning = true; 
+        isTransitioning = true;
         isMinigameActive = true;
+        ExitLocked = false;
         currentMinigame = minigame;
 
         if (player != null) player.SetMovement(false);
@@ -98,5 +100,6 @@ public class MinigameManager : MonoBehaviour
 
         isMinigameActive = false;
         isTransitioning = false;
+        ExitLocked = false;
     }
 }

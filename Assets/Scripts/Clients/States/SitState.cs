@@ -19,6 +19,7 @@ namespace RestaurantChaos.Clients
         {
             queueEndFill = client.Patience.NormalizedFill;
             client.Patience.Stop();
+            client.Patience.ShowBar();
 
             client.CurrentChair = chair;
             chair.SetOccupied(true);

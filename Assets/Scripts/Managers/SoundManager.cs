@@ -36,7 +36,8 @@ public enum SoundType
     FryerComplete,
     FryerLose,
     TutorialPop,
-    TutorialType
+    TutorialType,
+    WokFinalSkillCheck
 }
 
 [Serializable]
