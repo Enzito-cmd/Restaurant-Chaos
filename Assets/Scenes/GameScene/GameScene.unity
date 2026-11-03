@@ -100219,6 +100219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClientSpawnerE
   clientPrefabs:
   - {fileID: 4928392522281066036, guid: 20de98178afbd144bb55f6271b42392b, type: 3}
+  - {fileID: 2758157294104703835, guid: 8ea9ab75346d160499ed8e29d32981ab, type: 3}
   spawnPoints:
   - {fileID: 442289276}
   - {fileID: 1514067900}
@@ -100229,7 +100230,7 @@ MonoBehaviour:
   - {fileID: 1559464486}
   - {fileID: 218630349}
   - {fileID: 175237161}
-  spawnInterval: 0.5
+  spawnInterval: 0.7
   clientSpeed: 2
   poolSize: 20
 --- !u!4 &1303196449
