@@ -25836,8 +25836,8 @@ MonoBehaviour:
   deliverSigns:
   - You can give this client the dish you already made.
   collectMoneySigns:
-  - Any time a client is satisfied, they will leave money for you to pick up. Dont
-    forget it!
+  - "Whenever a client finishes eating, they will leave money for you to pick up.
+    Don\u2019t forget it!"
   completeSigns:
   - Congratulations! You know the basics to run the restaurant, now try for yourself!
   controlsImage: {fileID: 1128600746}
