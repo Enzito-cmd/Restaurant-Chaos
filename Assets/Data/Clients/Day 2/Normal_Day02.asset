@@ -15,8 +15,8 @@ MonoBehaviour:
   displayName: Normal_Day02
   moveSpeed: 3
   chaseSpeedMultiplier: 1
-  queuePatienceSeconds: 100
-  seatedPatienceSeconds: 100
+  queuePatienceSeconds: 150
+  seatedPatienceSeconds: 150
   carryOverRules:
   - queueThreshold: 0.6
     seatedStartFill: 0.8
@@ -25,3 +25,4 @@ MonoBehaviour:
   yellCooldown: 0
   yellDistance: 0
   yellDuration: 0
+  chaseStopDistance: 1.35

@@ -15,8 +15,8 @@ MonoBehaviour:
   displayName: Yakuza_Tutorial
   moveSpeed: 3
   chaseSpeedMultiplier: 1.5
-  queuePatienceSeconds: 4
-  seatedPatienceSeconds: 3
+  queuePatienceSeconds: 3
+  seatedPatienceSeconds: 2
   carryOverRules: []
   possibleMeals:
   - {fileID: 11400000, guid: fd4b2fbe76fcf79458fdeff6adad4284, type: 2}

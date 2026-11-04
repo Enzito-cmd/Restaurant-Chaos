@@ -16,7 +16,7 @@ MonoBehaviour:
   moveSpeed: 3
   chaseSpeedMultiplier: 1.5
   queuePatienceSeconds: 90
-  seatedPatienceSeconds: 90
+  seatedPatienceSeconds: 80
   carryOverRules:
   - queueThreshold: 0.6
     seatedStartFill: 0.8
@@ -26,3 +26,4 @@ MonoBehaviour:
   yellCooldown: 3
   yellDistance: 1
   yellDuration: 1
+  chaseStopDistance: 1.35
