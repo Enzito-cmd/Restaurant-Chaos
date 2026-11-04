@@ -27,6 +27,8 @@ public class DaySelectorIntro : MonoBehaviour
 
         yield return new WaitWhile(() => SceneTransition.IsRunning);
 
+        SoundManager.Instance?.PlaySound(SoundType.BookOpen);
+
         foreach (Sprite frame in frames)
         {
             bookImage.sprite = frame;

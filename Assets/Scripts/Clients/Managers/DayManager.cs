@@ -1,3 +1,4 @@
+using System.Collections;
 using RestaurantChaos.Tutorial;
 using UnityEngine;
 
@@ -25,10 +26,13 @@ namespace RestaurantChaos.Clients
         [SerializeField] private ClientSpawner spawner;
         [SerializeField] private LevelManager levelManager;
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private ScreenFade fade;
 
         private int currentDayIndex = -1;
         private bool currentDayHasTutorial;
+        private TutorialSequence currentTutorial;
         private PlayerHoldSystem playerHoldSystem;
+        private PlayerInteraction playerInteraction;
 
         public int CurrentDayIndex => currentDayIndex;
         public bool HasNextDay => currentDayIndex + 1 < days.Length;
@@ -94,8 +98,48 @@ namespace RestaurantChaos.Clients
             if (!HasNextDay) return;
 
             StartDay(currentDayIndex + 1);
-            playerController.transform.position = playerController.startPosition;
-            playerController.transform.rotation = playerController.startRotation;
+        }
+
+        public IEnumerator FadeToNextDay()
+        {
+            if (fade == null)
+            {
+                StartNextDay();
+                yield break;
+            }
+
+            SetPlayerLocked(true);
+
+            yield return fade.Out();
+
+            StartNextDay();
+
+            yield return fade.In();
+
+            SetPlayerLocked(false);
+        }
+
+        public bool IsInteractionAllowed(IInteractable interactable)
+        {
+            return currentTutorial == null || currentTutorial.AllowsInteraction(interactable);
+        }
+
+        public void SetPlayerLocked(bool locked)
+        {
+            if (playerController != null)
+            {
+                playerController.SetMovement(!locked);
+            }
+
+            if (playerInteraction == null)
+            {
+                playerInteraction = FindFirstObjectByType<PlayerInteraction>();
+            }
+
+            if (playerInteraction != null)
+            {
+                playerInteraction.SetLocked(locked);
+            }
         }
 
         public void SetOpeningAllowed(bool allowed)
@@ -175,7 +219,9 @@ namespace RestaurantChaos.Clients
             if (setup.definition == null) return;
 
             currentDayIndex = index;
+            currentTutorial = setup.tutorial;
 
+            ResetPlayerCameraAndMoney();
             UnlockStationsUpTo(index);
             ClearRestingPlates();
             ClearPlayerHands();
@@ -199,6 +245,24 @@ namespace RestaurantChaos.Clients
             if (hasTutorial)
             {
                 setup.tutorial.Begin();
+            }
+        }
+
+        private void ResetPlayerCameraAndMoney()
+        {
+            if (playerController != null)
+            {
+                playerController.ResetToStart();
+            }
+
+            if (CameraLookLock.Instance != null)
+            {
+                CameraLookLock.Instance.ResetCamera();
+            }
+
+            if (MoneyManager.Instance != null)
+            {
+                MoneyManager.Instance.ResetMoney();
             }
         }
 

@@ -47,6 +47,8 @@ public class SceneTransition : MonoBehaviour
 
         busy = true;
 
+        SoundManager.Instance?.PlaySound(SoundType.SceneBurn);
+
         yield return new WaitForEndOfFrame();
 
         Texture2D snapshot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);

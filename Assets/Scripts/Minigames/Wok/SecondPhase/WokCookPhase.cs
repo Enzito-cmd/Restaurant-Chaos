@@ -4,6 +4,8 @@ using TMPro;
 
 public class WokCookPhase : MonoBehaviour
 {
+    private const float RecenterDistance = 0.1f;
+
     [Header("References")]
     [SerializeField] private WokController wokController;
 
@@ -59,6 +61,7 @@ public class WokCookPhase : MonoBehaviour
     private bool isCookingActive = false;
     private bool isTossPhase = false;
     private bool isTossing = false;
+    private bool isRecentering = false;
     private Vector3 screenUp;
     private Coroutine tossRoutine;
 
@@ -84,6 +87,7 @@ public class WokCookPhase : MonoBehaviour
     }
     private void OnDisable()
     {
+        SoundManager.Instance?.StopLoopingSound(SoundType.StoveLoop);
         ResetWokTransform();
     }
 
@@ -133,7 +137,9 @@ public class WokCookPhase : MonoBehaviour
 
         isTossPhase = false;
         isTossing = false;
+        isRecentering = false;
         isCookingActive = true;
+        SoundManager.Instance?.StartLoopingSound(SoundType.StoveLoop);
         UpdateUI();
 
         Debug.Log("Cooking started");
@@ -159,7 +165,7 @@ public class WokCookPhase : MonoBehaviour
 
     private void UpdateCursor()
     {
-        if (isDragging || IsHoveringHandle())
+        if (isDragging)
         {
             CursorManager.Request(grabCursor);
         }
@@ -169,21 +175,9 @@ public class WokCookPhase : MonoBehaviour
         }
     }
 
-    private bool IsHoveringHandle()
-    {
-        if (handleCollider == null)
-        {
-            return false;
-        }
-
-        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
-
-        return Physics.Raycast(ray, out RaycastHit hit) && hit.collider == handleCollider;
-    }
-
     private void HandleWokDragging()
     {
-        if (Input.GetMouseButtonDown(0) && !isTossing)
+        if (Input.GetMouseButtonDown(0) && !isTossing && !isRecentering)
         {
             Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -360,6 +354,8 @@ public class WokCookPhase : MonoBehaviour
         }
 
         isTossPhase = true;
+        isRecentering = true;
+        isDragging = false;
         screenUp = Vector3.ProjectOnPlane(wokCamera.transform.up, Vector3.up).normalized;
 
         HideCookUI();
@@ -369,6 +365,16 @@ public class WokCookPhase : MonoBehaviour
     private void UpdateToss()
     {
         if (isTossing) return;
+
+        if (isRecentering)
+        {
+            if ((wokTransform.position - startPos).sqrMagnitude <= RecenterDistance * RecenterDistance)
+            {
+                isRecentering = false;
+            }
+
+            return;
+        }
 
         float reach = Mathf.Min(tossDistance, maxDragDistance * 0.95f);
         float progress = Mathf.Clamp01(Vector3.Dot(wokTransform.position - startPos, screenUp) / reach);
@@ -429,8 +435,10 @@ public class WokCookPhase : MonoBehaviour
         if (!isCookingActive) return;
 
         isCookingActive = false;
+        SoundManager.Instance?.StopLoopingSound(SoundType.StoveLoop);
         isTossPhase = false;
         isTossing = false;
+        isRecentering = false;
         ResetWokTransform();
         HideCookUI();
 

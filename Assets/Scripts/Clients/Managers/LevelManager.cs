@@ -19,6 +19,11 @@ namespace RestaurantChaos.Clients
         [SerializeField] private float delayBetweenStars = 0.5f;
         [SerializeField] private float starAnimationDuration = 0.4f;
 
+        [Header("Envelope Animation")]
+        [SerializeField] private ScoreEnvelope envelope;
+        [SerializeField] private Transform backgroundStars;
+        [SerializeField] private Transform[] buttons;
+
         [Header("Rating (sprites: 0-1 stars, 2 stars, 3 stars)")]
         [SerializeField] private Image ratingImage;
         [SerializeField] private Sprite[] ratingSprites;
@@ -59,6 +64,11 @@ namespace RestaurantChaos.Clients
 
         private void ResetForNewDay()
         {
+            if (levelEnded && DayManager.Instance != null)
+            {
+                DayManager.Instance.SetPlayerLocked(false);
+            }
+
             levelEnded = false;
             hasStartedChecking = false;
             clientsServed = 0;
@@ -127,6 +137,18 @@ namespace RestaurantChaos.Clients
         {
             HideResults();
 
+            SoundManager.Instance?.PlaySound(SoundType.DayEnd);
+
+            if (DayManager.Instance != null)
+            {
+                DayManager.Instance.SetPlayerLocked(true);
+            }
+
+            if (envelope != null)
+            {
+                envelope.Prepare();
+            }
+
             if (endPanel != null)
             {
                 endPanel.Show();
@@ -137,7 +159,33 @@ namespace RestaurantChaos.Clients
                 CursorManager.Instance.ShowCursor();
             }
 
-            StartCoroutine(ShowStars());
+            StartCoroutine(ShowResults());
+        }
+
+        private IEnumerator ShowResults()
+        {
+            if (envelope != null)
+            {
+                yield return envelope.Play();
+
+                if (!levelEnded) yield break;
+
+                if (backgroundStars != null)
+                {
+                    yield return Pop(backgroundStars);
+                }
+            }
+
+            yield return ShowStars();
+
+            if (envelope == null || !levelEnded) yield break;
+
+            foreach (Transform button in buttons)
+            {
+                StartCoroutine(Pop(button));
+            }
+
+            yield return new WaitForSeconds(starAnimationDuration);
         }
 
         private void HideResults()
@@ -153,6 +201,21 @@ namespace RestaurantChaos.Clients
             if (ratingImage != null)
             {
                 ratingImage.gameObject.SetActive(false);
+            }
+
+            if (envelope == null)
+            {
+                return;
+            }
+
+            if (backgroundStars != null)
+            {
+                backgroundStars.gameObject.SetActive(false);
+            }
+
+            foreach (Transform button in buttons)
+            {
+                button.gameObject.SetActive(false);
             }
         }
 

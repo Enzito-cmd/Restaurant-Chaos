@@ -8,6 +8,7 @@ public class WokTossPhase : MonoBehaviour
     [SerializeField] private Slider slider;
 
     [Header("Rice")]
+    [SerializeField] private Transform rawRice;
     [SerializeField] private Transform rice;
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float airTime = 1f;
@@ -26,12 +27,23 @@ public class WokTossPhase : MonoBehaviour
 
     private void Awake()
     {
-        if (rice == null) return;
+        if (rice != null)
+        {
+            riceParent = rice.parent;
+            ricePosition = rice.localPosition;
+            riceRotation = rice.localRotation;
+            riceScale = rice.localScale;
+        }
 
-        riceParent = rice.parent;
-        ricePosition = rice.localPosition;
-        riceRotation = rice.localRotation;
-        riceScale = rice.localScale;
+        ResetState();
+    }
+
+    public void ShowRaw()
+    {
+        if (rawRice != null)
+        {
+            rawRice.gameObject.SetActive(true);
+        }
     }
 
     public void Begin()
@@ -40,6 +52,11 @@ public class WokTossPhase : MonoBehaviour
         {
             slider.value = 0f;
             slider.gameObject.SetActive(true);
+        }
+
+        if (rawRice != null)
+        {
+            rawRice.gameObject.SetActive(false);
         }
 
         if (rice != null)
@@ -74,6 +91,9 @@ public class WokTossPhase : MonoBehaviour
         plate.position = plateStartPoint.position;
         plate.gameObject.SetActive(true);
 
+        SoundManager.Instance?.PlaySound(SoundType.FoodToss);
+        SoundManager.Instance?.PlaySound(SoundType.PlateSlide);
+
         Coroutine jump = StartCoroutine(MinigameMotion.Arc(rice, () => plateRicePoint.position, airTime, jumpHeight));
 
         yield return MinigameMotion.Slide(plate, plateCatchPoint.position, airTime);
@@ -99,6 +119,11 @@ public class WokTossPhase : MonoBehaviour
         if (plate != null)
         {
             plate.gameObject.SetActive(false);
+        }
+
+        if (rawRice != null)
+        {
+            rawRice.gameObject.SetActive(false);
         }
 
         if (rice == null) return;

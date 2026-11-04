@@ -21,6 +21,13 @@ public class FryerVisuals : MonoBehaviour
 
     private List<Rigidbody> spawnedTempuras = new List<Rigidbody>();
 
+    [Header("Frying Look")]
+    public Material tempuraMaterial;
+    public float shadeSpeed = 3f;
+
+    private float fried;
+    private float targetFried;
+
     [Header("Serve Animation")]
     public Transform plate;
     public Transform plateFoodPoint;
@@ -62,11 +69,36 @@ public class FryerVisuals : MonoBehaviour
         {
             basket.position = Vector3.Lerp(basket.position, targetBasketPos, Time.deltaTime * basketSpeed);
         }
+
+        if (fried != targetFried)
+        {
+            fried = Mathf.MoveTowards(fried, targetFried, shadeSpeed * Time.deltaTime);
+            ApplyFried();
+        }
+    }
+
+    public void SetFried(float value)
+    {
+        targetFried = value;
+    }
+
+    private void ApplyFried()
+    {
+        foreach (Rigidbody rb in spawnedTempuras)
+        {
+            if (rb != null)
+            {
+                TempuraShading.Apply(rb.gameObject, 1f, fried);
+            }
+        }
     }
 
     public void SpawnTempuras()
     {
         ClearTempuras();
+
+        fried = 0f;
+        targetFried = 0f;
 
         foreach (Transform spawnPoint in spawnPoints)
         {
@@ -74,6 +106,8 @@ public class FryerVisuals : MonoBehaviour
             Quaternion randomRotation = Random.rotation;
 
             GameObject temp = Instantiate(tempuraPrefab, spawnPoint.position, randomRotation);
+            TempuraShading.Setup(temp, tempuraMaterial);
+            TempuraShading.Apply(temp, 1f, 0f);
             if (temp.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
                 spawnedTempuras.Add(rb);
@@ -109,6 +143,8 @@ public class FryerVisuals : MonoBehaviour
             tempura.transform.SetParent(basket, true);
         }
 
+        SoundManager.Instance?.PlaySound(SoundType.PlateSlide);
+
         yield return MinigameMotion.Move(plate, plateStopPoint.position, plateMoveDuration);
 
         Quaternion rest = basket.rotation;
@@ -126,6 +162,8 @@ public class FryerVisuals : MonoBehaviour
 
             Vector3 landing = plateFoodPoint.position + plateFoodPoint.right * ((i - center) * tempuraSpacing);
 
+            SoundManager.Instance?.PlaySound(SoundType.FoodToss);
+
             last = StartCoroutine(ThrowTempura(spawnedTempuras[i].transform, landing));
 
             yield return new WaitForSeconds(tempuraDelay);
@@ -134,6 +172,8 @@ public class FryerVisuals : MonoBehaviour
         yield return last;
 
         StartCoroutine(TiltBasket(basket.rotation, rest));
+
+        SoundManager.Instance?.PlaySound(SoundType.PlateSlide);
 
         yield return MinigameMotion.Move(plate, plateEndPoint.position, plateMoveDuration);
 

@@ -21,6 +21,9 @@ namespace RestaurantChaos.Clients
         [SerializeField] private float thinkingDuration = 5f;
         [SerializeField] private float foodDeliveryDistance = 4f;
 
+        [Header("Sitting")]
+        [SerializeField] private Vector3 sitOffset;
+
         [Header("Eating")]
         [SerializeField] private float eatDuration = 10f;
 
@@ -61,6 +64,7 @@ namespace RestaurantChaos.Clients
         public GameObject ThinkingPrefab => thinkingPrefab;
         public float ThinkingDuration => thinkingDuration;
         public float EatDuration => eatDuration;
+        public Vector3 SitOffset => sitOffset;
 
         public bool IsFrontOfQueue { get; set; } = true;
 
@@ -301,7 +305,6 @@ namespace RestaurantChaos.Clients
             SoundManager.Instance?.PlaySound(SoundType.FoodDelivered);
 
             holdSystem.ClearHeldItem();
-            SpawnMoneyOnTable();
 
             if (Served != null)
             {
@@ -311,7 +314,7 @@ namespace RestaurantChaos.Clients
             ChangeState(new EatState(this));
         }
 
-        private void SpawnMoneyOnTable()
+        public void SpawnMoneyOnTable()
         {
             if (moneyPrefab == null) return;
             if (currentChair == null) return;

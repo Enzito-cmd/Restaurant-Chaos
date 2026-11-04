@@ -11,6 +11,8 @@ public class WokPrepPhase : MonoBehaviour
     public WokController wokController;
     public Camera wokCamera;
 
+    [SerializeField] private WokTossPhase tossPhase;
+
     [Header("UI References")]
     [SerializeField] private GameObject prepUIPanel;
     [SerializeField] private TMP_Text eggCounterText;
@@ -55,6 +57,12 @@ public class WokPrepPhase : MonoBehaviour
         currentEggs = 0;
         currentRice = 0f;
         ClearHeldItem();
+
+        if (tossPhase != null)
+        {
+            tossPhase.ResetState();
+        }
+
         isPrepActive = true;
         dragPlane = new Plane(Vector3.up, wokCollider.transform.position);
 
@@ -69,8 +77,21 @@ public class WokPrepPhase : MonoBehaviour
         if (!isPrepActive) return;
 
         HandleMouseInput();
+        AutoDropEgg();
         UpdateHeldObjectPosition();
         UpdateCursor();
+    }
+
+    private void AutoDropEgg()
+    {
+        if (currentItem != PrepItem.Egg) return;
+
+        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider == wokCollider)
+        {
+            DropEgg();
+        }
     }
 
     public void GrabFromCollider(Collider clicked)
@@ -97,7 +118,7 @@ public class WokPrepPhase : MonoBehaviour
             return;
         }
 
-        if (currentItem != PrepItem.None || IsHoveringGrabbable())
+        if (currentItem != PrepItem.None)
         {
             CursorManager.Request(grabCursor);
         }
@@ -105,23 +126,6 @@ public class WokPrepPhase : MonoBehaviour
         {
             CursorManager.Request(idleCursor);
         }
-    }
-
-    private bool IsHoveringGrabbable()
-    {
-        Ray ray = wokCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (!Physics.Raycast(ray, out RaycastHit hit))
-        {
-            return false;
-        }
-
-        if (hit.collider == eggBowlCollider && currentEggs < requiredEggs)
-        {
-            return true;
-        }
-
-        return hit.collider == riceBowlCollider && currentRice < requiredRice;
     }
 
     private void StartRiceSound()
@@ -153,7 +157,7 @@ public class WokPrepPhase : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && currentItem != PrepItem.None)
         {
-            ClearHeldItem();
+            DiscardHeldItem();
             return;
         }
 
@@ -182,7 +186,7 @@ public class WokPrepPhase : MonoBehaviour
                     }
                     else
                     {
-                        ClearHeldItem();
+                        DiscardHeldItem();
                     }
                 }
             }
@@ -237,6 +241,16 @@ public class WokPrepPhase : MonoBehaviour
                 em.enabled = false;
             }
         }
+    }
+
+    private void DiscardHeldItem()
+    {
+        if (currentItem == PrepItem.Egg)
+        {
+            SoundManager.Instance?.PlaySound(SoundType.EggBroken);
+        }
+
+        ClearHeldItem();
     }
 
     private void ClearHeldItem()
@@ -336,6 +350,12 @@ public class WokPrepPhase : MonoBehaviour
         {
             isPrepActive = false;
             ClearHeldItem();
+
+            if (tossPhase != null)
+            {
+                tossPhase.ShowRaw();
+            }
+
             transitionCoroutine = StartCoroutine(TransitionToCooking());
         }
     }
@@ -361,6 +381,11 @@ public class WokPrepPhase : MonoBehaviour
         isPrepActive = false;
         StopRiceSound();
         ClearHeldItem();
+
+        if (tossPhase != null)
+        {
+            tossPhase.ResetState();
+        }
 
         if (prepUIPanel != null) prepUIPanel.SetActive(false);
     }

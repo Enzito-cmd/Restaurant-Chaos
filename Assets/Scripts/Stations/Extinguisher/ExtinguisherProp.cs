@@ -18,12 +18,14 @@ public class ExtinguisherProp : MonoBehaviour, IInteractable
             if (extinguisherHoldPrefab != null)
             {
                 holdSystem.HoldItem(extinguisherHoldPrefab);
+                SoundManager.Instance?.PlaySound(SoundType.ExtinguisherEquip);
                 if (extinguisherPropPrefab != null) extinguisherPropPrefab.SetActive(false);
             }
         }
         else
         {
             holdSystem.ClearHeldItem();
+            SoundManager.Instance?.PlaySound(SoundType.ExtinguisherEquip);
             if (extinguisherPropPrefab != null) extinguisherPropPrefab.SetActive(true);
         }
     }

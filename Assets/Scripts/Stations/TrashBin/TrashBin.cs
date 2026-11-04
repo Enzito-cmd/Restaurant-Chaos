@@ -12,6 +12,7 @@ public class TrashBin : MonoBehaviour, IInteractable
             if (playerHoldSystem.IsHoldingItem)
             {
                 playerHoldSystem.ClearHeldItem();
+                SoundManager.Instance?.PlaySound(SoundType.TrashThrow);
             }
             else
             {

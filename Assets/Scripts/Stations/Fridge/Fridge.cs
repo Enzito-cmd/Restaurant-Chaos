@@ -68,6 +68,8 @@ public class Fridge : MonoBehaviour, IInteractable, IMinigame
             return;
         }
 
+        CursorManager.Request(CursorStyle.OpenHand);
+
         SetHovered(RaycastIngredient());
 
         if (hovered == null)
@@ -239,6 +241,7 @@ public class Fridge : MonoBehaviour, IInteractable, IMinigame
 
         isPicking = false;
 
+        CursorManager.Request(CursorStyle.ClosedHand);
         SetHovered(null);
         SoundManager.Instance?.PlaySound(SoundType.IngredientGrab);
         StartCoroutine(FlyToCamera(ingredient));

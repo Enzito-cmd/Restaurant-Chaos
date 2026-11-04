@@ -37,7 +37,26 @@ public enum SoundType
     FryerLose,
     TutorialPop,
     TutorialType,
-    WokFinalSkillCheck
+    WokFinalSkillCheck,
+    ClientEat,
+    PatienceLow,
+    DayEnd,
+    PauseOpen,
+    PauseClose,
+    StoveLoop,
+    FryingLoop,
+    EggBroken,
+    FoodToss,
+    PlateSlide,
+    PlayerWalk,
+    ExtinguisherEquip,
+    ExtinguisherSpray,
+    PlatePlace,
+    PlateTake,
+    SceneBurn,
+    LockedStation,
+    BookOpen,
+    TrashThrow
 }
 
 [Serializable]
@@ -163,11 +182,14 @@ public class SoundManager : MonoBehaviour
         if (!activeLoops.TryGetValue(sound, out AudioSource source))
             return;
 
+        activeLoops.Remove(sound);
+
+        if (source == null)
+            return;
+
         source.Stop();
         source.loop = false;
         source.clip = null;
-
-        activeLoops.Remove(sound);
     }
 
     public void SetSoundVolume(float volume)

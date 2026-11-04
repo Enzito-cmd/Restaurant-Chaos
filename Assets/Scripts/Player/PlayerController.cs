@@ -50,9 +50,22 @@ public class PlayerController : MonoBehaviour
         drivesAnimator = CanDriveAnimator();
     }
 
+    private void OnDisable()
+    {
+        SoundManager.Instance?.StopLoopingSound(SoundType.PlayerWalk);
+    }
+
     public void SetMovement(bool state)
     {
         canMove = state;
+    }
+
+    public void ResetToStart()
+    {
+        characterController.enabled = false;
+        transform.SetPositionAndRotation(startPosition, startRotation);
+        characterController.enabled = true;
+        moveDirection = Vector3.zero;
     }
 
     private void Update()
@@ -60,13 +73,30 @@ public class PlayerController : MonoBehaviour
         if (!canMove)
         {
             UpdateAnimator(false);
+            SetWalkSound(false);
             return;
         }
 
         HandleInput();
         HandleMovement();
         HandleRotation();
-        UpdateAnimator(moveDirection.sqrMagnitude >= 0.01f);
+
+        bool isMoving = moveDirection.sqrMagnitude >= 0.01f;
+
+        UpdateAnimator(isMoving);
+        SetWalkSound(isMoving);
+    }
+
+    private void SetWalkSound(bool isWalking)
+    {
+        if (isWalking && Time.timeScale > 0f)
+        {
+            SoundManager.Instance?.StartLoopingSound(SoundType.PlayerWalk);
+        }
+        else
+        {
+            SoundManager.Instance?.StopLoopingSound(SoundType.PlayerWalk);
+        }
     }
 
     private bool CanDriveAnimator()

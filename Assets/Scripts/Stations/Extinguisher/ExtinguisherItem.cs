@@ -17,8 +17,15 @@ public class ExtinguisherItem : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        SoundManager.Instance?.StopLoopingSound(SoundType.ExtinguisherSpray);
+    }
+
     public void UseExtinguisher()
     {
+        SoundManager.Instance?.StartLoopingSound(SoundType.ExtinguisherSpray);
+
         if (foamParticles != null)
         {
             foamParticles.Play();
@@ -26,6 +33,8 @@ public class ExtinguisherItem : MonoBehaviour
     }
     public void StopExtinguisher()
     {
+        SoundManager.Instance?.StopLoopingSound(SoundType.ExtinguisherSpray);
+
         if (foamParticles != null)
         {
             foamParticles.Stop();

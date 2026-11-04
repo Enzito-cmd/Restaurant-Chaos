@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InteractionPromptUI : MonoBehaviour
 {
@@ -7,11 +8,16 @@ public class InteractionPromptUI : MonoBehaviour
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private GameObject promptRoot;
 
+    [Header("Interact")]
+    [SerializeField] private Image keyIcon;
+    [SerializeField] private Sprite interactIcon;
+    [SerializeField] private string interactMessage = "Interact";
+
     [Header("Extinguisher")]
-    [SerializeField] private string extinguisherMessage = "Press F to use";
+    [SerializeField] private Sprite extinguisherIcon;
+    [SerializeField] private string extinguisherMessage = "Use";
 
     private TMP_Text promptText;
-    private string interactMessage;
     private bool isShowingExtinguisherMessage;
 
     private void Start()
@@ -25,10 +31,7 @@ public class InteractionPromptUI : MonoBehaviour
         {
             promptText = promptRoot.GetComponentInChildren<TMP_Text>(true);
 
-            if (promptText != null)
-            {
-                interactMessage = promptText.text;
-            }
+            Show(interactIcon, interactMessage);
 
             promptRoot.SetActive(false);
         }
@@ -56,11 +59,6 @@ public class InteractionPromptUI : MonoBehaviour
 
     private void UpdateMessage(bool useExtinguisherMessage)
     {
-        if (promptText == null)
-        {
-            return;
-        }
-
         if (useExtinguisherMessage == isShowingExtinguisherMessage)
         {
             return;
@@ -70,11 +68,24 @@ public class InteractionPromptUI : MonoBehaviour
 
         if (useExtinguisherMessage)
         {
-            promptText.text = extinguisherMessage;
+            Show(extinguisherIcon, extinguisherMessage);
         }
         else
         {
-            promptText.text = interactMessage;
+            Show(interactIcon, interactMessage);
+        }
+    }
+
+    private void Show(Sprite icon, string message)
+    {
+        if (promptText != null)
+        {
+            promptText.text = message;
+        }
+
+        if (keyIcon != null && icon != null)
+        {
+            keyIcon.sprite = icon;
         }
     }
 }

@@ -17,6 +17,8 @@ namespace RestaurantChaos.Clients
             client.Patience.Stop();
             client.Patience.Hide();
             client.OrderDisplay.Clear();
+
+            SoundManager.Instance?.PlaySound(SoundType.ClientEat);
         }
 
         public override void Tick()
@@ -25,6 +27,7 @@ namespace RestaurantChaos.Clients
 
             if (remaining <= 0f)
             {
+                client.SpawnMoneyOnTable();
                 client.ChangeState(new LeaveState(client));
             }
         }

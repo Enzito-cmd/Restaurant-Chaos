@@ -223,7 +223,28 @@ public class PlayerInteraction : MonoBehaviour
         if (followingClient != null)
         {
             followingClient.Interact();
+            return;
         }
+
+        if (IsLockedStationInRange())
+        {
+            SoundManager.Instance?.PlaySound(SoundType.LockedStation);
+        }
+    }
+
+    private bool IsLockedStationInRange()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
+
+        foreach (Collider hit in hitColliders)
+        {
+            if (hit.TryGetComponent<LockableStation>(out LockableStation lockable) && lockable.IsLocked)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private IInteractable FindTarget(bool restrictToExtinguisherOnly)
@@ -246,6 +267,11 @@ public class PlayerInteraction : MonoBehaviour
             }
 
             if (onlyDoorAllowed && !(interactable is RestaurantDoor))
+            {
+                continue;
+            }
+
+            if (DayManager.Instance != null && !DayManager.Instance.IsInteractionAllowed(interactable))
             {
                 continue;
             }

@@ -35,7 +35,7 @@ namespace RestaurantChaos.Clients
 
             if (chair.SitPoint != null)
             {
-                client.transform.position = chair.SitPoint.position;
+                client.transform.position = chair.SitPoint.position + chair.SitPoint.rotation * client.SitOffset;
                 client.transform.rotation = chair.SitPoint.rotation;
             }
 

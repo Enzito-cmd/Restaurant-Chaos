@@ -202,15 +202,31 @@ namespace RestaurantChaos.Tutorial
         {
             yield return ShowSigns(collectMoneySigns);
 
-            MoneyPickup money = FindFirstObjectByType<MoneyPickup>();
+            MoneyPickup pointed = null;
 
-            if (money != null)
+            while (true)
             {
-                pointer.PointAt(money.transform, false);
-            }
+                MoneyPickup money = FindFirstObjectByType<MoneyPickup>();
 
-            while (client != null || money != null)
-            {
+                if (money != pointed)
+                {
+                    pointed = money;
+
+                    if (money != null)
+                    {
+                        pointer.PointAt(money.transform, false);
+                    }
+                    else
+                    {
+                        pointer.Clear();
+                    }
+                }
+
+                if (client == null && money == null)
+                {
+                    break;
+                }
+
                 yield return null;
             }
 

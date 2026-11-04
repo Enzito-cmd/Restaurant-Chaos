@@ -11,11 +11,15 @@ namespace RestaurantChaos.Clients
         [SerializeField] private Image ringFill;
         [SerializeField, FormerlySerializedAs("fillImage")] private Image barFill;
 
+        [Header("Warning")]
+        [SerializeField, Range(0f, 1f)] private float lowThreshold = 0.25f;
+
         public event Action Expired;
 
         private GameObject ringRoot;
         private GameObject barRoot;
         private bool isRunning;
+        private bool lowWarned;
         private float duration;
         private float remaining;
 
@@ -68,6 +72,7 @@ namespace RestaurantChaos.Clients
             duration = durationSeconds;
             remaining = durationSeconds;
             isRunning = true;
+            lowWarned = false;
             ShowRing();
             UpdateFill();
         }
@@ -77,6 +82,7 @@ namespace RestaurantChaos.Clients
             duration = durationSeconds;
             remaining = durationSeconds * startFill;
             isRunning = true;
+            lowWarned = false;
             UpdateFill();
         }
 
@@ -121,6 +127,12 @@ namespace RestaurantChaos.Clients
                 }
 
                 return;
+            }
+
+            if (!lowWarned && NormalizedFill <= lowThreshold)
+            {
+                lowWarned = true;
+                SoundManager.Instance?.PlaySound(SoundType.PatienceLow);
             }
 
             UpdateFill();

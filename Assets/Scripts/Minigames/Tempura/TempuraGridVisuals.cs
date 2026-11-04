@@ -24,6 +24,12 @@ public class TempuraGridVisuals : MonoBehaviour
     public float tempuraRotationSpeed = 360f; 
     public Vector3 rotationAxis = Vector3.right;
 
+    [Header("Breading Look")]
+    public Material tempuraMaterial;
+    public float shadeSpeed = 3f;
+
+    private float breading;
+    private float targetBreading;
     private GameObject[,] gridTiles;
     private GameObject arrowInstance;
     private GameObject tempuraInstance;
@@ -105,6 +111,9 @@ public class TempuraGridVisuals : MonoBehaviour
         if (tempuraPrefab != null && tempuraInstance == null)
         {
             tempuraInstance = Instantiate(tempuraPrefab, transform);
+            breading = targetBreading;
+            TempuraShading.Setup(tempuraInstance, tempuraMaterial);
+            TempuraShading.Apply(tempuraInstance, breading, 0f);
         }
 
         if (tempuraInstance != null)
@@ -120,10 +129,21 @@ public class TempuraGridVisuals : MonoBehaviour
         tempuraTargetPosition = GetTileWorldPosition(destX, destY) + Vector3.up * tempuraHoverHeight;
     }
 
+    public void SetBreading(float value)
+    {
+        targetBreading = value;
+    }
+
     private void Update()
     {
         if (tempuraInstance != null)
         {
+            if (breading != targetBreading)
+            {
+                breading = Mathf.MoveTowards(breading, targetBreading, shadeSpeed * Time.deltaTime);
+                TempuraShading.Apply(tempuraInstance, breading, 0f);
+            }
+
             tempuraInstance.transform.position = Vector3.Lerp(
                 tempuraInstance.transform.position,
                 tempuraTargetPosition,

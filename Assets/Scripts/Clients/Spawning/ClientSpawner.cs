@@ -53,13 +53,19 @@ namespace RestaurantChaos.Clients
                 yield break;
             }
 
-            int amountToSpawn = Mathf.Min(clientCount, clientQueue.Capacity);
-
-            for (int i = 0; i < amountToSpawn; i++)
+            for (int i = 0; i < clientCount; i++)
             {
-                SpawnOne();
+                while (!clientQueue.HasSpace)
+                {
+                    yield return null;
+                }
 
-                if (i < amountToSpawn - 1)
+                if (!SpawnOne())
+                {
+                    break;
+                }
+
+                if (i < clientCount - 1)
                 {
                     yield return new WaitForSeconds(spawnInterval);
                 }
@@ -69,26 +75,27 @@ namespace RestaurantChaos.Clients
             spawnCoroutine = null;
         }
 
-        private void SpawnOne()
+        private bool SpawnOne()
         {
-            if (availableEntries == null || availableEntries.Length == 0) return;
-            if (spawnPoint == null) return;
-            if (!clientQueue.HasSpace) return;
+            if (availableEntries == null || availableEntries.Length == 0) return false;
+            if (spawnPoint == null) return false;
 
             int randomIndex = Random.Range(0, availableEntries.Length);
             ClientSpawnEntry entry = availableEntries[randomIndex];
 
-            if (entry.clientPrefab == null) return;
+            if (entry.clientPrefab == null) return false;
 
             GameObject instance = Instantiate(entry.clientPrefab, spawnPoint.position, spawnPoint.rotation);
             SoundManager.Instance?.PlaySound(SoundType.ClientSpawn);
             ClientBase client = instance.GetComponent<ClientBase>();
 
-            if (client == null) return;
+            if (client == null) return false;
 
             client.Initialize(entry.config);
             ClientRegistry.Register(client);
             clientQueue.Enqueue(client);
+
+            return true;
         }
     }
 }

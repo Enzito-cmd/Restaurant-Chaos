@@ -62,7 +62,7 @@ public class PauseMenu : MonoBehaviour
         if (isPaused)
             return;
 
-        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+        SoundManager.Instance?.PlaySound(SoundType.PauseOpen);
 
         isPaused = true;
 
@@ -89,7 +89,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
-        SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
+        SoundManager.Instance?.PlaySound(SoundType.PauseClose);
 
         isPaused = false;
 

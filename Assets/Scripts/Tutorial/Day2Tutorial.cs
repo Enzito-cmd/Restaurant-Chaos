@@ -37,6 +37,11 @@ namespace RestaurantChaos.Tutorial
 
         private readonly HashSet<CookStage> stagesWithSignsShown = new HashSet<CookStage>();
 
+        public override bool AllowsInteraction(IInteractable interactable)
+        {
+            return !(interactable is WokStation);
+        }
+
         protected override IEnumerator Run()
         {
             yield return ShowSigns(unlockedSigns);

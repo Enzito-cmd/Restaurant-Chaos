@@ -32,6 +32,8 @@ namespace RestaurantChaos.Clients
                 client.Agent.enabled = false;
             }
 
+            IgnorePlayerCollision();
+
             Rigidbody rb = client.GetComponent<Rigidbody>();
 
             if (rb == null)
@@ -48,6 +50,22 @@ namespace RestaurantChaos.Clients
             SoundManager.Instance?.PlaySound(SoundType.ClientDeath);
 
             client.StartCoroutine(DestroyAfterDelay());
+        }
+
+        private void IgnorePlayerCollision()
+        {
+            if (client.Player == null) return;
+
+            Collider[] clientColliders = client.GetComponentsInChildren<Collider>();
+            Collider[] playerColliders = client.Player.GetComponentsInChildren<Collider>();
+
+            foreach (Collider clientCollider in clientColliders)
+            {
+                foreach (Collider playerCollider in playerColliders)
+                {
+                    Physics.IgnoreCollision(clientCollider, playerCollider, true);
+                }
+            }
         }
 
         private IEnumerator DestroyAfterDelay()

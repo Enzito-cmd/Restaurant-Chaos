@@ -32,6 +32,11 @@ namespace RestaurantChaos.Tutorial
             }
         }
 
+        public override bool AllowsInteraction(IInteractable interactable)
+        {
+            return !(interactable is WokStation || interactable is TempuraStation || interactable is FryerStation || interactable is MochiStation || interactable is Fridge);
+        }
+
         protected override IEnumerator Run()
         {
             FindExtinguisher();

@@ -45,6 +45,11 @@ public class FryerController : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        SoundManager.Instance?.StopLoopingSound(SoundType.FryingLoop);
+    }
+
     public void StartMinigame()
     {
         currentSuccesses = 0;
@@ -81,6 +86,7 @@ public class FryerController : MonoBehaviour
 
         isMinigameActive = false;
         isSkillcheckActive = false;
+        SoundManager.Instance?.StopLoopingSound(SoundType.FryingLoop);
 
         if (fryingSequenceCoroutine != null)
         {
@@ -148,6 +154,8 @@ public class FryerController : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         if (visuals != null) visuals.MoveBasketDown();
+
+        SoundManager.Instance?.StartLoopingSound(SoundType.FryingLoop);
 
         float remainingTime = Mathf.Max(0f, timeBeforeSkillcheck - 1f);
         yield return new WaitForSeconds(remainingTime);
@@ -226,6 +234,7 @@ public class FryerController : MonoBehaviour
         if (visuals != null)
         {
             visuals.UpdateHits(currentSuccesses, successes);
+            visuals.SetFried((float)currentSuccesses / successes);
             visuals.BumpTempuras();
         }
 

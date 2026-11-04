@@ -26,6 +26,11 @@ namespace RestaurantChaos.Tutorial
         private readonly List<Transform> availableRestPoints = new List<Transform>();
         private Coroutine runningSequence;
 
+        public virtual bool AllowsInteraction(IInteractable interactable)
+        {
+            return true;
+        }
+
         public void Begin()
         {
             if (runningSequence != null)
@@ -57,7 +62,7 @@ namespace RestaurantChaos.Tutorial
                 yield return null;
             }
 
-            DayManager.Instance.StartNextDay();
+            yield return DayManager.Instance.FadeToNextDay();
         }
 
         protected IEnumerator ShowSigns(string[] pages)

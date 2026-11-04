@@ -61,6 +61,7 @@ public class PlateRest : MonoBehaviour, IInteractable
 
             playerHoldSystem.HoldExistingItem(heldPlate);
             heldPlate = null;
+            SoundManager.Instance?.PlaySound(SoundType.PlateTake);
             UpdateIndicator();
             return;
         }
@@ -108,6 +109,7 @@ public class PlateRest : MonoBehaviour, IInteractable
         released.transform.rotation = platePoint.rotation;
 
         heldPlate = released;
+        SoundManager.Instance?.PlaySound(SoundType.PlatePlace);
         UpdateIndicator();
         return true;
     }

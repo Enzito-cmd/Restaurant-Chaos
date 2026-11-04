@@ -11,7 +11,9 @@ public class CursorManager : MonoBehaviour
 {
     public static CursorManager Instance { get; private set; }
 
-    [Header("Hand Cursors")]
+    [Header("Cursors (hotspots are 0 to 1 from the top left)")]
+    [SerializeField] private Texture2D normalTexture;
+    [SerializeField] private Vector2 normalHotspot;
     [SerializeField] private Texture2D openHandTexture;
     [SerializeField] private Vector2 openHandHotspot;
     [SerializeField] private Texture2D closedHandTexture;
@@ -31,6 +33,7 @@ public class CursorManager : MonoBehaviour
 
     private void Start()
     {
+        Apply(normalTexture, normalHotspot);
         HideCursor();
     }
 
@@ -63,15 +66,26 @@ public class CursorManager : MonoBehaviour
         switch (style)
         {
             case CursorStyle.OpenHand:
-                Cursor.SetCursor(openHandTexture, openHandHotspot, CursorMode.Auto);
+                Apply(openHandTexture, openHandHotspot);
                 break;
             case CursorStyle.ClosedHand:
-                Cursor.SetCursor(closedHandTexture, closedHandHotspot, CursorMode.Auto);
+                Apply(closedHandTexture, closedHandHotspot);
                 break;
             default:
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                Apply(normalTexture, normalHotspot);
                 break;
         }
+    }
+
+    private static void Apply(Texture2D texture, Vector2 hotspot)
+    {
+        if (texture == null)
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            return;
+        }
+
+        Cursor.SetCursor(texture, Vector2.Scale(hotspot, new Vector2(texture.width, texture.height)), CursorMode.Auto);
     }
 
     public void ShowCursor()

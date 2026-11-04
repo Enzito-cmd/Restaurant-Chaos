@@ -93,7 +93,13 @@ public class TempuraController : MonoBehaviour
         visuals.SpawnArrow();
         UpdateArrow();
 
+        visuals.SetBreading(0f);
         visuals.SpawnTempura(playerPos.x, playerPos.y);
+    }
+
+    private void UpdateBreading()
+    {
+        visuals.SetBreading((float)currentStepIndex / Mathf.Max(logic.currentPath.Count - 1, 1));
     }
 
     private void Update()
@@ -170,6 +176,7 @@ public class TempuraController : MonoBehaviour
 
             visuals.UpdateTile(playerPos.x, playerPos.y, logic.gridLogic[playerPos.x, playerPos.y]);
             SoundManager.Instance?.PlaySound(SoundType.TempuraStep);
+            UpdateBreading();
             UpdateArrow();
             visuals.UpdateTempuraTarget(playerPos.x, playerPos.y);
             if (reachedEnd)

@@ -20,8 +20,6 @@ public class MoneyManager : MonoBehaviour
         }
 
         Instance = this;
-
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -35,11 +33,17 @@ public class MoneyManager : MonoBehaviour
         UpdateMoneyUI();
     }
 
+    public void ResetMoney()
+    {
+        currentMoney = 0;
+        UpdateMoneyUI();
+    }
+
     private void UpdateMoneyUI()
     {
         if (moneyText != null)
         {
-            moneyText.text = currentMoney.ToString();
+            moneyText.text = "$" + currentMoney;
         }
     }
 }
