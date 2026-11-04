@@ -3,12 +3,17 @@ guid: 4818ec441aa181e4b8f435c38ba78864
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mt_EstanteDeUtensillos
+    second: {fileID: 2100000, guid: c5ce345d467fcf949ab2791b4abe3d04, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
