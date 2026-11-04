@@ -806,7 +806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   musicSource: {fileID: 711627992}
-  music: {fileID: 8300000, guid: 23a04b8f436463449a75286834e690f6, type: 3}
+  music: {fileID: 8300000, guid: c63ea7cc1e8b7d940960488b49f433dc, type: 3}
 --- !u!1 &920752939
 GameObject:
   m_ObjectHideFlags: 0
@@ -1599,14 +1599,14 @@ MonoBehaviour:
   sounds:
   - type: 0
     clips:
-    - {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
+    - {fileID: 8300000, guid: e81ef1d46cd625c48a0fc86acb0a76bc, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 1
     clips:
-    - {fileID: 8300000, guid: 433c237b2f997da4aa10c416e8b9ae53, type: 3}
+    - {fileID: 8300000, guid: 51706030bb8bcac41aa17e0b02071216, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1620,7 +1620,7 @@ MonoBehaviour:
     minInterval: 0
   - type: 3
     clips:
-    - {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
+    - {fileID: 8300000, guid: 23cbff1e16387554bbeddc6fb950f779, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1632,7 +1632,8 @@ MonoBehaviour:
     pitchMax: 1
     minInterval: 0
   - type: 5
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 784cb1662329b2d4db2d4ed02b91dbee, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1645,7 +1646,8 @@ MonoBehaviour:
     pitchMax: 1
     minInterval: 0
   - type: 7
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: bce3e4b9abc025e45ba866defa14f9e2, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1666,26 +1668,28 @@ MonoBehaviour:
     minInterval: 0
   - type: 11
     clips:
-    - {fileID: 8300000, guid: c72dfcc88fa8af042a3a51c49056eaea, type: 3}
+    - {fileID: 8300000, guid: b528ae36d7b30a54a8210b3656a58b09, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 12
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 41b6853d7475f0f4eaad12e38f1fd5fe, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 13
     clips:
-    - {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
+    - {fileID: 8300000, guid: 85eafcc3f3efe9648b713e8a90e2949b, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 14
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 560dc0e5df11ee54e8c87a8aad87194c, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1699,7 +1703,7 @@ MonoBehaviour:
     minInterval: 0
   - type: 16
     clips:
-    - {fileID: 8300000, guid: 09c56f4c36e3eb3408b39f38722095d7, type: 3}
+    - {fileID: 8300000, guid: df1cfb7aa97b25247805f8be00e6c048, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
@@ -1718,79 +1722,92 @@ MonoBehaviour:
     pitchMax: 1
     minInterval: 0
   - type: 19
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: aadfe43821672cb4fbd667405cd84b7d, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 20
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: bfca8ef49137ba04f9088c39b767429d, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 21
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 7b25a162e262edd468c4fbb0ebd3ff45, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 22
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: d8e86ae69bdf4964d81f07c0790a9f5b, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 23
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 6d6206ae86311334787c4897d6e185c3, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 24
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: d4a24d1e82df7cd46b8d4d5ae20e3a57, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 25
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 57d54e9297d6c7b4a8479369c693a5a0, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 26
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 46d730f4f2daca949a81d132c04dde01, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 27
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 7f0f63fe6ab2bc448987ea23877173d3, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 28
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 8aa80666fa4bbdf44b819d55c5d851f8, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 29
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 90747b97a5aee144c8dc19db2a758dbc, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 30
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: 83790c22372b13548ad0e4c398bc1ea6, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
     minInterval: 0
   - type: 31
-    clips: []
+    clips:
+    - {fileID: 8300000, guid: a58f46c0898b2a84399d6046219c1767, type: 3}
     volume: 1
     pitchMin: 1
     pitchMax: 1
