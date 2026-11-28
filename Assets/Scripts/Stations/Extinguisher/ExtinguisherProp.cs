@@ -6,12 +6,23 @@ public class ExtinguisherProp : MonoBehaviour, IInteractable
     [SerializeField] private GameObject extinguisherHoldPrefab;
 
     [Header("World Visual")]
-    [SerializeField] private GameObject extinguisherPropPrefab; 
+    [SerializeField] private GameObject extinguisherPropPrefab;
+
+    public bool CanInteract()
+    {
+        PlayerHoldSystem holdSystem = PlayerHoldSystem.Instance;
+
+        if (holdSystem == null) return false;
+        if (!holdSystem.IsHoldingItem) return true;
+
+        return holdSystem.GetHeldItem().GetComponentInChildren<ExtinguisherItem>() != null;
+    }
 
     public void Interact()
     {
-        PlayerHoldSystem holdSystem = FindFirstObjectByType<PlayerHoldSystem>();
-        if (holdSystem == null) return;
+        if (!CanInteract()) return;
+
+        PlayerHoldSystem holdSystem = PlayerHoldSystem.Instance;
 
         if (!holdSystem.IsHoldingItem)
         {

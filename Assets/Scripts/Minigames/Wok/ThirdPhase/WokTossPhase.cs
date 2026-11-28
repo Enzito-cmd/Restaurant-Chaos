@@ -6,6 +6,7 @@ public class WokTossPhase : MonoBehaviour
 {
     [Header("Skillcheck")]
     [SerializeField] private Slider slider;
+    [SerializeField] private GameObject hint;
 
     [Header("Rice")]
     [SerializeField] private Transform rawRice;
@@ -54,6 +55,8 @@ public class WokTossPhase : MonoBehaviour
             slider.gameObject.SetActive(true);
         }
 
+        SetHintVisible(true);
+
         if (rawRice != null)
         {
             rawRice.gameObject.SetActive(false);
@@ -75,12 +78,22 @@ public class WokTossPhase : MonoBehaviour
         }
     }
 
+    private void SetHintVisible(bool visible)
+    {
+        if (hint != null)
+        {
+            hint.SetActive(visible);
+        }
+    }
+
     public IEnumerator Play()
     {
         if (slider != null)
         {
             slider.gameObject.SetActive(false);
         }
+
+        SetHintVisible(false);
 
         if (rice == null || plate == null || plateRicePoint == null || plateStartPoint == null || plateCatchPoint == null || plateEndPoint == null)
         {
@@ -110,6 +123,8 @@ public class WokTossPhase : MonoBehaviour
     public void ResetState()
     {
         StopAllCoroutines();
+
+        SetHintVisible(false);
 
         if (slider != null)
         {

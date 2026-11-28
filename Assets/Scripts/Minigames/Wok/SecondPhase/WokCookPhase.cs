@@ -12,6 +12,7 @@ public class WokCookPhase : MonoBehaviour
     [Header("Wok Control")]
     public Transform wokTransform;
     public Transform wokCenterHitbox;
+    [SerializeField] private GameObject centerMarker;
     public Camera wokCamera;
     public Collider dragPlaneCollider;
 
@@ -84,6 +85,7 @@ public class WokCookPhase : MonoBehaviour
 
         if (hitsText != null) hitsText.gameObject.SetActive(false);
         if (errorsText != null) errorsText.gameObject.SetActive(false);
+        if (centerMarker != null) centerMarker.SetActive(false);
     }
     private void OnDisable()
     {
@@ -107,6 +109,11 @@ public class WokCookPhase : MonoBehaviour
         {
             arrowsCanvas.SetActive(true);
         }
+
+        if (centerMarker != null)
+        {
+            centerMarker.SetActive(true);
+        }
     }
 
     public void StartCooking()
@@ -117,10 +124,7 @@ public class WokCookPhase : MonoBehaviour
             startRot = wokTransform.rotation;
         }
 
-        if (arrowsCanvas != null)
-        {
-            arrowsCanvas.SetActive(true);
-        }
+        ShowArrowSlots();
 
         if (hitsText != null) hitsText.gameObject.SetActive(true);
         if (errorsText != null) errorsText.gameObject.SetActive(true);
@@ -186,11 +190,8 @@ public class WokCookPhase : MonoBehaviour
                 if (hit.collider == handleCollider)
                 {
                     isDragging = true;
-
-                    if (dragPlane.Raycast(ray, out float enter))
-                    {
-                        dragOffset = wokTransform.position - ray.GetPoint(enter);
-                    }
+                    dragPlane = new Plane(Vector3.up, hit.point);
+                    dragOffset = wokTransform.position - hit.point;
                 }
             }
         }
@@ -286,7 +287,7 @@ public class WokCookPhase : MonoBehaviour
         }
 
         float randomSpeed = Random.Range(2f, 4f);
-        arrowScript.Initialize(targetPoint.position, randomSpeed, wokCenterHitbox);
+        arrowScript.Initialize(targetPoint.position, randomSpeed, wokCenterHitbox, wokCamera);
 
         arrowScript.onHit = OnArrowHit;
         arrowScript.onMiss = OnArrowMiss;
@@ -470,6 +471,7 @@ public class WokCookPhase : MonoBehaviour
 
         if (hitsText != null) hitsText.gameObject.SetActive(false);
         if (errorsText != null) errorsText.gameObject.SetActive(false);
+        if (centerMarker != null) centerMarker.SetActive(false);
     }
 
     private void ClearArrows()

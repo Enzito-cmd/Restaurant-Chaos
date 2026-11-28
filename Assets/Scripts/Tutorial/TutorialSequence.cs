@@ -18,6 +18,9 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] protected Transform kitchenCheckpoint;
         [SerializeField] protected float checkpointRadius = 1.5f;
 
+        [Header("Door")]
+        [SerializeField] protected Transform doorPoint;
+
         [Header("Clients")]
         [SerializeField] protected float clientSightDelay = 2.5f;
 
@@ -45,7 +48,7 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator RunAndFinish()
         {
-            while (SceneTransition.IsRunning)
+            while (SceneTransition.IsRunning || DayTitleUI.IsShowing)
             {
                 yield return null;
             }
@@ -68,6 +71,25 @@ namespace RestaurantChaos.Tutorial
         protected IEnumerator ShowSigns(string[] pages)
         {
             yield return ShowWithOptions(pages, null);
+        }
+
+        protected IEnumerator ShowSigns(string[] english, string[] spanish)
+        {
+            yield return ShowWithOptions(Localization.Pick(english, spanish), null);
+        }
+
+        protected IEnumerator WaitForRestaurantOpen()
+        {
+            DayManager.Instance.SetOpeningAllowed(true);
+
+            pointer.PointAt(doorPoint, true);
+
+            while (!DayManager.Instance.IsRestaurantOpen)
+            {
+                yield return null;
+            }
+
+            pointer.Clear();
         }
 
         protected IEnumerator ShowImage(GameObject image)
@@ -114,9 +136,9 @@ namespace RestaurantChaos.Tutorial
             }
         }
 
-        protected IEnumerator KitchenStep(string[] signs)
+        protected IEnumerator KitchenStep(string[] english, string[] spanish)
         {
-            yield return ShowSigns(signs);
+            yield return ShowSigns(english, spanish);
             yield return GoToKitchen();
         }
 

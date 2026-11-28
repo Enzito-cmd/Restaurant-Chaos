@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace RestaurantChaos.Clients
@@ -9,7 +8,6 @@ namespace RestaurantChaos.Clients
     {
         [Header("UI")]
         [SerializeField] private Image ringFill;
-        [SerializeField, FormerlySerializedAs("fillImage")] private Image barFill;
 
         [Header("Warning")]
         [SerializeField, Range(0f, 1f)] private float lowThreshold = 0.25f;
@@ -17,7 +15,7 @@ namespace RestaurantChaos.Clients
         public event Action Expired;
 
         private GameObject ringRoot;
-        private GameObject barRoot;
+        private Vector3 ringBaseLocalPosition;
         private bool isRunning;
         private bool lowWarned;
         private float duration;
@@ -25,32 +23,46 @@ namespace RestaurantChaos.Clients
 
         private void Awake()
         {
-            ringRoot = GetRoot(ringFill);
-            barRoot = GetRoot(barFill);
-
-            if (barRoot != null)
+            if (ringFill != null)
             {
-                Billboard.AttachAlwaysVisible(barRoot);
+                ringRoot = ringFill.GetComponentInParent<Canvas>(true).gameObject;
+                ringBaseLocalPosition = ringRoot.transform.localPosition;
             }
 
             Hide();
         }
 
-        private static GameObject GetRoot(Image image)
+        public float RingWorldY
         {
-            if (image == null)
+            get
             {
-                return null;
-            }
+                if (ringRoot == null)
+                {
+                    return 0f;
+                }
 
-            return image.GetComponentInParent<Canvas>(true).gameObject;
+                return ringRoot.transform.position.y;
+            }
         }
 
-        private static void SetVisible(GameObject root, bool visible)
+        public void SetRingWorldY(float worldY)
         {
-            if (root != null)
+            if (ringRoot == null)
             {
-                root.SetActive(visible);
+                return;
+            }
+
+            Vector3 position = ringRoot.transform.position;
+
+            position.y = worldY;
+            ringRoot.transform.position = position;
+        }
+
+        public void ResetRingHeight()
+        {
+            if (ringRoot != null)
+            {
+                ringRoot.transform.localPosition = ringBaseLocalPosition;
             }
         }
 
@@ -93,20 +105,18 @@ namespace RestaurantChaos.Clients
 
         public void ShowRing()
         {
-            SetVisible(ringRoot, true);
-            SetVisible(barRoot, false);
-        }
-
-        public void ShowBar()
-        {
-            SetVisible(ringRoot, false);
-            SetVisible(barRoot, true);
+            if (ringRoot != null)
+            {
+                ringRoot.SetActive(true);
+            }
         }
 
         public void Hide()
         {
-            SetVisible(ringRoot, false);
-            SetVisible(barRoot, false);
+            if (ringRoot != null)
+            {
+                ringRoot.SetActive(false);
+            }
         }
 
         private void Update()
@@ -140,16 +150,9 @@ namespace RestaurantChaos.Clients
 
         private void UpdateFill()
         {
-            float fill = NormalizedFill;
-
             if (ringFill != null)
             {
-                ringFill.fillAmount = fill;
-            }
-
-            if (barFill != null)
-            {
-                barFill.fillAmount = fill;
+                ringFill.fillAmount = NormalizedFill;
             }
         }
     }

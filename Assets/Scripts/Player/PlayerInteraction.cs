@@ -4,19 +4,39 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    private const int MaxNearby = 64;
+
     [Header("Detection Settings")]
     [SerializeField] private Transform interactPoint;
-    [SerializeField] private float interactRadius = 2.5f;
+    [SerializeField] private float interactRange = 2.2f;
+    [SerializeField, Range(10f, 360f)] private float interactAngle = 180f;
     [SerializeField] private LayerMask interactableLayer;
 
     private PlayerHoldSystem holdSystem;
     private bool isInteractionLocked;
+    private readonly Collider[] buffer = new Collider[MaxNearby];
+    private readonly List<Collider> nearby = new List<Collider>();
     private readonly List<LockableStation> visibleLockIcons = new List<LockableStation>();
     private readonly List<PlateRest> visiblePlateRests = new List<PlateRest>();
     private readonly List<ClientHighlight> visibleClientHighlights = new List<ClientHighlight>();
     private readonly List<MoneyHighlight> visibleMoneyHighlights = new List<MoneyHighlight>();
 
     public bool HasTarget { get; private set; }
+
+    private Vector3 Origin
+    {
+        get
+        {
+            Vector3 origin = transform.position;
+
+            if (interactPoint != null)
+            {
+                origin.y = interactPoint.position.y;
+            }
+
+            return origin;
+        }
+    }
 
     private void Awake()
     {
@@ -25,6 +45,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        RefreshNearby();
+
         if (!isInteractionLocked && Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
@@ -37,19 +59,36 @@ public class PlayerInteraction : MonoBehaviour
         UpdateClientHighlights();
         UpdateMoneyHighlights();
     }
+
+    private void RefreshNearby()
+    {
+        nearby.Clear();
+
+        Vector3 origin = Origin;
+        Vector3 forward = transform.forward;
+        float halfAngle = interactAngle * 0.5f;
+        int count = Physics.OverlapSphereNonAlloc(origin, interactRange, buffer, interactableLayer);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 toCollider = buffer[i].bounds.ClosestPoint(origin) - origin;
+
+            toCollider.y = 0f;
+
+            if (toCollider.sqrMagnitude > 0.0001f && Vector3.Angle(forward, toCollider) > halfAngle)
+            {
+                continue;
+            }
+
+            nearby.Add(buffer[i]);
+        }
+    }
+
     private void UpdateMoneyHighlights()
     {
-        if (interactPoint == null) return;
-
-        Collider[] hitColliders = Physics.OverlapSphere(
-            interactPoint.position,
-            interactRadius,
-            interactableLayer
-        );
-
         List<MoneyHighlight> currentHighlights = new List<MoneyHighlight>();
 
-        foreach (var hit in hitColliders)
+        foreach (Collider hit in nearby)
         {
             MoneyPickup money = hit.GetComponentInParent<MoneyPickup>();
 
@@ -79,10 +118,9 @@ public class PlayerInteraction : MonoBehaviour
         visibleMoneyHighlights.Clear();
         visibleMoneyHighlights.AddRange(currentHighlights);
     }
+
     private void UpdateClientHighlights()
     {
-        if (interactPoint == null) return;
-
         ClientBase followingClient = ClientRegistry.GetFollowingClient();
 
         if (followingClient != null)
@@ -99,15 +137,9 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        Collider[] hitColliders = Physics.OverlapSphere(
-            interactPoint.position,
-            interactRadius,
-            interactableLayer
-        );
-
         List<ClientHighlight> currentHighlights = new List<ClientHighlight>();
 
-        foreach (var hit in hitColliders)
+        foreach (Collider hit in nearby)
         {
             ClientBase client = hit.GetComponentInParent<ClientBase>();
 
@@ -129,7 +161,7 @@ public class PlayerInteraction : MonoBehaviour
 
         foreach (ClientHighlight previous in visibleClientHighlights)
         {
-            if (!currentHighlights.Contains(previous))
+            if (previous != null && !currentHighlights.Contains(previous))
             {
                 previous.SetHighlight(false);
             }
@@ -138,14 +170,12 @@ public class PlayerInteraction : MonoBehaviour
         visibleClientHighlights.Clear();
         visibleClientHighlights.AddRange(currentHighlights);
     }
+
     private void UpdateLockIconsInRange()
     {
-        if (interactPoint == null) return;
-
-        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
         List<LockableStation> stillInRange = new List<LockableStation>();
 
-        foreach (var hit in hitColliders)
+        foreach (Collider hit in nearby)
         {
             if (hit.TryGetComponent<LockableStation>(out var lockable))
             {
@@ -172,12 +202,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePlateRestsInRange()
     {
-        if (interactPoint == null) return;
-
-        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
         List<PlateRest> stillInRange = new List<PlateRest>();
 
-        foreach (var hit in hitColliders)
+        foreach (Collider hit in nearby)
         {
             if (hit.TryGetComponent<PlateRest>(out var plateRest))
             {
@@ -205,7 +232,6 @@ public class PlayerInteraction : MonoBehaviour
     private void TryInteract()
     {
         if (Time.timeScale == 0f) return;
-        if (interactPoint == null) return;
 
         bool restrictToExtinguisherOnly = IsBeingChased() || IsHoldingExtinguisher();
         IInteractable targetInteractable = FindTarget(restrictToExtinguisherOnly);
@@ -234,9 +260,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool IsLockedStationInRange()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
-
-        foreach (Collider hit in hitColliders)
+        foreach (Collider hit in nearby)
         {
             if (hit.TryGetComponent<LockableStation>(out LockableStation lockable) && lockable.IsLocked)
             {
@@ -247,79 +271,88 @@ public class PlayerInteraction : MonoBehaviour
         return false;
     }
 
-    private IInteractable FindTarget(bool restrictToExtinguisherOnly)
+    private bool IsValidTarget(Collider hit, IInteractable interactable, bool restrictToExtinguisherOnly, bool onlyDoorAllowed)
     {
-        if (interactPoint == null)
+        if (onlyDoorAllowed && !(interactable is RestaurantDoor))
         {
-            return null;
+            return false;
         }
 
-        Collider[] hitColliders = Physics.OverlapSphere(interactPoint.position, interactRadius, interactableLayer);
-        IInteractable target = null;
+        if (DayManager.Instance != null && !DayManager.Instance.IsInteractionAllowed(interactable))
+        {
+            return false;
+        }
 
+        if (restrictToExtinguisherOnly)
+        {
+            if (interactable is ExtinguisherProp)
+            {
+                return interactable.CanInteract();
+            }
+
+            PlateRest plateRest = interactable as PlateRest;
+
+            if (plateRest != null && plateRest.CanDepositHeldPlate())
+            {
+                return true;
+            }
+
+            return interactable is TrashBin && interactable.CanInteract() && !IsHoldingExtinguisher();
+        }
+
+        if (hit.TryGetComponent<LockableStation>(out LockableStation lockable) && lockable.IsLocked)
+        {
+            return false;
+        }
+
+        return interactable.CanInteract();
+    }
+
+    private IInteractable FindTarget(bool restrictToExtinguisherOnly)
+    {
+        Vector3 origin = Origin;
         bool onlyDoorAllowed = DayManager.Instance != null && !DayManager.Instance.CanUseStations;
 
-        foreach (Collider hit in hitColliders)
+        IInteractable clientTarget = null;
+        IInteractable otherTarget = null;
+        float clientDistance = float.MaxValue;
+        float otherDistance = float.MaxValue;
+
+        foreach (Collider hit in nearby)
         {
             if (!hit.TryGetComponent<IInteractable>(out IInteractable interactable))
             {
                 continue;
             }
 
-            if (onlyDoorAllowed && !(interactable is RestaurantDoor))
+            if (!IsValidTarget(hit, interactable, restrictToExtinguisherOnly, onlyDoorAllowed))
             {
                 continue;
             }
 
-            if (DayManager.Instance != null && !DayManager.Instance.IsInteractionAllowed(interactable))
-            {
-                continue;
-            }
-
-            if (restrictToExtinguisherOnly)
-            {
-                if (interactable is ExtinguisherProp)
-                {
-                    return interactable;
-                }
-
-                PlateRest plateRest = interactable as PlateRest;
-
-                if (plateRest != null && plateRest.CanDepositHeldPlate())
-                {
-                    return interactable;
-                }
-
-                if (interactable is TrashBin && interactable.CanInteract() && !IsHoldingExtinguisher())
-                {
-                    return interactable;
-                }
-
-                continue;
-            }
-
-            if (hit.TryGetComponent<LockableStation>(out LockableStation lockable) && lockable.IsLocked)
-            {
-                continue;
-            }
-
-            if (!interactable.CanInteract())
-            {
-                continue;
-            }
+            float distance = (hit.bounds.ClosestPoint(origin) - origin).sqrMagnitude;
 
             if (interactable is RestaurantClient || interactable is ClientBase)
             {
-                return interactable;
+                if (distance < clientDistance)
+                {
+                    clientDistance = distance;
+                    clientTarget = interactable;
+                }
             }
-
-            if (target == null)
+            else if (distance < otherDistance)
             {
-                target = interactable;
+                otherDistance = distance;
+                otherTarget = interactable;
             }
         }
 
-        return target;
+        if (clientTarget != null)
+        {
+            return clientTarget;
+        }
+
+        return otherTarget;
     }
 
     private void UpdateHasTarget()
@@ -364,10 +397,14 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (interactPoint != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(interactPoint.position, interactRadius);
-        }
+        Gizmos.color = Color.green;
+
+        Vector3 origin = Origin;
+        Vector3 left = Quaternion.Euler(0f, -interactAngle * 0.5f, 0f) * transform.forward;
+        Vector3 right = Quaternion.Euler(0f, interactAngle * 0.5f, 0f) * transform.forward;
+
+        Gizmos.DrawWireSphere(origin, interactRange);
+        Gizmos.DrawLine(origin, origin + left * interactRange);
+        Gizmos.DrawLine(origin, origin + right * interactRange);
     }
 }

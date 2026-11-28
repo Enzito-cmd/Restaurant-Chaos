@@ -13,6 +13,13 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] [TextArea] private string[] angrySigns;
         [SerializeField] [TextArea] private string[] completeSigns;
 
+        [Header("Signs (Spanish)")]
+        [SerializeField] [TextArea] private string[] welcomeSignsEs;
+        [SerializeField] [TextArea] private string[] openRestaurantSignsEs;
+        [SerializeField] [TextArea] private string[] yakuzaSignsEs;
+        [SerializeField] [TextArea] private string[] angrySignsEs;
+        [SerializeField] [TextArea] private string[] completeSignsEs;
+
         [Header("Targets")]
         [SerializeField] private Transform extinguisherStation;
         [SerializeField] private Transform extinguisherPoint;
@@ -41,12 +48,12 @@ namespace RestaurantChaos.Tutorial
         {
             FindExtinguisher();
 
-            yield return ShowSigns(welcomeSigns);
+            yield return ShowSigns(welcomeSigns, welcomeSignsEs);
             yield return OpenRestaurantStep();
             yield return MeetYakuzaStep();
             yield return WaitForAngryStep();
             yield return DefeatYakuzaStep();
-            yield return ShowSigns(completeSigns);
+            yield return ShowSigns(completeSigns, completeSignsEs);
         }
 
         private void FindExtinguisher()
@@ -66,14 +73,8 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator OpenRestaurantStep()
         {
-            yield return ShowSigns(openRestaurantSigns);
-
-            DayManager.Instance.SetOpeningAllowed(true);
-
-            while (!DayManager.Instance.IsRestaurantOpen)
-            {
-                yield return null;
-            }
+            yield return ShowSigns(openRestaurantSigns, openRestaurantSignsEs);
+            yield return WaitForRestaurantOpen();
         }
 
         private IEnumerator MeetYakuzaStep()
@@ -89,7 +90,7 @@ namespace RestaurantChaos.Tutorial
 
             if (yakuza != null)
             {
-                yield return ShowSigns(yakuzaSigns);
+                yield return ShowSigns(yakuzaSigns, yakuzaSignsEs);
             }
         }
 
@@ -108,7 +109,7 @@ namespace RestaurantChaos.Tutorial
                 yield break;
             }
 
-            yield return ShowSigns(angrySigns);
+            yield return ShowSigns(angrySigns, angrySignsEs);
 
             bool isPointing = false;
 

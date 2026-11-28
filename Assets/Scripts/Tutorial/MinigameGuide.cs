@@ -12,6 +12,7 @@ namespace RestaurantChaos.Tutorial
         public class Step
         {
             [TextArea] public string text;
+            [TextArea] public string textSpanish;
             public Camera worldCamera;
             public Collider[] colliders;
             public Renderer[] renderers;
@@ -98,7 +99,7 @@ namespace RestaurantChaos.Tutorial
                 options.advanceCondition = () => ClickHits(step.clickColliders, camera);
             }
 
-            yield return signUI.ShowPages(new string[] { step.text }, options);
+            yield return signUI.ShowPages(new string[] { Localization.Pick(step.text, step.textSpanish) }, options);
         }
 
         private bool ClickHits(Collider[] clickColliders, Camera camera)

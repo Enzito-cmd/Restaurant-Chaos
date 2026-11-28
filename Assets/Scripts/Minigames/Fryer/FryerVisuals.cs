@@ -12,6 +12,15 @@ public class FryerVisuals : MonoBehaviour
     public Transform basketDownPoint;
     public float basketSpeed = 3f;
     private Vector3 targetBasketPos;
+    private Vector3 basketBasePos;
+
+    [Header("Basket Shake")]
+    [SerializeField] private float shakeHeight = 0.3f;
+    [SerializeField] private float shakeDuration = 0.45f;
+    [SerializeField] private float shakeCycles = 2f;
+
+    private float shakeOffset;
+    private Coroutine shakeRoutine;
 
     [Header("Tempuras Physics")]
     public GameObject tempuraPrefab;
@@ -55,7 +64,12 @@ public class FryerVisuals : MonoBehaviour
 
     private void Start()
     {
-        if (basket != null) targetBasketPos = basket.position;
+        if (basket != null)
+        {
+            targetBasketPos = basket.position;
+            basketBasePos = basket.position;
+        }
+
         if (skillcheckCanvas != null) skillcheckCanvas.SetActive(false);
         if (countdownText != null) countdownText.gameObject.SetActive(false);
 
@@ -67,7 +81,8 @@ public class FryerVisuals : MonoBehaviour
     {
         if (basket != null)
         {
-            basket.position = Vector3.Lerp(basket.position, targetBasketPos, Time.deltaTime * basketSpeed);
+            basketBasePos = Vector3.Lerp(basketBasePos, targetBasketPos, Time.deltaTime * basketSpeed);
+            basket.position = basketBasePos + Vector3.up * shakeOffset;
         }
 
         if (fried != targetFried)
@@ -210,6 +225,29 @@ public class FryerVisuals : MonoBehaviour
                 rb.WakeUp();
             }
         }
+    }
+
+    public void ShakeBasket()
+    {
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+        }
+
+        shakeRoutine = StartCoroutine(Shake());
+    }
+
+    private IEnumerator Shake()
+    {
+        for (float t = 0f; t < 1f; t += Time.deltaTime / shakeDuration)
+        {
+            shakeOffset = Mathf.Abs(Mathf.Sin(t * Mathf.PI * shakeCycles)) * (1f - t) * shakeHeight;
+
+            yield return null;
+        }
+
+        shakeOffset = 0f;
+        shakeRoutine = null;
     }
 
     public void BumpTempuras()

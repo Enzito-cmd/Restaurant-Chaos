@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WokPrepPhase : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class WokPrepPhase : MonoBehaviour
     public Collider eggBowlCollider;
     public Collider riceBowlCollider;
     public Collider wokCollider;
+
+    [Header("Taken Ingredients")]
+    [SerializeField] private GameObject riceBowlModel;
+    [SerializeField] private GameObject[] basketEggs;
 
     [Header("Drag Visuals")]
     public GameObject dragEggPrefab;
@@ -45,6 +50,7 @@ public class WokPrepPhase : MonoBehaviour
     [SerializeField] private CursorStyle grabCursor = CursorStyle.ClosedHand;
 
     private PrepItem currentItem = PrepItem.None;
+    private GameObject takenEgg;
     private GameObject heldObjInstance;
     private ParticleSystem heldParticles;
     private Plane dragPlane;
@@ -57,6 +63,7 @@ public class WokPrepPhase : MonoBehaviour
         currentEggs = 0;
         currentRice = 0f;
         ClearHeldItem();
+        RestoreBasketEggs();
 
         if (tossPhase != null)
         {
@@ -231,8 +238,14 @@ public class WokPrepPhase : MonoBehaviour
         currentItem = item;
         heldObjInstance = Instantiate(prefab);
 
+        if (item == PrepItem.Egg)
+        {
+            TakeBasketEgg();
+        }
+
         if (item == PrepItem.Rice)
         {
+            SetRiceBowlVisible(false);
             heldParticles = heldObjInstance.GetComponentInChildren<ParticleSystem>();
             if (heldParticles != null)
             {
@@ -245,11 +258,6 @@ public class WokPrepPhase : MonoBehaviour
 
     private void DiscardHeldItem()
     {
-        if (currentItem == PrepItem.Egg)
-        {
-            SoundManager.Instance?.PlaySound(SoundType.EggBroken);
-        }
-
         ClearHeldItem();
     }
 
@@ -258,6 +266,55 @@ public class WokPrepPhase : MonoBehaviour
         if (heldObjInstance != null) Destroy(heldObjInstance);
         currentItem = PrepItem.None;
         heldParticles = null;
+        SetRiceBowlVisible(true);
+
+        if (takenEgg != null)
+        {
+            takenEgg.SetActive(true);
+            takenEgg = null;
+        }
+    }
+
+    private void SetRiceBowlVisible(bool visible)
+    {
+        if (riceBowlModel == null) return;
+
+        foreach (Renderer bowlRenderer in riceBowlModel.GetComponentsInChildren<Renderer>(true))
+        {
+            bowlRenderer.enabled = visible;
+        }
+    }
+
+    private void TakeBasketEgg()
+    {
+        List<GameObject> remaining = new List<GameObject>();
+
+        foreach (GameObject egg in basketEggs)
+        {
+            if (egg != null && egg.activeSelf)
+            {
+                remaining.Add(egg);
+            }
+        }
+
+        if (remaining.Count > 0)
+        {
+            takenEgg = remaining[Random.Range(0, remaining.Count)];
+            takenEgg.SetActive(false);
+        }
+    }
+
+    private void RestoreBasketEggs()
+    {
+        takenEgg = null;
+
+        foreach (GameObject egg in basketEggs)
+        {
+            if (egg != null)
+            {
+                egg.SetActive(true);
+            }
+        }
     }
 
     private void DropEgg()
@@ -267,6 +324,7 @@ public class WokPrepPhase : MonoBehaviour
         UpdateUI();
         Debug.Log($"Eggs: {currentEggs}/{requiredEggs}");
 
+        takenEgg = null;
         ClearHeldItem();
         CheckCompletion();
     }
@@ -381,6 +439,7 @@ public class WokPrepPhase : MonoBehaviour
         isPrepActive = false;
         StopRiceSound();
         ClearHeldItem();
+        RestoreBasketEggs();
 
         if (tossPhase != null)
         {

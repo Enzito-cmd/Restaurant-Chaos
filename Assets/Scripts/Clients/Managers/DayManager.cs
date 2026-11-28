@@ -27,7 +27,9 @@ namespace RestaurantChaos.Clients
         [SerializeField] private LevelManager levelManager;
         [SerializeField] private PlayerController playerController;
         [SerializeField] private ScreenFade fade;
+        [SerializeField] private DayTitleUI titleUI;
 
+        private bool isChangingDay;
         private int currentDayIndex = -1;
         private bool currentDayHasTutorial;
         private TutorialSequence currentTutorial;
@@ -75,22 +77,62 @@ namespace RestaurantChaos.Clients
             RequestedDayNumber = 0;
             RequestedTutorialNumber = 0;
 
+            int startIndex = ResolveStartIndex(requestedDay);
+
             if (requestedTutorial > 0)
             {
-                StartDay(ResolveTutorialIndex(requestedTutorial));
-                return;
+                startIndex = ResolveTutorialIndex(requestedTutorial);
             }
 
-            StartDay(ResolveStartIndex(requestedDay));
+            if (titleUI != null && startIndex >= 0 && startIndex < days.Length)
+            {
+                StartCoroutine(ShowFirstTitle(startIndex));
+            }
+
+            StartDay(startIndex);
+        }
+
+        private IEnumerator ShowFirstTitle(int index)
+        {
+            SetPlayerLocked(true);
+
+            yield return titleUI.Show(BuildTitle(index), null, true);
+
+            SetPlayerLocked(false);
+        }
+
+        private string BuildTitle(int index)
+        {
+            int tutorials = 0;
+            int realDays = 0;
+
+            for (int i = 0; i <= index; i++)
+            {
+                if (days[i].tutorial != null)
+                {
+                    tutorials++;
+                }
+                else
+                {
+                    realDays++;
+                }
+            }
+
+            if (days[index].tutorial != null)
+            {
+                return titleUI.GetTitle(true, tutorials);
+            }
+
+            return titleUI.GetTitle(false, realDays);
         }
 
         public void AdvanceToNextDay()
         {
-            if (!HasNextDay) return;
+            if (!HasNextDay || isChangingDay) return;
 
             SoundManager.Instance?.PlaySound(SoundType.ButtonClick);
 
-            StartNextDay();
+            StartCoroutine(FadeToNextDay());
         }
 
         public void StartNextDay()
@@ -102,21 +144,42 @@ namespace RestaurantChaos.Clients
 
         public IEnumerator FadeToNextDay()
         {
-            if (fade == null)
+            if (isChangingDay || !HasNextDay) yield break;
+
+            isChangingDay = true;
+
+            if (titleUI != null)
+            {
+                SetPlayerLocked(true);
+
+                yield return titleUI.Show(BuildTitle(currentDayIndex + 1), StartNextDayLocked, false);
+
+                SetPlayerLocked(false);
+            }
+            else if (fade == null)
             {
                 StartNextDay();
-                yield break;
+            }
+            else
+            {
+                SetPlayerLocked(true);
+
+                yield return fade.Out();
+
+                StartNextDay();
+
+                yield return fade.In();
+
+                SetPlayerLocked(false);
             }
 
-            SetPlayerLocked(true);
+            isChangingDay = false;
+        }
 
-            yield return fade.Out();
-
+        private void StartNextDayLocked()
+        {
             StartNextDay();
-
-            yield return fade.In();
-
-            SetPlayerLocked(false);
+            SetPlayerLocked(true);
         }
 
         public bool IsInteractionAllowed(IInteractable interactable)

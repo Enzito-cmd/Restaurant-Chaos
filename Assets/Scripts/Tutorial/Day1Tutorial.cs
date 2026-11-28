@@ -19,6 +19,19 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] [TextArea] private string[] collectMoneySigns;
         [SerializeField] [TextArea] private string[] completeSigns;
 
+        [Header("Signs (Spanish)")]
+        [SerializeField] [TextArea] private string[] welcomeSignsEs;
+        [SerializeField] [TextArea] private string[] kitchenSignsEs;
+        [SerializeField] [TextArea] private string[] cookSignsEs;
+        [SerializeField] [TextArea] private string[] placeDishSignsEs;
+        [SerializeField] [TextArea] private string[] trashSignsEs;
+        [SerializeField] [TextArea] private string[] openRestaurantSignsEs;
+        [SerializeField] [TextArea] private string[] seatClientSignsEs;
+        [SerializeField] [TextArea] private string[] orderSignsEs;
+        [SerializeField] [TextArea] private string[] deliverSignsEs;
+        [SerializeField] [TextArea] private string[] collectMoneySignsEs;
+        [SerializeField] [TextArea] private string[] completeSignsEs;
+
         [Header("Images")]
         [SerializeField] private GameObject controlsImage;
 
@@ -43,9 +56,9 @@ namespace RestaurantChaos.Tutorial
 
         protected override IEnumerator Run()
         {
-            yield return ShowSigns(welcomeSigns);
+            yield return ShowSigns(welcomeSigns, welcomeSignsEs);
             yield return ShowImage(controlsImage);
-            yield return KitchenStep(kitchenSigns);
+            yield return KitchenStep(kitchenSigns, kitchenSignsEs);
             yield return CookStep();
             yield return PlaceDishStep();
             yield return OpenRestaurantStep();
@@ -57,7 +70,7 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator CookStep()
         {
-            yield return ShowSigns(cookSigns);
+            yield return ShowSigns(cookSigns, cookSignsEs);
             yield return WaitForDishInHand();
         }
 
@@ -75,8 +88,8 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator PlaceDishStep()
         {
-            yield return ShowSigns(placeDishSigns);
-            yield return ShowSigns(trashSigns);
+            yield return ShowSigns(placeDishSigns, placeDishSignsEs);
+            yield return ShowSigns(trashSigns, trashSignsEs);
 
             while (FindRestWithPlate() == null)
             {
@@ -95,14 +108,8 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator OpenRestaurantStep()
         {
-            yield return ShowSigns(openRestaurantSigns);
-
-            DayManager.Instance.SetOpeningAllowed(true);
-
-            while (!DayManager.Instance.IsRestaurantOpen)
-            {
-                yield return null;
-            }
+            yield return ShowSigns(openRestaurantSigns, openRestaurantSignsEs);
+            yield return WaitForRestaurantOpen();
         }
 
         private IEnumerator SeatClientStep()
@@ -118,7 +125,7 @@ namespace RestaurantChaos.Tutorial
 
             if (client != null && !(client.CurrentState is SitState))
             {
-                yield return ShowSigns(seatClientSigns);
+                yield return ShowSigns(seatClientSigns, seatClientSignsEs);
             }
 
             while (client != null && !(client.CurrentState is SitState))
@@ -142,7 +149,7 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator OrderStep()
         {
-            yield return ShowSigns(orderSigns);
+            yield return ShowSigns(orderSigns, orderSignsEs);
 
             while (client != null && OrderBoard.OpenTicketCount == 0)
             {
@@ -152,7 +159,7 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator DeliverStep()
         {
-            yield return ShowSigns(deliverSigns);
+            yield return ShowSigns(deliverSigns, deliverSignsEs);
 
             Transform pointedArrow = null;
             Transform pointedGlow = null;
@@ -200,7 +207,7 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator CollectMoneyStep()
         {
-            yield return ShowSigns(collectMoneySigns);
+            yield return ShowSigns(collectMoneySigns, collectMoneySignsEs);
 
             MoneyPickup pointed = null;
 
@@ -232,7 +239,7 @@ namespace RestaurantChaos.Tutorial
 
             pointer.Clear();
 
-            yield return ShowSigns(completeSigns);
+            yield return ShowSigns(completeSigns, completeSignsEs);
         }
     }
 }

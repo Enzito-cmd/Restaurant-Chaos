@@ -12,10 +12,12 @@ public class InteractionPromptUI : MonoBehaviour
     [SerializeField] private Image keyIcon;
     [SerializeField] private Sprite interactIcon;
     [SerializeField] private string interactMessage = "Interact";
+    [SerializeField] private string interactMessageSpanish = "Interactuar";
 
     [Header("Extinguisher")]
     [SerializeField] private Sprite extinguisherIcon;
     [SerializeField] private string extinguisherMessage = "Use";
+    [SerializeField] private string extinguisherMessageSpanish = "Usar";
 
     private TMP_Text promptText;
     private bool isShowingExtinguisherMessage;
@@ -31,10 +33,20 @@ public class InteractionPromptUI : MonoBehaviour
         {
             promptText = promptRoot.GetComponentInChildren<TMP_Text>(true);
 
-            Show(interactIcon, interactMessage);
+            Refresh();
 
             promptRoot.SetActive(false);
         }
+    }
+
+    private void OnEnable()
+    {
+        Localization.Changed += Refresh;
+    }
+
+    private void OnDisable()
+    {
+        Localization.Changed -= Refresh;
     }
 
     private void Update()
@@ -66,13 +78,18 @@ public class InteractionPromptUI : MonoBehaviour
 
         isShowingExtinguisherMessage = useExtinguisherMessage;
 
-        if (useExtinguisherMessage)
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        if (isShowingExtinguisherMessage)
         {
-            Show(extinguisherIcon, extinguisherMessage);
+            Show(extinguisherIcon, Localization.Pick(extinguisherMessage, extinguisherMessageSpanish));
         }
         else
         {
-            Show(interactIcon, interactMessage);
+            Show(interactIcon, Localization.Pick(interactMessage, interactMessageSpanish));
         }
     }
 

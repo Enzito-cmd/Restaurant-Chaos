@@ -25,6 +25,17 @@ namespace RestaurantChaos.Tutorial
         [SerializeField] [TextArea] private string[] frySigns;
         [SerializeField] [TextArea] private string[] placeDishSigns;
         [SerializeField] [TextArea] private string[] completeSigns;
+        [SerializeField] [TextArea] private string[] openRestaurantSigns;
+
+        [Header("Signs (Spanish)")]
+        [SerializeField] [TextArea] private string[] unlockedSignsEs;
+        [SerializeField] [TextArea] private string[] kitchenSignsEs;
+        [SerializeField] [TextArea] private string[] phasesSignsEs;
+        [SerializeField] [TextArea] private string[] breadSignsEs;
+        [SerializeField] [TextArea] private string[] frySignsEs;
+        [SerializeField] [TextArea] private string[] placeDishSignsEs;
+        [SerializeField] [TextArea] private string[] openRestaurantSignsEs;
+        [SerializeField] [TextArea] private string[] completeSignsEs;
 
         [Header("Targets")]
         [SerializeField] private Transform fridgeStation;
@@ -44,14 +55,14 @@ namespace RestaurantChaos.Tutorial
 
         protected override IEnumerator Run()
         {
-            yield return ShowSigns(unlockedSigns);
+            yield return ShowSigns(unlockedSigns, unlockedSignsEs);
             yield return GoToKitchen();
-            yield return ShowSigns(kitchenSigns);
-            yield return ShowSigns(phasesSigns);
+            yield return ShowSigns(kitchenSigns, kitchenSignsEs);
+            yield return ShowSigns(phasesSigns, phasesSignsEs);
             yield return CookTempuraStep();
             yield return OpenRestaurantStep();
             yield return ServeClientStep();
-            yield return ShowSigns(completeSigns);
+            yield return ShowSigns(completeSigns, completeSignsEs);
         }
 
         private IEnumerator CookTempuraStep()
@@ -126,11 +137,11 @@ namespace RestaurantChaos.Tutorial
             switch (stage)
             {
                 case CookStage.Bread:
-                    return breadSigns;
+                    return Localization.Pick(breadSigns, breadSignsEs);
                 case CookStage.Fry:
-                    return frySigns;
+                    return Localization.Pick(frySigns, frySignsEs);
                 case CookStage.Place:
-                    return placeDishSigns;
+                    return Localization.Pick(placeDishSigns, placeDishSignsEs);
                 default:
                     return null;
             }
@@ -170,12 +181,8 @@ namespace RestaurantChaos.Tutorial
 
         private IEnumerator OpenRestaurantStep()
         {
-            DayManager.Instance.SetOpeningAllowed(true);
-
-            while (!DayManager.Instance.IsRestaurantOpen)
-            {
-                yield return null;
-            }
+            yield return ShowSigns(openRestaurantSigns, openRestaurantSignsEs);
+            yield return WaitForRestaurantOpen();
         }
 
         private IEnumerator ServeClientStep()

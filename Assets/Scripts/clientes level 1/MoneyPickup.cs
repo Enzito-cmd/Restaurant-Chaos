@@ -16,8 +16,15 @@ public class MoneyPickup : MonoBehaviour, IInteractable
         moneyAmount = amount;
     }
 
+    public bool CanInteract()
+    {
+        return PlayerHoldSystem.Instance == null || !PlayerHoldSystem.Instance.IsHoldingItem;
+    }
+
     public void Interact()
     {
+        if (!CanInteract()) return;
+
         if (MoneyManager.Instance != null)
         {
             MoneyManager.Instance.AddMoney(moneyAmount);

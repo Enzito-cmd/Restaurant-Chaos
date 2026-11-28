@@ -27,7 +27,8 @@ public class TempuraController : MonoBehaviour
     [SerializeField] private TMP_Text mistakesText;
 
     [Header("Input Tolerance")]
-    [SerializeField] private float diagonalBufferTime = 0.05f;
+    [SerializeField] private float diagonalWindow = 0.15f;
+    [SerializeField] private float failDelay = 0.8f;
 
     private int currentRound = 0;
     private int currentMistakes = 0;
@@ -35,8 +36,10 @@ public class TempuraController : MonoBehaviour
     private Vector2Int playerPos;
     private bool isPlaying = false;
     private Coroutine startRoutine;
+    private Coroutine failRoutine;
 
     private bool isWaitingForInputBuffer = false;
+    private float bufferDeadline;
     private bool bufferW, bufferS, bufferA, bufferD;
 
     public void StartMinigame()
@@ -70,9 +73,16 @@ public class TempuraController : MonoBehaviour
             startRoutine = null;
         }
 
+        if (failRoutine != null)
+        {
+            StopCoroutine(failRoutine);
+            failRoutine = null;
+        }
+
         tempuraTray.SetActive(false);
         panel.SetActive(false);
         isPlaying = false;
+        isWaitingForInputBuffer = false;
         ResetBuffers();
         visuals.ClearGrid();
     }
@@ -110,6 +120,15 @@ public class TempuraController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S)) { bufferS = true; StartInputBuffer(); }
         if (Input.GetKeyDown(KeyCode.A)) { bufferA = true; StartInputBuffer(); }
         if (Input.GetKeyDown(KeyCode.D)) { bufferD = true; StartInputBuffer(); }
+
+        if (!isWaitingForInputBuffer) return;
+
+        Vector2Int moveInput = ReadBufferedMove();
+
+        if (IsNextStep(playerPos + moveInput) || Time.time >= bufferDeadline)
+        {
+            EvaluateBufferedInput(moveInput);
+        }
     }
 
     private void StartInputBuffer()
@@ -117,26 +136,29 @@ public class TempuraController : MonoBehaviour
         if (isWaitingForInputBuffer) return;
 
         isWaitingForInputBuffer = true;
-
-        Invoke(nameof(EvaluateBufferedInput), diagonalBufferTime);
+        bufferDeadline = Time.time + diagonalWindow;
     }
 
-    private void EvaluateBufferedInput()
+    private Vector2Int ReadBufferedMove()
     {
-        isWaitingForInputBuffer = false;
-
-        if (!isPlaying)
-        {
-            ResetBuffers();
-            return;
-        }
-
         Vector2Int moveInput = Vector2Int.zero;
 
         if (bufferW) moveInput.y += 1;
         if (bufferS) moveInput.y -= 1;
         if (bufferD) moveInput.x += 1;
         if (bufferA) moveInput.x -= 1;
+
+        return moveInput;
+    }
+
+    private bool IsNextStep(Vector2Int position)
+    {
+        return currentStepIndex + 1 < logic.currentPath.Count && position == logic.currentPath[currentStepIndex + 1];
+    }
+
+    private void EvaluateBufferedInput(Vector2Int moveInput)
+    {
+        isWaitingForInputBuffer = false;
 
         ResetBuffers();
 
@@ -162,7 +184,7 @@ public class TempuraController : MonoBehaviour
             return;
         }
 
-        if (currentStepIndex + 1 < logic.currentPath.Count && newPos == logic.currentPath[currentStepIndex + 1])
+        if (IsNextStep(newPos))
         {
             currentStepIndex++;
             playerPos = newPos;
@@ -217,12 +239,27 @@ public class TempuraController : MonoBehaviour
 
         SoundManager.Instance?.PlaySound(SoundType.TempuraFail);
 
+        failRoutine = StartCoroutine(RestartAfterFail());
+    }
+
+    private IEnumerator RestartAfterFail()
+    {
+        isPlaying = false;
+        isWaitingForInputBuffer = false;
+        ResetBuffers();
+
+        yield return new WaitForSeconds(failDelay);
+
         StartRound();
+
+        failRoutine = null;
+        isPlaying = true;
     }
 
     private void LoseMinigame()
     {
         isPlaying = false;
+        isWaitingForInputBuffer = false;
         ResetBuffers();
 
         if (MinigameManager.Instance != null)

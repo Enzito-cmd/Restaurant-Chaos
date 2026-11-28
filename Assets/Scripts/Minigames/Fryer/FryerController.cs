@@ -236,6 +236,7 @@ public class FryerController : MonoBehaviour
             visuals.UpdateHits(currentSuccesses, successes);
             visuals.SetFried((float)currentSuccesses / successes);
             visuals.BumpTempuras();
+            visuals.ShakeBasket();
         }
 
         needleDirection *= -1;
@@ -253,6 +254,7 @@ public class FryerController : MonoBehaviour
         if (visuals != null)
         {
             visuals.UpdateMisses(currentFails, fails);
+            visuals.ShakeBasket();
         }
 
         if (currentFails >= fails) EndMinigame(false);

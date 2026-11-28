@@ -33,6 +33,11 @@ namespace RestaurantChaos.Tutorial
         [Header("Floor Glow")]
         [SerializeField] private float glowHeightOffset = 0.02f;
 
+        [Header("Screen Edge Arrow")]
+        [SerializeField] private Camera worldCamera;
+        [SerializeField] private RectTransform edgeArrow;
+        [SerializeField] private float edgeMargin = 80f;
+
         private readonly List<ArrowMarker> arrows = new List<ArrowMarker>();
         private readonly List<SkinnedMeshRenderer> bodyRenderers = new List<SkinnedMeshRenderer>();
         private Transform glowTarget;
@@ -199,6 +204,107 @@ namespace RestaurantChaos.Tutorial
             }
 
             UpdatePositions();
+            UpdateEdgeArrow();
+        }
+
+        private void UpdateEdgeArrow()
+        {
+            if (edgeArrow == null || worldCamera == null)
+            {
+                return;
+            }
+
+            bool canShow = arrows.Count > 0 && Time.timeScale > 0f && !TutorialSignUI.IsAnySignShowing && !WorldTime.IsMenuPaused;
+
+            if (canShow && MinigameManager.Instance != null && MinigameManager.Instance.IsBusy)
+            {
+                canShow = false;
+            }
+
+            bool hasOffscreenTarget = false;
+            Vector2 direction = Vector2.up;
+
+            if (canShow)
+            {
+                hasOffscreenTarget = TryGetOffscreenDirection(out direction);
+            }
+
+            if (edgeArrow.gameObject.activeSelf != hasOffscreenTarget)
+            {
+                edgeArrow.gameObject.SetActive(hasOffscreenTarget);
+            }
+
+            if (hasOffscreenTarget)
+            {
+                PlaceEdgeArrow(direction);
+            }
+        }
+
+        private bool TryGetOffscreenDirection(out Vector2 direction)
+        {
+            direction = Vector2.up;
+
+            foreach (ArrowMarker marker in arrows)
+            {
+                if (marker.anchor == null)
+                {
+                    continue;
+                }
+
+                Vector3 viewport = worldCamera.WorldToViewportPoint(marker.anchor.position);
+
+                if (viewport.z > 0f && viewport.x > 0f && viewport.x < 1f && viewport.y > 0f && viewport.y < 1f)
+                {
+                    return false;
+                }
+            }
+
+            foreach (ArrowMarker marker in arrows)
+            {
+                if (marker.anchor == null)
+                {
+                    continue;
+                }
+
+                Vector3 viewport = worldCamera.WorldToViewportPoint(marker.anchor.position);
+                Vector2 offset = new Vector2(viewport.x - 0.5f, viewport.y - 0.5f);
+
+                if (viewport.z < 0f)
+                {
+                    offset = -offset;
+                }
+
+                if (offset.sqrMagnitude > 0.0001f)
+                {
+                    direction = offset;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void PlaceEdgeArrow(Vector2 direction)
+        {
+            Vector2 halfScreen = new Vector2(Screen.width, Screen.height) * 0.5f;
+            Vector2 pixels = new Vector2(direction.x * Screen.width, direction.y * Screen.height);
+            float scaleX = (halfScreen.x - edgeMargin) / Mathf.Max(Mathf.Abs(pixels.x), 0.0001f);
+            float scaleY = (halfScreen.y - edgeMargin) / Mathf.Max(Mathf.Abs(pixels.y), 0.0001f);
+            Vector2 screenPoint = halfScreen + pixels * Mathf.Min(scaleX, scaleY);
+
+            Canvas canvas = edgeArrow.GetComponentInParent<Canvas>().rootCanvas;
+            Camera canvasCamera = null;
+
+            if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            {
+                canvasCamera = canvas.worldCamera;
+            }
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)edgeArrow.parent, screenPoint, canvasCamera, out Vector2 localPoint);
+
+            edgeArrow.localPosition = new Vector3(localPoint.x, localPoint.y, edgeArrow.localPosition.z);
+            edgeArrow.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(pixels.y, pixels.x) * Mathf.Rad2Deg - 90f);
         }
 
         private void UpdatePositions()

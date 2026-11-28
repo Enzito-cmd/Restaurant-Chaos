@@ -17,6 +17,8 @@ namespace RestaurantChaos.Clients
 
         public override void OnInteract()
         {
+            if (client.IsPlayerHoldingItem()) return;
+
             client.ChangeState(new IdleState(client));
         }
 

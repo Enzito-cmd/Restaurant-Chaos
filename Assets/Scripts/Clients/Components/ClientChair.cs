@@ -34,9 +34,10 @@ namespace RestaurantChaos.Clients
             if (!isSittable) return;
             if (isOccupied) return;
 
-            ClientBase followingClient = FindFollowingClient();
+            ClientBase followingClient = ClientRegistry.GetFollowingClient();
 
             if (followingClient == null) return;
+            if (followingClient.IsPlayerHoldingItem()) return;
 
             followingClient.SitOnChair(this);
         }
@@ -46,7 +47,9 @@ namespace RestaurantChaos.Clients
             if (!isSittable) return false;
             if (isOccupied) return false;
 
-            return ClientRegistry.AnyFollowing;
+            ClientBase followingClient = ClientRegistry.GetFollowingClient();
+
+            return followingClient != null && !followingClient.IsPlayerHoldingItem();
         }
 
         public void ReplaceMoney(GameObject newMoney)
@@ -115,21 +118,6 @@ namespace RestaurantChaos.Clients
 
             Destroy(currentFreeIndicator);
             currentFreeIndicator = null;
-        }
-
-        private ClientBase FindFollowingClient()
-        {
-            ClientBase[] clients = FindObjectsByType<ClientBase>(FindObjectsSortMode.None);
-
-            foreach (ClientBase candidate in clients)
-            {
-                if (candidate.IsFollowingPlayer)
-                {
-                    return candidate;
-                }
-            }
-
-            return null;
         }
 
         public static void ShowFreeChairs()

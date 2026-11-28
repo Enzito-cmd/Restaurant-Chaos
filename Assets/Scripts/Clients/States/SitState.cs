@@ -19,7 +19,7 @@ namespace RestaurantChaos.Clients
         {
             queueEndFill = client.Patience.NormalizedFill;
             client.Patience.Stop();
-            client.Patience.ShowBar();
+            client.Patience.ShowRing();
 
             client.CurrentChair = chair;
             chair.SetOccupied(true);
@@ -33,11 +33,15 @@ namespace RestaurantChaos.Clients
                 client.Agent.enabled = false;
             }
 
+            float ringHeight = client.Patience.RingWorldY;
+
             if (chair.SitPoint != null)
             {
                 client.transform.position = chair.SitPoint.position + chair.SitPoint.rotation * client.SitOffset;
                 client.transform.rotation = chair.SitPoint.rotation;
             }
+
+            client.Patience.SetRingWorldY(ringHeight);
 
             client.ChosenMeal = client.Config.ChooseMeal();
 
@@ -70,6 +74,8 @@ namespace RestaurantChaos.Clients
                 client.StopCoroutine(orderCoroutine);
                 orderCoroutine = null;
             }
+
+            client.Patience.ResetRingHeight();
 
             OrderBoard.CloseTicket(chair.TableNumber);
         }

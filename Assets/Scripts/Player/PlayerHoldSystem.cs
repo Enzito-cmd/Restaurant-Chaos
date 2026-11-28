@@ -7,10 +7,17 @@ public class PlayerHoldSystem : MonoBehaviour
 
     private GameObject currentHeldObject;
 
+    public static PlayerHoldSystem Instance { get; private set; }
+
     public GameObject CurrentHeldObject => currentHeldObject;
 
 
     public bool IsHoldingItem => currentHeldObject != null;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     /// <summary>
     /// Instantiates a new 3D Prefab and places it at the player's HoldPoint.

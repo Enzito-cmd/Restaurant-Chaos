@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: 2143116}
   - component: {fileID: 2143118}
   - component: {fileID: 2143117}
+  - component: {fileID: 2143119}
   m_Layer: 5
   m_Name: Skip
   m_TagString: Untagged
@@ -436,6 +437,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143115}
   m_CullTransparentMesh: 1
+--- !u!114 &2143119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ea52bd61b8574bac17aadba7afd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  english: Skip
+  spanish: Saltar
 --- !u!1 &2636135
 GameObject:
   m_ObjectHideFlags: 0
@@ -4988,6 +5003,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 488990474}
+  - {fileID: 1138411309}
   - {fileID: 1185060491}
   - {fileID: 1895525697}
   m_Father: {fileID: 1708212832}
@@ -10427,6 +10443,7 @@ MonoBehaviour:
   signUI: {fileID: 530029632}
   steps:
   - text: Drag the ingredients to the pan.
+    textSpanish: "Arrastra los ingredientes a la sart\xE9n."
     worldCamera: {fileID: 330585545}
     colliders:
     - {fileID: 8065399423379748324}
@@ -13080,7 +13097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RestaurantDoor
   doorPivot: {fileID: 925080929}
   openAngle: 90
-  rotationSpeed: 120
+  rotationSpeed: 140
   closedIndicator: {fileID: 532960678}
 --- !u!65 &175603970
 BoxCollider:
@@ -16856,6 +16873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeIngredient
   displayName: Peach
+  displayNameSpanish: Durazno
   heldPrefab: {fileID: 4470247534003671543, guid: 251bf81c74bcbe7408848415220188e9, type: 3}
   grabVisual: {fileID: 919132149155446097, guid: 05eee89a658b96246befc8789b1444f7, type: 3}
   highlight: {fileID: 217925154}
@@ -17545,6 +17563,7 @@ MonoBehaviour:
   signUI: {fileID: 530029632}
   steps:
   - text: Now grab the bowl from its handle.
+    textSpanish: Ahora agarra el bowl por su asa.
     worldCamera: {fileID: 330585545}
     colliders:
     - {fileID: 1773386734}
@@ -17555,7 +17574,8 @@ MonoBehaviour:
     showMouseIcon: 0
     showObjects: []
     holeTint: {r: 0, g: 0, b: 0, a: 0}
-  - text: Move the pan to an arrow when it matches.
+  - text: Move the center of the pan onto an arrow to catch it.
+    textSpanish: "Lleva el centro de la sart\xE9n hasta una flecha para atraparla."
     worldCamera: {fileID: 330585545}
     colliders: []
     renderers: []
@@ -26176,6 +26196,7 @@ MonoBehaviour:
   holdSystem: {fileID: 1728617282}
   kitchenCheckpoint: {fileID: 842586192}
   checkpointRadius: 1.5
+  doorPoint: {fileID: 175603968}
   clientSightDelay: 2.5
   welcomeSigns:
   - 'Welcome to your Restaurant! You will have to dominate the Chaos if you want
@@ -26190,7 +26211,8 @@ MonoBehaviour:
   - Made a mistake? You can also discard any ingredient or dish you are holding by
     heading to the trash bin in the furthest corner of the kitchen.
   openRestaurantSigns:
-  - Now go open the restaurant so you can attend some clients!
+  - Now go to the front door and press E to open the restaurant so you can attend
+    some clients!
   seatClientSigns:
   - Guide the client to any table available.
   orderSigns:
@@ -26204,6 +26226,36 @@ MonoBehaviour:
     Don\u2019t forget it!"
   completeSigns:
   - Congratulations! You know the basics to run the restaurant, now try for yourself!
+  welcomeSignsEs:
+  - "\xA1Bienvenido a tu restaurante! \xA1Tendr\xE1s que dominar el Caos si quieres
+    progresar!"
+  kitchenSignsEs:
+  - "Empecemos a cocinar algo. Primero, dir\xEDgete a la cocina."
+  cookSignsEs:
+  - Para cocinar tu primer plato, el arroz al wok, ve a la estufa.
+  placeDishSignsEs:
+  - Cuando tengas el plato en las manos, puedes dejarlo en cualquier mesa disponible.
+  trashSignsEs:
+  - "\xBFTe equivocaste? Tambi\xE9n puedes descartar cualquier ingrediente o plato
+    que lleves en las manos yendo al cesto de basura del rinc\xF3n m\xE1s lejano
+    de la cocina."
+  openRestaurantSignsEs:
+  - "\xA1Ahora ve hasta la puerta de entrada y presiona E para abrir el restaurante
+    y atender a algunos clientes!"
+  seatClientSignsEs:
+  - "Gu\xEDa al cliente hasta cualquier mesa disponible."
+  orderSignsEs:
+  - "Los clientes har\xE1n distintos pedidos que tendr\xE1s que aprender. \xA1Y cuidado!,
+    si miras sobre un cliente ver\xE1s su indicador de paciencia. \xA1No dejes que
+    se acabe y s\xE9 r\xE1pido!"
+  deliverSignsEs:
+  - Ya puedes darle a este cliente el plato que preparaste.
+  collectMoneySignsEs:
+  - "Cada vez que un cliente termine de comer, dejar\xE1 dinero para que lo recojas.
+    \xA1No lo olvides!"
+  completeSignsEs:
+  - "\xA1Felicitaciones! Ya conoces lo b\xE1sico para manejar el restaurante, \xA1ahora
+    int\xE9ntalo por tu cuenta!"
   controlsImage: {fileID: 1128600746}
   wokStation: {fileID: 138967393}
   wokPoint: {fileID: 558383827}
@@ -28582,6 +28634,9 @@ MonoBehaviour:
   bodyClearance: 1
   heightFollowSpeed: 6
   glowHeightOffset: 0.02
+  worldCamera: {fileID: 330585545}
+  edgeArrow: {fileID: 1047996089}
+  edgeMargin: 80
 --- !u!1 &375274907
 GameObject:
   m_ObjectHideFlags: 0
@@ -31182,6 +31237,14 @@ MonoBehaviour:
   eggBowlCollider: {fileID: 8700725330488937737}
   riceBowlCollider: {fileID: 8065399423379748324}
   wokCollider: {fileID: 8946298117896500465}
+  riceBowlModel: {fileID: 5983600770687164668}
+  basketEggs:
+  - {fileID: 8707273952559884814}
+  - {fileID: 8416272008552279035}
+  - {fileID: 2076850630829868655}
+  - {fileID: 1582813066777508476}
+  - {fileID: 7623545440500303585}
+  - {fileID: 9014776605616048525}
   dragEggPrefab: {fileID: 690936677800230601, guid: cd1949225c3c8b64bbdff4548356df3d, type: 3}
   dragRiceBowlPrefab: {fileID: 578638451629357682, guid: d9b5bd5f51bd2c84196797d8ccc70c08, type: 3}
   dragHeightOffset: 1.5
@@ -31226,6 +31289,7 @@ MonoBehaviour:
   wokController: {fileID: 407859962}
   wokTransform: {fileID: 8605378407507111498}
   wokCenterHitbox: {fileID: 1060082743}
+  centerMarker: {fileID: 0}
   wokCamera: {fileID: 330585545}
   dragPlaneCollider: {fileID: 2025439638}
   handleCollider: {fileID: 1773386734}
@@ -31267,6 +31331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WokTossPhase
   slider: {fileID: 1404836626}
+  hint: {fileID: 0}
   rawRice: {fileID: 715216764}
   rice: {fileID: 8854996908583128122}
   jumpHeight: 2
@@ -42391,8 +42456,10 @@ MonoBehaviour:
   keyIcon: {fileID: 1628210275}
   interactIcon: {fileID: 21300000, guid: ac2c68ad2f651da43a0f008e172488c2, type: 3}
   interactMessage: Interact
+  interactMessageSpanish: Interactuar
   extinguisherIcon: {fileID: 21300000, guid: c8cab7b2e90e53f43a66ccf0100cea6b, type: 3}
   extinguisherMessage: Use
+  extinguisherMessageSpanish: Usar
 --- !u!1001 &548022392
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50436,6 +50503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeIngredient
   displayName: Strawberry
+  displayNameSpanish: Frutilla
   heldPrefab: {fileID: 6892001173313084946, guid: 672928f87621baf4f8c61c3a7bb76092, type: 3}
   grabVisual: {fileID: 919132149155446097, guid: c9f1790326d25a3428cc28977ec11a06, type: 3}
   highlight: {fileID: 631088242}
@@ -84529,7 +84597,7 @@ Transform:
   m_GameObject: {fileID: 925080928}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 0.256104, y: -2.1290555, z: -10.122}
+  m_LocalPosition: {x: 2.271163, y: -2.1290576, z: -10.011}
   m_LocalScale: {x: 100, y: 99.99997, z: 99.99997}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -86723,6 +86791,7 @@ GameObject:
   - component: {fileID: 953284573}
   - component: {fileID: 953284575}
   - component: {fileID: 953284574}
+  - component: {fileID: 953284576}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -86849,6 +86918,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 953284572}
   m_CullTransparentMesh: 1
+--- !u!114 &953284576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953284572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ea52bd61b8574bac17aadba7afd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  english: Exit
+  spanish: Salir
 --- !u!1 &953502852
 GameObject:
   m_ObjectHideFlags: 0
@@ -93568,6 +93651,143 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975208810}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &975295399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 975295400}
+  - component: {fileID: 975295402}
+  - component: {fileID: 975295401}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &975295400
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975295399}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2020549032}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &975295401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975295399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Day 1
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: cbd2dcf2198750d46ba2b4be747ef590, type: 2}
+  m_sharedMaterial: {fileID: -5112705542217266507, guid: cbd2dcf2198750d46ba2b4be747ef590, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 150
+  m_fontSizeBase: 150
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &975295402
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975295399}
+  m_CullTransparentMesh: 1
 --- !u!1 &975308053
 GameObject:
   m_ObjectHideFlags: 0
@@ -94687,6 +94907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeIngredient
   displayName: Chocolate
+  displayNameSpanish: Chocolate
   heldPrefab: {fileID: 2836416315902219343, guid: 1f8007ff0737ffc4fa6a424618903032, type: 3}
   grabVisual: {fileID: 919132149155446097, guid: ed60c8903490caf49aec91496d4d0e83, type: 3}
   highlight: {fileID: 980689387}
@@ -99158,6 +99379,81 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045486136}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &1047996088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1047996089}
+  - component: {fileID: 1047996091}
+  - component: {fileID: 1047996090}
+  m_Layer: 5
+  m_Name: EdgeArrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1047996089
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047996088}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1388151479}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 110, y: 110}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1047996090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047996088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 659a6ba74e43a1b4480296d1389cd06c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1047996091
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047996088}
+  m_CullTransparentMesh: 1
 --- !u!1 &1048425052
 GameObject:
   m_ObjectHideFlags: 0
@@ -108319,6 +108615,153 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bbf335c4828480c4fa663f46d855f726, type: 3}
   m_PrefabInstance: {fileID: 1136976060}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1138411308
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1138411309}
+  - component: {fileID: 1138411313}
+  - component: {fileID: 1138411312}
+  - component: {fileID: 1138411311}
+  - component: {fileID: 1138411310}
+  m_Layer: 5
+  m_Name: Language
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1138411309
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138411308}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.5921999, y: 1.5921999, z: 1.5921999}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1764405817}
+  m_Father: {fileID: 64342412}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 722, y: -394}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1138411310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138411308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c132a43b552b114f8f4d40efb86a7bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageSwitch
+  label: {fileID: 1764405818}
+--- !u!114 &1138411311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138411308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1138411312}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1138411310}
+        m_TargetAssemblyTypeName: LanguageSwitch, Assembly-CSharp
+        m_MethodName: Toggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1138411312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138411308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1138411313
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138411308}
+  m_CullTransparentMesh: 1
 --- !u!1 &1139808167
 GameObject:
   m_ObjectHideFlags: 0
@@ -121433,6 +121876,7 @@ MonoBehaviour:
   holdSystem: {fileID: 1728617282}
   kitchenCheckpoint: {fileID: 842586192}
   checkpointRadius: 1.5
+  doorPoint: {fileID: 175603968}
   clientSightDelay: 2.5
   unlockedSigns:
   - 'Welcome back! You have unlocked a second dish: Tempuras. Head back to the kitchen
@@ -121451,6 +121895,27 @@ MonoBehaviour:
   - Nice! Now you can leave the plate in any table available.
   completeSigns:
   - 'Congratulations! You learned a new dish for your restaurant! '
+  openRestaurantSigns:
+  - Time to open the restaurant! Go to the front door and press E.
+  unlockedSignsEs:
+  - "\xA1Bienvenido de nuevo! Desbloqueaste un segundo plato: Tempuras. Vuelve a
+    la cocina para prepararlo."
+  kitchenSignsEs:
+  - "Este plato se hace en tres pasos distintos. Al completarlos en orden, recibir\xE1s
+    el plato terminado."
+  phasesSignsEs:
+  - Para el primer paso, ve a la heladera y toma algunos mariscos.
+  breadSignsEs:
+  - Ahora lleva los mariscos al empanador para empezar el plato.
+  frySignsEs:
+  - "\xA1Genial! Ahora tendr\xE1s que fre\xEDr tus mariscos empanados para terminar
+    el plato. Ve a la freidora."
+  placeDishSignsEs:
+  - "\xA1Muy bien! Ahora puedes dejar el plato en cualquier mesa disponible."
+  openRestaurantSignsEs:
+  - "\xA1Hora de abrir el restaurante! Ve hasta la puerta de entrada y presiona E."
+  completeSignsEs:
+  - "\xA1Felicitaciones! \xA1Aprendiste un nuevo plato para tu restaurante!"
   fridgeStation: {fileID: 543450652700478374}
   fridgePoint: {fileID: 363892715}
   breaderStation: {fileID: 1277294347}
@@ -128583,9 +129048,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1047996089}
   - {fileID: 1456793202}
   - {fileID: 1874299251}
   - {fileID: 1708212832}
+  - {fileID: 2020549032}
   m_Father: {fileID: 1075200995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -133589,7 +134056,8 @@ MonoBehaviour:
   panel: {fileID: 1680628770}
   completedText: {fileID: 1964529826}
   mistakesText: {fileID: 1418396503}
-  diagonalBufferTime: 0.05
+  diagonalWindow: 0.15
+  failDelay: 0.8
 --- !u!1001 &1459918117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -143914,6 +144382,7 @@ MonoBehaviour:
   signUI: {fileID: 530029632}
   steps:
   - text: Press SPACE when the needle is inside the zone.
+    textSpanish: "Presiona ESPACIO cuando la aguja est\xE9 dentro de la zona."
     worldCamera: {fileID: 330585545}
     colliders: []
     renderers: []
@@ -150813,6 +151282,7 @@ MonoBehaviour:
   signUI: {fileID: 530029632}
   steps:
   - text: 'Reach the end to bread the seafood '
+    textSpanish: Llega hasta el final para empanar los mariscos.
     worldCamera: {fileID: 330585545}
     colliders: []
     renderers: []
@@ -150823,6 +151293,8 @@ MonoBehaviour:
     - {fileID: 512919869}
     holeTint: {r: 0, g: 0, b: 0, a: 0}
   - text: Sometimes you will need to move diagonally. Use two keys at once.
+    textSpanish: "A veces tendr\xE1s que moverte en diagonal. Usa dos teclas a la
+      vez."
     worldCamera: {fileID: 330585545}
     colliders: []
     renderers: []
@@ -151079,12 +151551,14 @@ MonoBehaviour:
   holdSystem: {fileID: 1728617282}
   kitchenCheckpoint: {fileID: 0}
   checkpointRadius: 1.5
+  doorPoint: {fileID: 175603968}
   clientSightDelay: 2.5
   welcomeSigns:
   - Hello there! You made it to this day. More people are starting to hear about
     your restaurant, which means more clients are coming!
   openRestaurantSigns:
-  - There is no new dishes for now, so go open the restaurant to get started!
+  - There are no new dishes for now. Head to the front door and press E to open the
+    restaurant!
   yakuzaSigns:
   - 'This is a new type of customer. He is very impatient, so be sure to attend him
     as fast as you can whenever you see him! '
@@ -151094,6 +151568,21 @@ MonoBehaviour:
   completeSigns:
   - Congratulations! You now know how to kick an angry customer whenever you need
     to!
+  welcomeSignsEs:
+  - "\xA1Hola! Llegaste a este d\xEDa. Cada vez m\xE1s personas conocen tu restaurante,
+    \xA1as\xED que vienen m\xE1s clientes!"
+  openRestaurantSignsEs:
+  - "Por ahora no hay platos nuevos. \xA1Ve hasta la puerta de entrada y presiona
+    E para abrir el restaurante!"
+  yakuzaSignsEs:
+  - "Este es un nuevo tipo de cliente. Es muy impaciente, \xA1as\xED que ati\xE9ndelo
+    lo m\xE1s r\xE1pido posible cuando lo veas!"
+  angrySignsEs:
+  - "El cliente se cans\xF3 de esperar y ahora te persigue; no dejar\xE1 de quejarse.
+    Ve al extintor de la cocina para echarlo."
+  completeSignsEs:
+  - "\xA1Felicitaciones! \xA1Ya sabes c\xF3mo echar a un cliente enojado cuando lo
+    necesites!"
   extinguisherStation: {fileID: 1332996231}
   extinguisherPoint: {fileID: 482466797}
 --- !u!1 &1700147753
@@ -153665,7 +154154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
   interactPoint: {fileID: 1097742591}
-  interactRadius: 1
+  interactRange: 2.2
+  interactAngle: 180
   interactableLayer:
     serializedVersion: 2
     m_Bits: 704
@@ -157028,6 +157518,143 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764024022}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &1764405816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1764405817}
+  - component: {fileID: 1764405819}
+  - component: {fileID: 1764405818}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1764405817
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764405816}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1138411309}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1764405818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764405816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: cbd2dcf2198750d46ba2b4be747ef590, type: 2}
+  m_sharedMaterial: {fileID: -5112705542217266507, guid: cbd2dcf2198750d46ba2b4be747ef590, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281479730
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 24
+  m_fontSizeBase: 24
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1764405819
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764405816}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1768288555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169766,6 +170393,9 @@ MonoBehaviour:
   basketUpPoint: {fileID: 558710132}
   basketDownPoint: {fileID: 291225687}
   basketSpeed: 3
+  shakeHeight: 0.3
+  shakeDuration: 0.45
+  shakeCycles: 2
   tempuraPrefab: {fileID: 7716428118767300812, guid: 692e79002cd9baf409bc58ab425e3c18, type: 3}
   spawnPoints:
   - {fileID: 835367219}
@@ -179449,6 +180079,77 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2017653507}
   m_Mesh: {fileID: -5052397404256833082, guid: eacf3a4bd90724d4d87e409c954dfd91, type: 3}
+--- !u!1 &2020549031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2020549032}
+  - component: {fileID: 2020549034}
+  - component: {fileID: 2020549033}
+  m_Layer: 5
+  m_Name: DayTitle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2020549032
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020549031}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2102965667}
+  - {fileID: 975295400}
+  m_Father: {fileID: 1388151479}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2020549033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020549031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b7f7f27e3d5af48a8e163296e173b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantChaos.Clients.DayTitleUI
+  group: {fileID: 2020549034}
+  titleText: {fileID: 975295401}
+  fadeDuration: 0.5
+  holdDuration: 1.6
+  dayEnglish: Day {0}
+  daySpanish: "D\xEDa {0}"
+  tutorialEnglish: Tutorial {0}
+  tutorialSpanish: Tutorial {0}
+--- !u!225 &2020549034
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020549031}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2020668776
 GameObject:
   m_ObjectHideFlags: 0
@@ -185406,6 +186107,81 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102190770}
   m_Mesh: {fileID: -5646128114681269635, guid: 27d4c8b2e0cf3014880f860d0b8cfd47, type: 3}
+--- !u!1 &2102965666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2102965667}
+  - component: {fileID: 2102965669}
+  - component: {fileID: 2102965668}
+  m_Layer: 5
+  m_Name: Backdrop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2102965667
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102965666}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2020549032}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2102965668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102965666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2102965669
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102965666}
+  m_CullTransparentMesh: 1
 --- !u!1 &2104238849
 GameObject:
   m_ObjectHideFlags: 0
@@ -186308,6 +187084,7 @@ MonoBehaviour:
   levelManager: {fileID: 62201158}
   playerController: {fileID: 1728617278}
   fade: {fileID: 1874299252}
+  titleUI: {fileID: 2020549033}
 --- !u!1 &2113357369
 GameObject:
   m_ObjectHideFlags: 0
@@ -191004,6 +191781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeIngredient
   displayName: Seafood
+  displayNameSpanish: Mariscos
   heldPrefab: {fileID: 1725019957686578554, guid: 9ccf4873c027d334f81d10dba08c0c9b, type: 3}
   grabVisual: {fileID: 919132149155446097, guid: 13f27310856dd214f90ef008a40f8d62, type: 3}
   highlight: {fileID: 175558982980929836}
@@ -192801,7 +193579,7 @@ Transform:
   m_GameObject: {fileID: 2529381028657308069}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0001912499, z: 0}
+  m_LocalPosition: {x: -0.020150589, y: 0.0013012508, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -65,6 +65,11 @@ public class RestaurantDoor : MonoBehaviour, IInteractable
             return false;
         }
 
-        return dayManager.CanOpenRestaurant && !dayManager.IsRestaurantOpen;
+        return dayManager.CanOpenRestaurant && !dayManager.IsRestaurantOpen && !IsHoldingItem();
+    }
+
+    private bool IsHoldingItem()
+    {
+        return PlayerHoldSystem.Instance != null && PlayerHoldSystem.Instance.IsHoldingItem;
     }
 }
